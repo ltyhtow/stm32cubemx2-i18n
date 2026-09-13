@@ -123,10 +123,31 @@ msgstr "风险评分："
 | `framework-nls` | 框架 NLS 已提供翻译，属 Tier 0 |
 | `not-ui-position` | 未落在任何已知 UI 文本位置 |
 
+### 方案的固有边界
+
+按值查表的运行时方案有一类文本**原理上够不到**：渲染时才由模板拼装的文本。
+
+```tsx
+{`${GREETING_MESSAGE} ${GREETING_HIGHLIGHT_MESSAGE}`}
+title={`Last Opened project - ${formatDateAsDelay(...)}`}
+```
+
+运行时看到的是拼好的整句，而译文表里只有各个片段，永远对不上。这类条目会被收录进
+文本清单并标为 `template-concat`，明确告诉开发者「不是漏了，是够不到」。
+同理，Theia 主菜单与命令面板由 Lumino 而非 React 渲染，也不在 React 挂钩的覆盖范围内（见分期规划）。
+
 ### 实测覆盖率
 
-静态分析只能告诉你抽到了什么，告诉不了你界面上还剩什么没翻。`audit` 命令给出实测办法：
-开启审计后正常操作一遍界面，运行时会记录所有查表未命中的英文，导出即是尚未覆盖的部分。
+静态分析只能告诉你抽到了什么，告诉不了你界面上还剩什么没翻。有两个办法：
+
+**伪翻译**——把每条原文包成 `⟦原文⟧` 装进去，启动即可肉眼分辨：中文＝框架已翻译（Tier 0），
+`⟦括号⟧`＝我们的挂钩命中，裸英文＝覆盖缺口。
+
+```bash
+node dist/cli.js install --locale zh-cn --pseudo
+```
+
+**运行时审计**——记录所有查表未命中的英文：
 
 ```bash
 node dist/cli.js audit   # 打印操作步骤
@@ -151,8 +172,8 @@ node dist/cli.js audit   # 打印操作步骤
 | `extract` | 抽取文本，生成 `catalog.json` 与 `.pot` 模板 |
 | `catalog` | 生成开发者 HTML 文本清单 |
 | `sync --locale <x>` | 用最新模板更新语言 PO，保留已有译文 |
-| `build --locale <x>` | 把 PO 编译成运行时译文表 |
-| `install --locale <x>` | 注入运行时并部署译文 |
+| `build --locale <x>` | 把 PO 编译成运行时译文表（`--pseudo` 生成伪翻译） |
+| `install --locale <x>` | 注入运行时并部署译文（`--pseudo` 部署伪翻译） |
 | `rollback` | 还原 `bundle.js` 与 `index.html` |
 | `doctor` | 体检安装、备份、注入状态 |
 | `audit` | 打印实测覆盖率的操作步骤 |
@@ -174,4 +195,4 @@ node dist/cli.js audit   # 打印操作步骤
   属于其它项目的翻译成果，需要显式加 `--include-foreign` 才会导入，
   且那样产出的 PO 不可公开分发。
 
-代码以 Apache-2.0 授权，详见 `LICENSE` 与 `NOTICE`。
+代码以 Mozilla Public License 2.0 授权，详见 `LICENSE` 与 `DISCLAIMER.md`。

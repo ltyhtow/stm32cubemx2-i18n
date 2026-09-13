@@ -10,7 +10,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: STM32CubeMX2 1.1.1\n"
-"POT-Creation-Date: 2026-09-13T11:27:16.652Z\n"
+"POT-Creation-Date: 2026-09-13T12:00:06.672Z\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -206,10 +206,11 @@ msgstr ""
 #: @prg-cube/application-project/src/browser/components/packs-overview/cells/pack-version-cell/pack-version-cell.tsx:54
 #: @prg-cube/application-project/src/browser/components/packs-overview/cells/pack-version-cell/pack-version-cell.tsx:59
 #: @prg-cube/application-project/src/browser/components/packs-overview/columns/pack-status-column/pack-status-column.tsx:71
-#. 界面位置：application-project → PackComponent，application-project → PackVersionCell，application-project → buildStatusColumn
+#: @prg-cube/cube-package-manager/src/common/protocol.ts:301
+#. 界面位置：application-project → PackComponent，application-project → PackVersionCell，application-project → buildStatusColumn，cube-package-manager → NOT_INSTALLED
 #. 语境：) : ( <span> <Typography color="text_error_default">Not installed</Typography> </span> )}
-#. 共 4 处使用
-#, jsx-child, jsx-prop
+#. 共 5 处使用
+#, jsx-child, jsx-prop, config-value
 msgid "Not installed"
 msgstr ""
 
@@ -224,16 +225,19 @@ msgstr ""
 
 #: @prg-cube/application-project/src/browser/components/packs-overview/cells/pack-status-cell/pack-status-cell.utils.tsx:27
 #: @prg-cube/application-project/src/browser/components/packs-overview/columns/pack-status-column/pack-status-column.tsx:53
-#. 界面位置：application-project → TAG_META_BY_STATUS，application-project → buildStatusColumn
+#: @prg-cube/cube-package-manager/src/common/protocol.ts:304
+#. 界面位置：application-project → TAG_META_BY_STATUS，application-project → buildStatusColumn，cube-package-manager → UP_TO_DATE
 #. 语境：> = { [PACK_LIFECYCLE_STATUS.UP_TO_DATE]: () => ({ label: 'Up to date', backgroundColor: 'surface_green_soft', textColor: 'text_default',
-#. 共 2 处使用
+#. 共 3 处使用
 #, config-value, jsx-prop
 msgid "Up to date"
 msgstr ""
 
 #: @prg-cube/application-project/src/browser/components/packs-overview/cells/pack-status-cell/pack-status-cell.utils.tsx:37
-#. 界面位置：application-project → TAG_META_BY_STATUS
+#: @prg-cube/cube-package-manager/src/common/protocol.ts:305
+#. 界面位置：application-project → TAG_META_BY_STATUS，cube-package-manager → INSTALL_FAILED
 #. 语境：}), [PACK_LIFECYCLE_STATUS.FAILED_TO_INSTALL]: () => ({ label: 'Install failed', backgroundColor: 'surface_error_soft', textColor: 'text_error_default',
+#. 共 2 处使用
 #, config-value
 msgid "Install failed"
 msgstr ""
@@ -291,21 +295,24 @@ msgid "Select"
 msgstr ""
 
 #: @prg-cube/application-project/src/browser/components/packs-overview/columns/pack-status-column/pack-status-column.tsx:62
-#. 界面位置：application-project → buildStatusColumn
+#: @prg-cube/cube-package-manager/src/common/protocol.ts:303
+#. 界面位置：application-project → buildStatusColumn，cube-package-manager → TO_UPDATE
 #. 语境：backgroundColor="surface_amber_20" textColor="text_default" label="Update available" /> </SelectItem>
-#, jsx-prop
+#. 共 2 处使用
+#, jsx-prop, config-value
 msgid "Update available"
 msgstr ""
 
 #: @prg-cube/application-project/src/browser/components/packs-overview/columns/pack-type-column/pack-type-column.tsx:15
+#: @prg-cube/application-project/src/browser/components/popup/project-creation/selectors/board/hooks/use-board-columns.tsx:19
 #: @prg-cube/clock-tree-theia/src/browser/property-view-element-details/property-view-element-details.tsx:243
 #: @prg-cube/clock-tree-theia/src/browser/table/clock-table-component.tsx:318
 #: @prg-cube/theia-ext-pinout-configuration/src/browser/components/property-view/all-pins-mode/AllPinsProperties.tsx:118
 #: @prg-cube/theia-ext-pinout-configuration/src/browser/components/table-view/PinTableComponent.tsx:535
 #: @prg-cube/theia-ext-pinout-configuration/src/browser/components/Toolbar/PinoutToolbar.tsx:963
-#. 界面位置：application-project → buildTypeColumn，clock-tree-theia → PropertyViewElementDetails，clock-tree-theia → ClockComponent，theia-ext-pinout-configuration → AllPinsProperties
+#. 界面位置：application-project → buildTypeColumn，application-project → COLUMN_DEFINITIONS，clock-tree-theia → PropertyViewElementDetails，clock-tree-theia → ClockComponent
 #. 语境：cell: { type: 'label' }, field: 'type', header: 'Type', sortable: true, filter: {
-#. 共 6 处使用
+#. 共 7 处使用
 #, config-value, jsx-prop, jsx-child
 msgid "Type"
 msgstr ""
@@ -317,6 +324,13 @@ msgstr ""
 #. 共 2 处使用
 #, jsx-prop
 msgid "Packs"
+msgstr ""
+
+#: @prg-cube/application-project/src/browser/components/popup/generic-popup/generic-footer-component.tsx:52
+#. 界面位置：application-project → GenericFooterComponent
+#. 语境：return !isFormValid || isValidating || Boolean(isLoadingConfirmButton); }, [isFormValid, isValidating, isLoadingConfirmButton]); const errorMessage = 'Please co
+#, config-value
+msgid "Please complete all form information"
 msgstr ""
 
 #: @prg-cube/application-project/src/browser/components/popup/generic-popup/generic-footer-component.tsx:85
@@ -423,6 +437,13 @@ msgstr ""
 msgid "Your project will reload automatically when the operation completes."
 msgstr ""
 
+#: @prg-cube/application-project/src/browser/components/popup/pack-update/steps/pack-update-in-progress-step/pack-update-in-progress-step.tsx:31
+#. 界面位置：application-project → PackUpdateInProgressStep
+#. 语境：title="Update is in progress." message="Your project will reload automatically when the operation completes." note="Please wait, this may take several minutes d
+#, jsx-prop
+msgid "Please wait, this may take several minutes depending on your connection and pack size."
+msgstr ""
+
 #: @prg-cube/application-project/src/browser/components/popup/pack-update/steps/pack-update-success-step/pack-update-success-step.tsx:25
 #. 界面位置：application-project → PackUpdateSuccessStep
 #. 语境：/> } title="Update complete." message="All selected packs were updated successfully." note="Your project has been updated and reloaded."
@@ -435,6 +456,13 @@ msgstr ""
 #. 语境：} title="Update complete." message="All selected packs were updated successfully." note="Your project has been updated and reloaded." />
 #, jsx-prop
 msgid "All selected packs were updated successfully."
+msgstr ""
+
+#: @prg-cube/application-project/src/browser/components/popup/pack-update/steps/pack-update-success-step/pack-update-success-step.tsx:27
+#. 界面位置：application-project → PackUpdateSuccessStep
+#. 语境：title="Update complete." message="All selected packs were updated successfully." note="Your project has been updated and reloaded." /> );
+#, jsx-prop
+msgid "Your project has been updated and reloaded."
 msgstr ""
 
 #: @prg-cube/application-project/src/browser/components/popup/project-creation/project-creation-completed-component.tsx:24
@@ -454,9 +482,12 @@ msgid ""
 msgstr ""
 
 #: @prg-cube/application-project/src/browser/components/popup/project-creation/project-creation-component.tsx:169
-#. 界面位置：application-project → ProjectCreationComponent
+#: @prg-cube/getting-started-mx2/src/browser/hooks/use-init-action-buttons.tsx:27
+#: @prg-cube/getting-started-mx2/src/browser/hooks/use-init-action-buttons.tsx:37
+#. 界面位置：application-project → ProjectCreationComponent，getting-started-mx2
 #. 语境：confirmButtonLabel = ( <div className={projectCreationStyles?.['button-form-validation']} data-testid="button-form-validation"> Create project </div> );
-#, jsx-child
+#. 共 3 处使用
+#, jsx-child, config-value
 msgid "Create project"
 msgstr ""
 
@@ -543,6 +574,15 @@ msgstr ""
 msgid "Please wait."
 msgstr ""
 
+#: @prg-cube/application-project/src/browser/components/popup/project-creation/project-creation.constants.ts:26
+#. 界面位置：application-project → PROJECT_CREATION_STEP_HELPERS
+#. 语境：[ProjectCreationSteps.HardwareSelectionStep]: { [HardwareProjectType.BOARD]: { text: 'Choose your STM32 board from the list below. Not sure which one to pick? F
+#, config-value
+msgid ""
+"Choose your STM32 board from the list below. Not sure which one to pick? Find the board that best "
+"fits your needs by exploring the"
+msgstr ""
+
 #: @prg-cube/application-project/src/browser/components/popup/project-creation/project-creation.constants.ts:28
 #. 界面位置：application-project → PROJECT_CREATION_STEP_HELPERS
 #. 语境：text: 'Choose your STM32 board from the list below. Not sure which one to pick? Find the board that best fits your needs by exploring the', link: { label: 'STM3
@@ -550,11 +590,34 @@ msgstr ""
 msgid "STM32 Board Portfolio."
 msgstr ""
 
+#: @prg-cube/application-project/src/browser/components/popup/project-creation/project-creation.constants.ts:33
+#. 界面位置：application-project → PROJECT_CREATION_STEP_HELPERS
+#. 语境：}, [HardwareProjectType.MCU]: { text: 'Choose your STM32 Microcontroller Unit (MCU) from the list below. Not sure which one to pick? Find the MCU that best fits
+#, config-value
+msgid ""
+"Choose your STM32 Microcontroller Unit (MCU) from the list below. Not sure which one to pick? Find "
+"the MCU that best fits your needs by exploring the"
+msgstr ""
+
 #: @prg-cube/application-project/src/browser/components/popup/project-creation/project-creation.constants.ts:35
 #. 界面位置：application-project → PROJECT_CREATION_STEP_HELPERS
 #. 语境：text: 'Choose your STM32 Microcontroller Unit (MCU) from the list below. Not sure which one to pick? Find the MCU that best fits your needs by exploring the', l
 #, config-value
 msgid "STM32 MCU Portfolio."
+msgstr ""
+
+#: @prg-cube/application-project/src/browser/components/popup/project-creation/project-creation.constants.ts:41
+#. 界面位置：application-project → PROJECT_CREATION_STEP_HELPERS
+#. 语境：}, [ProjectCreationSteps.ProjectInformationStep]: { text: 'Enter your project name and location.', }, };
+#, config-value
+msgid "Enter your project name and location."
+msgstr ""
+
+#: @prg-cube/application-project/src/browser/components/popup/project-creation/project-creation.helpers.tsx:61
+#. 界面位置：application-project
+#. 语境：export const resolvePopupTitle = (hardwareProjectType: HardwareProjectType | null): string => { let title = 'Create Application Project'; if (hardwareProjectTyp
+#, config-value
+msgid "Create Application Project"
 msgstr ""
 
 #: @prg-cube/application-project/src/browser/components/popup/project-creation/selectors/board/board-selector-component.tsx:41
@@ -585,6 +648,15 @@ msgstr ""
 msgid "Group by MCU series"
 msgstr ""
 
+#: @prg-cube/application-project/src/browser/components/popup/project-creation/selectors/board/board-selector-component.tsx:140
+#: @prg-cube/application-project/src/browser/components/popup/project-creation/selectors/mcu/mcu-selector-component.tsx:79
+#. 界面位置：application-project → BoardSelectorComponent，application-project → McuSelectorComponent
+#. 语境：filterMode="row" showDataExport dataExportButtonText="Export list" onDataExport={(data) => { if (data?.rows && data?.columns) {
+#. 共 2 处使用
+#, jsx-prop
+msgid "Export list"
+msgstr ""
+
 #: @prg-cube/application-project/src/browser/components/popup/project-creation/selectors/board/board-selector-component.tsx:171
 #. 界面位置：application-project → BoardSelectorComponent
 #. 语境：value={globalSearch} onChange={(_, value) => setGlobalSearch(typeof value === 'string' ? value : '')} placeholder="Search by part no, type, mounted devices..." 
@@ -599,12 +671,98 @@ msgstr ""
 msgid "Group boards by"
 msgstr ""
 
+#: @prg-cube/application-project/src/browser/components/popup/project-creation/selectors/board/hooks/use-board-columns.tsx:18
+#. 界面位置：application-project → COLUMN_DEFINITIONS
+#. 语境：export const COLUMN_DEFINITIONS: SelectorColumn[] = [ { id: 'cpn', prettyName: 'Commercial Part No', filterType: 'inputText' }, { id: 'type', prettyName: 'Type'
+#, config-value
+msgid "Commercial Part No"
+msgstr ""
+
+#: @prg-cube/application-project/src/browser/components/popup/project-creation/selectors/board/hooks/use-board-columns.tsx:20
+#. 界面位置：application-project → COLUMN_DEFINITIONS
+#. 语境：{ id: 'cpn', prettyName: 'Commercial Part No', filterType: 'inputText' }, { id: 'type', prettyName: 'Type', filterType: 'textDropdown' }, { id: 'mountedDevices'
+#, config-value
+msgid "Mounted Device"
+msgstr ""
+
 #: @prg-cube/application-project/src/browser/components/popup/project-creation/selectors/empty-result/selector-empty-result-component.tsx:42
 #. 界面位置：application-project → SelectorEmptyResultComponent
 #. 语境：> <Typography align="center" bold color="text_default" variant="h1"> No results found </Typography> <Typography align="center" color="text_default" variant="des
 #, jsx-child
 msgid "No results found"
 msgstr "未找到结果"
+
+#: @prg-cube/application-project/src/browser/components/popup/project-creation/selectors/mcu/mcu-selector-component.tsx:25
+#. 界面位置：application-project
+#. 语境：const initColumns: DataGridColumnProps[] = getDatagridColumnProps([ { id: 'cpn', prettyName: 'MCU name', filterType: 'inputText' }, { id: 'series', prettyName: 
+#, config-value
+msgid "MCU name"
+msgstr ""
+
+#: @prg-cube/application-project/src/browser/components/popup/project-creation/selectors/mcu/mcu-selector-component.tsx:26
+#. 界面位置：application-project
+#. 语境：const initColumns: DataGridColumnProps[] = getDatagridColumnProps([ { id: 'cpn', prettyName: 'MCU name', filterType: 'inputText' }, { id: 'series', prettyName: 
+#, config-value
+msgid "Series"
+msgstr ""
+
+#: @prg-cube/application-project/src/browser/components/popup/project-creation/selectors/mcu/mcu-selector-component.tsx:27
+#: libs/features/exti/ext/exti-configuration/src/browser/components/exti-table-view.tsx:144
+#. 界面位置：application-project，exti-configuration → ExtiTableView
+#. 语境：{ id: 'cpn', prettyName: 'MCU name', filterType: 'inputText' }, { id: 'series', prettyName: 'Series', filterType: 'inputText' }, { id: 'line', prettyName: 'Line
+#. 共 2 处使用
+#, config-value
+msgid "Line"
+msgstr ""
+
+#: @prg-cube/application-project/src/browser/components/popup/project-creation/selectors/mcu/mcu-selector-component.tsx:28
+#. 界面位置：application-project
+#. 语境：{ id: 'series', prettyName: 'Series', filterType: 'inputText' }, { id: 'line', prettyName: 'Line', filterType: 'inputText' }, { id: 'packageDescription', pretty
+#, config-value
+msgid "Package"
+msgstr ""
+
+#: @prg-cube/application-project/src/browser/components/popup/project-creation/selectors/mcu/mcu-selector-component.tsx:29
+#. 界面位置：application-project
+#. 语境：{ id: 'line', prettyName: 'Line', filterType: 'inputText' }, { id: 'packageDescription', prettyName: 'Package', filterType: 'inputText' }, { id: 'maxFrequency',
+#, config-value
+msgid "Freq (MHz)"
+msgstr ""
+
+#: @prg-cube/application-project/src/browser/components/popup/project-creation/selectors/mcu/mcu-selector-component.tsx:30
+#. 界面位置：application-project
+#. 语境：{ id: 'packageDescription', prettyName: 'Package', filterType: 'inputText' }, { id: 'maxFrequency', prettyName: 'Freq (MHz)', filterType: 'inputFloat' }, { id: 
+#, config-value
+msgid "RAM (kB)"
+msgstr ""
+
+#: @prg-cube/application-project/src/browser/components/popup/project-creation/selectors/mcu/mcu-selector-component.tsx:31
+#. 界面位置：application-project
+#. 语境：{ id: 'maxFrequency', prettyName: 'Freq (MHz)', filterType: 'inputFloat' }, { id: 'ram', prettyName: 'RAM (kB)', filterType: 'inputFloat' }, { id: 'flash', pret
+#, config-value
+msgid "Flash (kB)"
+msgstr ""
+
+#: @prg-cube/application-project/src/browser/components/popup/project-creation/selectors/mcu/mcu-selector-component.tsx:33
+#. 界面位置：application-project
+#. 语境：{ id: 'flash', prettyName: 'Flash (kB)', filterType: 'inputFloat' }, // we are hiding tempMin and tempMax columns as a temporary workaround for TMX2-17599 which
+#, config-value
+msgid "T°C Min"
+msgstr ""
+
+#: @prg-cube/application-project/src/browser/components/popup/project-creation/selectors/mcu/mcu-selector-component.tsx:34
+#. 界面位置：application-project
+#. 语境：// we are hiding tempMin and tempMax columns as a temporary workaround for TMX2-17599 which is about some columns are truncated and not fully visible { id: 'tem
+#, config-value
+msgid "T°C Max"
+msgstr ""
+
+#: @prg-cube/application-project/src/browser/components/popup/project-creation/selectors/mcu/mcu-selector-component.tsx:35
+#. 界面位置：application-project
+#. 语境：{ id: 'tempMin', prettyName: 'T°C Min', filterType: 'inputFloat', hidden: true }, { id: 'tempMax', prettyName: 'T°C Max', filterType: 'inputFloat', hidden: true
+#, config-value
+msgid "Cores"
+msgstr ""
 
 #: @prg-cube/application-project/src/browser/components/popup/project-creation/selectors/mcu/mcu-selector-component.tsx:66
 #. 界面位置：application-project → McuSelectorComponent
@@ -819,14 +977,15 @@ msgid "Micro Control Unit"
 msgstr ""
 
 #: @prg-cube/application-project/src/browser/components/settings/global-service-view/configuration-menu/configuration-menu.tsx:57
+#: @prg-cube/cube-domain-model-frontend-shared/src/browser/shared-components/reset-configuration-dialog.tsx:59
 #: @prg-cube/cube-domain-model-frontend-shared/src/browser/shared-components/reset-configuration.tsx:125
 #: @prg-cube/cube-frontend-commons/src/browser/domains/config-page/hooks/useConfirmAction.ts:16
 #: @prg-cube/cube-peripherals/src/browser/views/configuration/components/peripheral-configuration-menu/PeripheralConfigurationMenu.tsx:87
 #: @prg-cube/theia-ext-dma-configuration/src/browser/components/dma-configuration-header-menu.tsx:52
 #: @prg-cube/theia-ext-pinout-configuration/src/browser/components/gpio-view/GpioConfiguration/GpioConfigurationMenu/GpioConfigurationMenu.tsx:53
-#. 界面位置：application-project → ConfigurationMenu，cube-domain-model-frontend-shared → ResetConfiguration，cube-frontend-commons，cube-peripherals → PeripheralConfigurationMenu
+#. 界面位置：application-project → ConfigurationMenu，cube-domain-model-frontend-shared → ResetConfigurationDialog，cube-domain-model-frontend-shared → ResetConfiguration，cube-frontend-commons
 #. 语境：{ key: 'reset-configuration', label: 'Reset configuration', onClick: onResetRequested, error: true,
-#. 共 6 处使用
+#. 共 7 处使用
 #, config-value, jsx-child
 msgid "Reset configuration"
 msgstr ""
@@ -1063,6 +1222,20 @@ msgstr ""
 msgid "Error"
 msgstr ""
 
+#: @prg-cube/application-project/src/browser/services/features/features-service.ts:458
+#. 界面位置：application-project → ApplicationProjectFeaturesServiceImpl
+#. 语境：console.log('[ApplicationProjectFeaturesService] Showing pack upgrade message'); try { const message = 'New versions of one or more component packs can be updat
+#, config-value
+msgid "New versions of one or more component packs can be updated."
+msgstr ""
+
+#: @prg-cube/application-project/src/browser/services/features/features-service.ts:459
+#. 界面位置：application-project → ApplicationProjectFeaturesServiceImpl
+#. 语境：try { const message = 'New versions of one or more component packs can be updated.'; const showDetailsAction = 'Show details'; const selected = await this.messa
+#, config-value
+msgid "Show details"
+msgstr ""
+
 #: @prg-cube/application-project/src/browser/widgets/application-project/application-project-widget.tsx:74
 #: @prg-cube/left-panel/src/browser/sidebar/features/project-manager/project-manager-component.tsx:65
 #. 界面位置：application-project → ApplicationProjectExtensionWidget，left-panel → ProjectManagerFeatureComponent
@@ -1137,6 +1310,421 @@ msgstr ""
 msgid "Cube: Save As"
 msgstr ""
 
+#: @prg-cube/application-project/src/common/errors.ts:16
+#. 界面位置：application-project → ERROR_LOADING_HW_SETTINGS
+#. 语境：export const ERROR_DURING_HW_PROJECT_CREATION = 'Error during hw project creation: '; export const ERROR_LOADING_HW_SETTINGS = 'Not able to recover hw project i
+#. 首尾空格有意义：该片段会与相邻内容拼接，翻译时请原样保留
+#, config-value, needs-review, keep-whitespace
+msgid "Not able to recover hw project information: "
+msgstr ""
+
+#: @prg-cube/application-project/src/common/errors.ts:22
+#. 界面位置：application-project → ERROR_NOT_ABLE_TO_OPEN_COMPOSER
+#. 语境：export const ERROR_DURING_PROJECT_REMOVAL = 'An error happened while removing the project: '; export const ERROR_NOT_ABLE_TO_OPEN_COMPOSER = 'Error: Not able to
+#, config-value
+msgid "Error: Not able to open sw project in composer"
+msgstr ""
+
+#: @prg-cube/application-project/src/common/errors.ts:24
+#. 界面位置：application-project → ERROR_NOT_ABLE_TO_CREATE_SW_PROJECT
+#. 语境：export const ERROR_NOT_ABLE_TO_OPEN_COMPOSER = 'Error: Not able to open sw project in composer'; export const ERROR_NOT_ABLE_TO_CREATE_SW_PROJECT = 'Error: Not 
+#, config-value
+msgid "Error: Not able to create sw project"
+msgstr ""
+
+#: @prg-cube/application-project/src/common/errors.ts:28
+#. 界面位置：application-project → ERROR_LOADING_PROJECT_SETTINGS
+#. 语境：export const ERROR_DURING_COMMAND_EXECUTION = 'Error during command execution.'; export const ERROR_LOADING_PROJECT_SETTINGS = 'Error during platform loading'; 
+#, config-value
+msgid "Error during platform loading"
+msgstr ""
+
+#: @prg-cube/application-project/src/common/errors.ts:30
+#. 界面位置：application-project → ERROR_INVALID_RECENT_PROJECT
+#. 语境：export const ERROR_LOADING_PROJECT_SETTINGS = 'Error during platform loading'; export const ERROR_INVALID_RECENT_PROJECT = 'Error : Application project not foun
+#. 首尾空格有意义：该片段会与相邻内容拼接，翻译时请原样保留
+#, config-value, needs-review, keep-whitespace
+msgid "Error : Application project not found with path : "
+msgstr ""
+
+#: @prg-cube/application-project/src/common/errors.ts:32
+#. 界面位置：application-project → NOT_ABLE_TO_OPEN_EXTENSION
+#. 语境：export const ERROR_INVALID_RECENT_PROJECT = 'Error : Application project not found with path : '; export const NOT_ABLE_TO_OPEN_EXTENSION = `Not able to open ex
+#, config-value
+msgid "Not able to open extension."
+msgstr ""
+
+#: @prg-cube/application-project/src/common/errors.ts:34
+#. 界面位置：application-project → NOT_ABLE_RELOAD_PROJECT_ERROR
+#. 语境：export const NOT_ABLE_TO_OPEN_EXTENSION = `Not able to open extension.`; export const NOT_ABLE_RELOAD_PROJECT_ERROR = 'Not able to reload project.'; export cons
+#, config-value
+msgid "Not able to reload project."
+msgstr ""
+
+#: @prg-cube/application-project/src/common/errors.ts:36
+#. 界面位置：application-project → NOT_ABLE_TO_SEARCH_PROJECT_IN_FOLDER
+#. 语境：export const NOT_ABLE_RELOAD_PROJECT_ERROR = 'Not able to reload project.'; export const NOT_ABLE_TO_SEARCH_PROJECT_IN_FOLDER = `Failed to search folder.`; expo
+#, config-value
+msgid "Failed to search folder."
+msgstr ""
+
+#: @prg-cube/application-project/src/common/errors.ts:39
+#. 界面位置：application-project → NOT_ABLE_TO_OPEN_APPLICATION_PROJECT
+#. 语境：export const NOT_ABLE_TO_OPEN_APPLICATION_PROJECT = 'Cannot open project : Incorrect path provided or an error happened.'; export const IOC2_NOT_COMPATIBLE =
+#, config-value
+msgid "Cannot open project : Incorrect path provided or an error happened."
+msgstr ""
+
+#: @prg-cube/application-project/src/common/errors.ts:42
+#. 界面位置：application-project → IOC2_NOT_COMPATIBLE
+#. 语境：export const IOC2_NOT_COMPATIBLE = 'Cannot open project : The ioc2 is not compatible with the current MX version. Please upgrade.'; export const MX2_VERSION_TOO
+#, config-value
+msgid "Cannot open project : The ioc2 is not compatible with the current MX version. Please upgrade."
+msgstr ""
+
+#: @prg-cube/application-project/src/common/errors.ts:44
+#. 界面位置：application-project → MX2_VERSION_TOO_OLD
+#. 语境：'Cannot open project : The ioc2 is not compatible with the current MX version. Please upgrade.'; export const MX2_VERSION_TOO_OLD = 'Warning: This project has b
+#, config-value
+msgid "Warning: This project has been saved with a newer version of MX2."
+msgstr ""
+
+#: @prg-cube/application-project/src/common/errors.ts:46
+#. 界面位置：application-project → IOC2_CORRUPTED
+#. 语境：export const MX2_VERSION_TOO_OLD = 'Warning: This project has been saved with a newer version of MX2.'; export const IOC2_CORRUPTED = 'Cannot open project : The
+#, config-value
+msgid "Cannot open project : The ioc2 file is corrupted."
+msgstr ""
+
+#: @prg-cube/application-project/src/common/errors.ts:51
+#. 界面位置：application-project → PROJECT_NAME_FORBIDDEN_INVISIBLE_CHARACTERS
+#. 语境：'Project name must not contain any of the following characters: \\ / : * ? " < > | + . $ ¤ £ µ % ! § , ; & ~ \' ( ) [ ] ` @ { } = ^ and space and must not be co
+#, config-value
+msgid "Project name must not contain any of invisible characters."
+msgstr ""
+
+#: @prg-cube/application-project/src/common/errors.ts:53
+#. 界面位置：application-project → NO_APP_PROJECT_FOUND
+#. 语境：export const PROJECT_NAME_FORBIDDEN_INVISIBLE_CHARACTERS = 'Project name must not contain any of invisible characters.'; export const NO_APP_PROJECT_FOUND = 'No
+#, config-value
+msgid "No Application project found"
+msgstr ""
+
+#: @prg-cube/application-project/src/common/errors.ts:55
+#. 界面位置：application-project → NO_HW_PROJECT_FOUND
+#. 语境：export const NO_APP_PROJECT_FOUND = 'No Application project found'; export const NO_HW_PROJECT_FOUND = 'No Hardware project found'; export const NO_SW_PROJECT_F
+#, config-value
+msgid "No Hardware project found"
+msgstr ""
+
+#: @prg-cube/application-project/src/common/errors.ts:57
+#: @prg-cube/cube-peripherals/src/browser/app/context.tsx:52
+#. 界面位置：application-project → NO_SW_PROJECT_FOUND，cube-peripherals → AppContextProvider
+#. 语境：export const NO_HW_PROJECT_FOUND = 'No Hardware project found'; export const NO_SW_PROJECT_FOUND = 'No software project found'; export const SW_PROJECT_CREATION
+#. 共 2 处使用
+#, config-value, jsx-prop
+msgid "No software project found"
+msgstr ""
+
+#: @prg-cube/application-project/src/common/errors.ts:59
+#. 界面位置：application-project → SW_PROJECT_CREATION_CANCELLED_BY_USER
+#. 语境：export const NO_SW_PROJECT_FOUND = 'No software project found'; export const SW_PROJECT_CREATION_CANCELLED_BY_USER = 'SW project creation canceled by user.'; ex
+#, config-value
+msgid "SW project creation canceled by user."
+msgstr ""
+
+#: @prg-cube/application-project/src/common/errors.ts:61
+#. 界面位置：application-project → NOT_ABLE_TO_CONVERT_TO_HW_PROJECT
+#. 语境：export const SW_PROJECT_CREATION_CANCELLED_BY_USER = 'SW project creation canceled by user.'; export const NOT_ABLE_TO_CONVERT_TO_HW_PROJECT = 'Not able to conv
+#, config-value
+msgid "Not able to convert generic project to hw project!"
+msgstr ""
+
+#: @prg-cube/application-project/src/common/errors.ts:64
+#. 界面位置：application-project → INCORRECT_FOLDER_SELECTED
+#. 语境：export const INCORRECT_FOLDER_SELECTED = 'Incorrect folder selected: Please select a folder located inside the application project'; export const SELECTED_FOLDE
+#, config-value
+msgid "Incorrect folder selected: Please select a folder located inside the application project"
+msgstr ""
+
+#: @prg-cube/application-project/src/common/errors.ts:67
+#. 界面位置：application-project → SELECTED_FOLDER_ALREADY_OCCUPIED
+#. 语境：export const SELECTED_FOLDER_ALREADY_OCCUPIED = 'Error: Selected folder is already occupied, please select a not existing or empty folder and try again.'; expor
+#, config-value
+msgid ""
+"Error: Selected folder is already occupied, please select a not existing or empty folder and try "
+"again."
+msgstr ""
+
+#: @prg-cube/application-project/src/common/errors.ts:69
+#. 界面位置：application-project → PROJECT_FOLDER_CREATION_ERROR
+#. 语境：'Error: Selected folder is already occupied, please select a not existing or empty folder and try again.'; export const PROJECT_FOLDER_CREATION_ERROR = 'Error: 
+#, config-value
+msgid "Error: Cannot create project folder at selected location."
+msgstr ""
+
+#: @prg-cube/application-project/src/common/errors.ts:74
+#. 界面位置：application-project → CANNOT_SELECT_MCU_QUICKFINDER
+#. 语境：export const CANNOT_SELECT_MCU_QUICKFINDER = 'MCU cannot be selected, object is missing required property. Please select another MCU.'; export const CANNOT_SELE
+#, config-value
+msgid "MCU cannot be selected, object is missing required property. Please select another MCU."
+msgstr ""
+
+#: @prg-cube/application-project/src/common/errors.ts:77
+#. 界面位置：application-project → CANNOT_SELECT_BOARD_QUICKFINDER
+#. 语境：export const CANNOT_SELECT_BOARD_QUICKFINDER = 'Board cannot be selected, object is missing required property. Please select another Board.'; export const MESSA
+#, config-value
+msgid "Board cannot be selected, object is missing required property. Please select another Board."
+msgstr ""
+
+#: @prg-cube/application-project/src/common/errors.ts:79
+#: @prg-cube/cube-package-manager/src/common/protocol.ts:316
+#: @prg-cube/getting-started-mx2/src/common/protocol.ts:13
+#. 界面位置：application-project → MESSAGE_SERVICE_ERROR，cube-package-manager → MESSAGE_SERVICE_ERROR，getting-started-mx2 → MESSAGE_SERVICE_ERROR
+#. 语境：'Board cannot be selected, object is missing required property. Please select another Board.'; export const MESSAGE_SERVICE_ERROR = 'Not able to display message
+#. 共 3 处使用
+#. 首尾空格有意义：该片段会与相邻内容拼接，翻译时请原样保留
+#, config-value, needs-review, keep-whitespace
+msgid "Not able to display message: "
+msgstr ""
+
+#: @prg-cube/application-project/src/common/errors.ts:81
+#. 界面位置：application-project → NOT_ABLE_TO_FIND_PROJECT
+#. 语境：export const MESSAGE_SERVICE_ERROR = 'Not able to display message: '; export const NOT_ABLE_TO_FIND_PROJECT = 'Cannot find project(s)'; export const SW_PROJECT_
+#, config-value
+msgid "Cannot find project(s)"
+msgstr ""
+
+#: @prg-cube/application-project/src/common/errors.ts:83
+#. 界面位置：application-project → SW_PROJECT_MIN_CHARACTER
+#. 语境：export const NOT_ABLE_TO_FIND_PROJECT = 'Cannot find project(s)'; export const SW_PROJECT_MIN_CHARACTER = 'Software project name should contain at least 1 chara
+#, config-value
+msgid "Software project name should contain at least 1 character"
+msgstr ""
+
+#: @prg-cube/application-project/src/common/errors.ts:85
+#. 界面位置：application-project → APPLICATION_PROJECT_MIN_CHARACTER
+#. 语境：export const SW_PROJECT_MIN_CHARACTER = 'Software project name should contain at least 1 character'; export const APPLICATION_PROJECT_MIN_CHARACTER = 'Project n
+#, config-value
+msgid "Project name should contain at least 1 character"
+msgstr ""
+
+#: @prg-cube/application-project/src/common/errors.ts:89
+#. 界面位置：application-project → ERROR_NO_DRIVER_PACK_AVAILABLE
+#. 语境：export const ERROR_DURING_SW_PROJECT_CREATION = 'Error during SW project creation'; export const ERROR_NO_DRIVER_PACK_AVAILABLE = 'No driver pack is available';
+#, config-value
+msgid "No driver pack is available"
+msgstr ""
+
+#: @prg-cube/application-project/src/common/errors.ts:91
+#. 界面位置：application-project → ERROR_COULD_NOT_READ_ID_FROM_PROJECT
+#. 语境：export const ERROR_NO_DRIVER_PACK_AVAILABLE = 'No driver pack is available'; export const ERROR_COULD_NOT_READ_ID_FROM_PROJECT = 'Could not read Id from project
+#, config-value
+msgid "Could not read Id from project"
+msgstr ""
+
+#: @prg-cube/application-project/src/common/errors.ts:93
+#. 界面位置：application-project → ERROR_COULD_NOT_FIND_APPLICATION_PROJECT
+#. 语境：export const ERROR_COULD_NOT_READ_ID_FROM_PROJECT = 'Could not read Id from project'; export const ERROR_COULD_NOT_FIND_APPLICATION_PROJECT = 'Could not find ap
+#, config-value
+msgid "Could not find application project"
+msgstr ""
+
+#: @prg-cube/application-project/src/common/errors.ts:95
+#. 界面位置：application-project → ERROR_COULD_NOT_SOLVE_DEPENDENCIES
+#. 语境：export const ERROR_COULD_NOT_FIND_APPLICATION_PROJECT = 'Could not find application project'; export const ERROR_COULD_NOT_SOLVE_DEPENDENCIES = 'Could not solve
+#, config-value
+msgid "Could not solve sw project dependencies"
+msgstr ""
+
+#: @prg-cube/application-project/src/common/errors.ts:97
+#. 界面位置：application-project → ERROR_COULD_NOT_DELETE_LAST_SW
+#. 语境：export const ERROR_COULD_NOT_SOLVE_DEPENDENCIES = 'Could not solve sw project dependencies'; export const ERROR_COULD_NOT_DELETE_LAST_SW = 'Not possible to dele
+#, config-value
+msgid "Not possible to delete the last SW project in an application project"
+msgstr ""
+
+#: @prg-cube/application-project/src/common/errors.ts:99
+#. 界面位置：application-project → ERROR_SW_PROJECT_DELETION_FILE_REMAINING
+#. 语境：export const ERROR_COULD_NOT_DELETE_LAST_SW = 'Not possible to delete the last SW project in an application project'; export const ERROR_SW_PROJECT_DELETION_FIL
+#, config-value
+msgid "Some files could not be deleted while deleting SW Project"
+msgstr ""
+
+#: @prg-cube/application-project/src/common/errors.ts:102
+#. 界面位置：application-project → INSTALLATION_OF_MISSING_PACKS_REQUIRED
+#. 语境：export const INSTALLATION_OF_MISSING_PACKS_REQUIRED = 'Error: Installation of missing packs is required to open the project.'; export const ERROR_WHILE_INSTALLI
+#, config-value
+msgid "Error: Installation of missing packs is required to open the project."
+msgstr ""
+
+#: @prg-cube/application-project/src/common/errors.ts:104
+#. 界面位置：application-project → ERROR_WHILE_INSTALLING_PACKS
+#. 语境：'Error: Installation of missing packs is required to open the project.'; export const ERROR_WHILE_INSTALLING_PACKS = 'Error while installing packs.'; export con
+#, config-value
+msgid "Error while installing packs."
+msgstr ""
+
+#: @prg-cube/application-project/src/common/errors.ts:107
+#. 界面位置：application-project → FAILED_TO_INSTALL_PACKS_CANNOT_LOCATE_CMSIS_PACK_ROOT
+#. 语境：export const FAILED_TO_INSTALL_PACKS_CANNOT_LOCATE_CMSIS_PACK_ROOT = 'Failed to install missing packs, cannot locate CMSIS_PACK_ROOT'; export const ERROR_PACK_N
+#, config-value
+msgid "Failed to install missing packs, cannot locate CMSIS_PACK_ROOT"
+msgstr ""
+
+#: @prg-cube/application-project/src/common/errors.ts:109
+#. 界面位置：application-project → ERROR_PACK_NOT_IN_PROJECT
+#. 语境：'Failed to install missing packs, cannot locate CMSIS_PACK_ROOT'; export const ERROR_PACK_NOT_IN_PROJECT = 'The pack is not in the project'; export const ERROR_
+#, config-value
+msgid "The pack is not in the project"
+msgstr ""
+
+#: @prg-cube/application-project/src/common/errors.ts:111
+#. 界面位置：application-project → ERROR_PACK_NOT_FOUND
+#. 语境：export const ERROR_PACK_NOT_IN_PROJECT = 'The pack is not in the project'; export const ERROR_PACK_NOT_FOUND = `Pack not found by the cmsis scanner.`; export co
+#, config-value
+msgid "Pack not found by the cmsis scanner."
+msgstr ""
+
+#: @prg-cube/application-project/src/common/errors.ts:113
+#. 界面位置：application-project → ERROR_PACK_VERSION_NOT_COMPATIBLE
+#. 语境：export const ERROR_PACK_NOT_FOUND = `Pack not found by the cmsis scanner.`; export const ERROR_PACK_VERSION_NOT_COMPATIBLE = 'The pack version is not compatible
+#, config-value
+msgid "The pack version is not compatible with the project."
+msgstr ""
+
+#: @prg-cube/application-project/src/common/errors.ts:115
+#. 界面位置：application-project → ERROR_PACK_VERSION_NOT_AVAILABLE
+#. 语境：export const ERROR_PACK_VERSION_NOT_COMPATIBLE = 'The pack version is not compatible with the project.'; export const ERROR_PACK_VERSION_NOT_AVAILABLE = 'Reques
+#, config-value
+msgid "Requested pack version is not available."
+msgstr ""
+
+#: @prg-cube/application-project/src/common/errors.ts:117
+#. 界面位置：application-project → ERROR_PACK_UPDATE_DOWNGRADE_REASON
+#. 语境：export const ERROR_PACK_VERSION_NOT_AVAILABLE = 'Requested pack version is not available.'; export const ERROR_PACK_UPDATE_DOWNGRADE_REASON = 'Older version not
+#, config-value
+msgid "Older version not allowed."
+msgstr ""
+
+#: @prg-cube/application-project/src/common/errors.ts:126
+#. 界面位置：application-project → ERROR_PACK_UPDATE_MAJOR_MISMATCH_REASON
+#. 语境：}, and downgrading to an older version is not allowed.`; export const ERROR_PACK_UPDATE_MAJOR_MISMATCH_REASON = 'Different Major version is not allowed.'; expor
+#, config-value
+msgid "Different Major version is not allowed."
+msgstr ""
+
+#: @prg-cube/application-project/src/common/errors.ts:136
+#. 界面位置：application-project → ERROR_PACK_UPDATE_DEPENDENCY_CONSTRAINTS
+#. 语境：export const ERROR_PACK_UPDATE_DEPENDENCY_CONSTRAINTS = 'The requested pack version does not satisfy existing dependency constraints.'; export const ERROR_PACK_
+#, config-value
+msgid "The requested pack version does not satisfy existing dependency constraints."
+msgstr ""
+
+#: @prg-cube/application-project/src/common/errors.ts:144
+#. 界面位置：application-project → ERROR_PACK_UPDATE_MX2_INCOMPATIBLE_DETAILS
+#. 语境：export const ERROR_PACK_UPDATE_MX2_INCOMPATIBLE_DETAILS = 'Please choose a compatible version. Use the command `cube mx pack-manager list-packs` to dump the ver
+#, config-value
+msgid ""
+"Please choose a compatible version. Use the command `cube mx pack-manager list-packs` to dump the "
+"versions available with their compatibility status."
+msgstr ""
+
+#: @prg-cube/application-project/src/common/errors.ts:147
+#. 界面位置：application-project → ERROR_PACK_UPDATE_MX2_COMPATIBILITY_CHECK_FAILED
+#. 语境：export const ERROR_PACK_UPDATE_MX2_COMPATIBILITY_CHECK_FAILED = 'Failed to verify MX2 compatibility for the requested pack version.'; export const ERROR_PACK_ID
+#, config-value
+msgid "Failed to verify MX2 compatibility for the requested pack version."
+msgstr ""
+
+#: @prg-cube/application-project/src/common/errors.ts:149
+#. 界面位置：application-project → ERROR_PACK_ID_NOT_WELL_FORMATTED
+#. 语境：'Failed to verify MX2 compatibility for the requested pack version.'; export const ERROR_PACK_ID_NOT_WELL_FORMATTED = 'The pack identifier is not well formatted
+#, config-value
+msgid "The pack identifier is not well formatted."
+msgstr ""
+
+#: @prg-cube/application-project/src/common/errors.ts:154
+#. 界面位置：application-project → CANNOT_CONVERT_INPUT_PACK_TO_PACKID
+#. 语境：'An eror happened during the opening of the file selection service, please retry.'; export const CANNOT_CONVERT_INPUT_PACK_TO_PACKID = 'Warning: Cannot convert 
+#. 首尾空格有意义：该片段会与相邻内容拼接，翻译时请原样保留
+#, config-value, needs-review, keep-whitespace
+msgid "Warning: Cannot convert input pack to packId: "
+msgstr ""
+
+#: @prg-cube/application-project/src/common/errors.ts:156
+#. 界面位置：application-project → CANNOT_RESOLVE_PROJECT_STATE
+#. 语境：export const CANNOT_CONVERT_INPUT_PACK_TO_PACKID = 'Warning: Cannot convert input pack to packId: '; export const CANNOT_RESOLVE_PROJECT_STATE = 'Error: Cannot 
+#. 首尾空格有意义：该片段会与相邻内容拼接，翻译时请原样保留
+#, config-value, needs-review, keep-whitespace
+msgid "Error: Cannot resolve application project state, project path: "
+msgstr ""
+
+#: @prg-cube/application-project/src/common/errors.ts:158
+#. 界面位置：application-project → CANNOT_LINK_SOFTWARE_TO_APPLICATION
+#. 语境：export const CANNOT_RESOLVE_PROJECT_STATE = 'Error: Cannot resolve application project state, project path: '; export const CANNOT_LINK_SOFTWARE_TO_APPLICATION 
+#, config-value
+msgid "Cannot link software project to application project"
+msgstr ""
+
+#: @prg-cube/application-project/src/common/errors.ts:160
+#. 界面位置：application-project → CANNOT_LOAD_PROJECT
+#. 语境：export const CANNOT_LINK_SOFTWARE_TO_APPLICATION = 'Cannot link software project to application project'; export const CANNOT_LOAD_PROJECT = 'Error: Specified p
+#, config-value
+msgid "Error: Specified project cannot be loaded."
+msgstr ""
+
+#: @prg-cube/application-project/src/common/errors.ts:163
+#. 界面位置：application-project → WARN_PACK_VERSION_NOT_SPECIFIED
+#. 语境：export const WARN_PACK_VERSION_NOT_SPECIFIED = 'Version not specified in the csolution. Already using latest (implicitly). Skipping upgrade.'; export const ERRO
+#, config-value
+msgid "Version not specified in the csolution. Already using latest (implicitly). Skipping upgrade."
+msgstr ""
+
+#: @prg-cube/application-project/src/common/errors.ts:171
+#. 界面位置：application-project → ERROR_CANNOT_CONVERT_PACK_IDENTIFIER
+#. 语境：`The pack ${vendor}::${name} version ${version} is already installed. No update needed.`; export const ERROR_CANNOT_CONVERT_PACK_IDENTIFIER = 'Cannot convert al
+#, config-value
+msgid "Cannot convert alternative to PackID."
+msgstr ""
+
+#: @prg-cube/application-project/src/common/notification.ts:9
+#: @prg-cube/application-project/src/common/success.ts:11
+#. 界面位置：application-project → PROJECT_SAVED_SUCCESSFULLY
+#. 语境：// unauthorized manner without written consent. // ***************************************************************************** export const PROJECT_SAVED_SUCC
+#. 共 2 处使用
+#, config-value
+msgid "The project was saved successfully !"
+msgstr ""
+
+#: @prg-cube/application-project/src/common/notification.ts:11
+#. 界面位置：application-project → NOTIFY_SW_PROJECT_REMOVAL
+#. 语境：export const PROJECT_SAVED_SUCCESSFULLY = 'The project was saved successfully !'; export const NOTIFY_SW_PROJECT_REMOVAL = 'Are you sure you want to delete this
+#, config-value
+msgid "Are you sure you want to delete this SW project?"
+msgstr ""
+
+#: @prg-cube/application-project/src/common/notification.ts:13
+#. 界面位置：application-project → NOTIFY_HW_PROJECT_REMOVAL
+#. 语境：export const NOTIFY_SW_PROJECT_REMOVAL = 'Are you sure you want to delete this SW project?'; export const NOTIFY_HW_PROJECT_REMOVAL = 'You are about to remove t
+#, config-value
+msgid "You are about to remove the hardware project from this application project."
+msgstr ""
+
+#: @prg-cube/application-project/src/common/notification.ts:19
+#. 界面位置：application-project → FEATURE_UNDER_DEVELOPMENT
+#. 语境：export const CANCEL_PROJECT_REMOVAL = 'Cancel'; export const FEATURE_UNDER_DEVELOPMENT = 'This feature is currently under development'; export const PRODUCT_SEL
+#, config-value
+msgid "This feature is currently under development"
+msgstr ""
+
+#: @prg-cube/application-project/src/common/notification.ts:23
+#. 界面位置：application-project → PROJECT_IS_LOADING
+#. 语境：export const PRODUCT_SELECTOR_LOADING = 'Please wait, product selector is loading...'; export const PROJECT_IS_LOADING = 'Project opening is ongoing, please wai
+#, config-value
+msgid "Project opening is ongoing, please wait..."
+msgstr ""
+
 #: @prg-cube/application-project/src/common/preferences.ts:17
 #. 界面位置：application-project → CUBE_APPLICATION_PROJECT_PREFERENCES_SCHEMA
 #. 语境：properties: { [DEFAULT_PROJECT_PATH]: { description: 'Specifies the directory where new projects are created & saved', type: 'string', scope: PreferenceScope.Us
@@ -1149,6 +1737,20 @@ msgstr ""
 #. 语境：}, [DEFAULT_OPEN_PROJECT_PATH]: { description: 'Specifies the default directory used when opening existing project from the filesystem', type: 'string', scope: 
 #, config-value
 msgid "Specifies the default directory used when opening existing project from the filesystem"
+msgstr ""
+
+#: @prg-cube/application-project/src/common/success.ts:9
+#. 界面位置：application-project → APPLICATION_PROJECT_LOADED_SUCCESSFULLY
+#. 语境：// unauthorized manner without written consent. // ***************************************************************************** export const APPLICATION_PROJEC
+#, config-value
+msgid "Application Project loaded successfully!"
+msgstr ""
+
+#: @prg-cube/application-project/src/common/success.ts:13
+#. 界面位置：application-project → PROJECT_DELETED_SUCCESSFULLY
+#. 语境：export const PROJECT_SAVED_SUCCESSFULLY = 'The project was saved successfully !'; export const PROJECT_DELETED_SUCCESSFULLY = 'The project was deleted successfu
+#, config-value
+msgid "The project was deleted successfully !"
 msgstr ""
 
 #: @prg-cube/application-project-commons/src/commands.ts:55
@@ -1233,6 +1835,70 @@ msgstr ""
 #. 语境：export const OPEN_GLOBAL_SERVICE_CONFIGURATION_COMMAND_ID: Command = { id: 'Cube:open-global-service-configuration', label: 'Cube: Open global service', };
 #, config-value
 msgid "Cube: Open global service"
+msgstr ""
+
+#: @prg-cube/application-project-commons/src/constants.ts:18
+#. 界面位置：application-project-commons → OPEN_PROJECT_FROM_IOC2_FILE
+#. 语境：export const WINDOWS_SEPARATOR = '\\'; export const PROJECT_TYPE_APPLICATION = 'APPLICATION'; export const OPEN_PROJECT_FROM_IOC2_FILE = 'Open Application proje
+#, config-value
+msgid "Open Application project from ioc2 file"
+msgstr ""
+
+#: @prg-cube/application-project-commons/src/constants.ts:19
+#. 界面位置：application-project-commons → SELECT_FOLDER_LOCATION
+#. 语境：export const PROJECT_TYPE_APPLICATION = 'APPLICATION'; export const OPEN_PROJECT_FROM_IOC2_FILE = 'Open Application project from ioc2 file'; export const SELECT
+#, config-value
+msgid "Select project folder location"
+msgstr ""
+
+#: @prg-cube/application-project-commons/src/constants.ts:20
+#. 界面位置：application-project-commons → SELECT_SUB_FOLDER_LOCATION
+#. 语境：export const OPEN_PROJECT_FROM_IOC2_FILE = 'Open Application project from ioc2 file'; export const SELECT_FOLDER_LOCATION = 'Select project folder location'; ex
+#, config-value
+msgid "Select project sub-folder location (must be located inside the project)"
+msgstr ""
+
+#: @prg-cube/clock-tree-glsp/src/features/notification/theia-glsp-message-service.ts:114
+#: @prg-cube/clock-tree-glsp/src/features/notification/theia-glsp-message-service.ts:229
+#. 界面位置：clock-tree-glsp → TheiaGLSPMessageService
+#. 语境：if (result === TheiaGLSPMessageService.YES_BUTTON) { progress = await this.messageService.showProgress({ text: `Searching solution, Please wait ...`, }); logger
+#. 共 2 处使用
+#, config-value
+msgid "Searching solution, Please wait ..."
+msgstr ""
+
+#: @prg-cube/clock-tree-glsp/src/features/notification/theia-glsp-message-service.ts:153
+#: @prg-cube/clock-tree-glsp/src/features/notification/theia-glsp-message-service.ts:197
+#. 界面位置：clock-tree-glsp → TheiaGLSPMessageService
+#. 语境：if (result === TheiaGLSPMessageService.YES_UNLOCK) { progress = await this.messageService.showProgress({ text: `Unlocking, Please wait ...`, }); for (const lock
+#. 共 2 处使用
+#, config-value
+msgid "Unlocking, Please wait ..."
+msgstr ""
+
+#: @prg-cube/clock-tree-glsp/src/features/notification/theia-glsp-message-service.ts:365
+#: @prg-cube/clock-tree-glsp-protocol/src/utilities.ts:14
+#: @prg-cube/clock-tree-glsp-protocol/src/utilities.ts:164
+#: @prg-cube/clock-tree-glsp-protocol/src/utilities.ts:167
+#. 界面位置：clock-tree-glsp → frequencyconverter，clock-tree-glsp-protocol → displayFrequency，clock-tree-glsp-protocol → createMarkerMessage，clock-tree-glsp-protocol → MHzUnit
+#. 语境：/** Unit default to MHz */ const unit = { text: 'MHz', factor: '1/1000000', };
+#. 共 4 处使用
+#, config-value
+msgid "MHz"
+msgstr ""
+
+#: @prg-cube/clock-tree-glsp/src/view/button-views.tsx:148
+#. 界面位置：clock-tree-glsp → CssToggleButtonView
+#. 语境：const cssToggleArg = button.args && button.args['cssToggle']; const cssEnabled = cssToggleArg && cssToggleArg === 'cssEnabled'; const label = cssEnabled ? 'CSS 
+#, config-value
+msgid "CSS Enabled"
+msgstr ""
+
+#: @prg-cube/clock-tree-glsp/src/view/button-views.tsx:148
+#. 界面位置：clock-tree-glsp → CssToggleButtonView
+#. 语境：const cssToggleArg = button.args && button.args['cssToggle']; const cssEnabled = cssToggleArg && cssToggleArg === 'cssEnabled'; const label = cssEnabled ? 'CSS 
+#, config-value
+msgid "Enable CSS"
 msgstr ""
 
 #: @prg-cube/clock-tree-glsp-protocol/src/clock-tree-language.ts:14
@@ -1507,6 +2173,24 @@ msgstr ""
 msgid "Center selected component"
 msgstr ""
 
+#: @prg-cube/clock-tree-theia/src/browser/graph/viewbar/clock-viewbar.tsx:304
+#: @prg-cube/theia-ext-pinout-configuration/src/browser/components/package-view/ViewBar/ViewBar.tsx:284
+#. 界面位置：clock-tree-theia → ViewBar，theia-ext-pinout-configuration → ViewBar
+#. 语境：toolMenuOptions={{ showDivider: false, lockedLabel: 'Toolbar always visible', collapsibleLabel: 'Toolbar collapses after a short delay', selectedItem: menuStatu
+#. 共 2 处使用
+#, config-value
+msgid "Toolbar always visible"
+msgstr ""
+
+#: @prg-cube/clock-tree-theia/src/browser/graph/viewbar/clock-viewbar.tsx:305
+#: @prg-cube/theia-ext-pinout-configuration/src/browser/components/package-view/ViewBar/ViewBar.tsx:285
+#. 界面位置：clock-tree-theia → ViewBar，theia-ext-pinout-configuration → ViewBar
+#. 语境：showDivider: false, lockedLabel: 'Toolbar always visible', collapsibleLabel: 'Toolbar collapses after a short delay', selectedItem: menuStatus, onSelectedItem: 
+#. 共 2 处使用
+#, config-value
+msgid "Toolbar collapses after a short delay"
+msgstr ""
+
 #: @prg-cube/clock-tree-theia/src/browser/panel/clock-commands.ts:20
 #. 界面位置：clock-tree-theia → ClockPanelOpenCommand
 #. 语境：export const ClockPanelOpenCommand: Command = { id: 'com.st.cube.clock', label: 'Cube: Clock tree', }; /**
@@ -1631,11 +2315,35 @@ msgstr ""
 msgid "Search configurations, settings..."
 msgstr ""
 
+#: @prg-cube/clock-tree-theia/src/browser/panel/clock-toolbar.tsx:250
+#: @prg-cube/cube-domain-model-frontend-shared/src/browser/shared-components/panel-tools.tsx:93
+#: libs/features/exti/ext/exti-configuration/src/browser/components/exti-toolbar.tsx:41
+#: @prg-cube/getting-started-mx2/src/browser/components/project/recent-project-card-actions/recent-project-card-actions.tsx:64
+#: @prg-cube/theia-ext-pinout-configuration/src/browser/components/common/SignalsSelector/SignalsSelector.tsx:189
+#: @prg-cube/theia-ext-pinout-configuration/src/browser/components/common/UserLabelsEditor/UserLabelsEditor.tsx:155
+#: @prg-cube/ui-core/src/components/DataGrid/filter/iconDropdown.tsx:48
+#: @prg-cube/ui-core/src/components/DataGrid/filter/inputFloat.tsx:43
+#. 界面位置：clock-tree-theia → ClockToolbar，cube-domain-model-frontend-shared → PanelTools，exti-configuration → ExtiToolbar，getting-started-mx2 → RecentProjectCardActions
+#. 语境：onChange: onSearch, clear: true, clearText: 'Clear', value: searchText,
+#. 共 19 处使用
+#, config-value, jsx-prop, jsx-child
+msgid "Clear"
+msgstr ""
+
 #: @prg-cube/clock-tree-theia/src/browser/panel/clock-toolbar.tsx:278
 #. 界面位置：clock-tree-theia → ClockToolbar
 #. 语境：variant="contained" > Reset clock </Button> {isOpen && (
 #, jsx-child
 msgid "Reset clock"
+msgstr ""
+
+#: @prg-cube/clock-tree-theia/src/browser/panel/clock-toolbar.tsx:322
+#: @prg-cube/theia-ext-pinout-configuration/src/browser/components/Toolbar/PinoutToolbar.tsx:732
+#. 界面位置：clock-tree-theia → ClockToolbar，theia-ext-pinout-configuration → PinoutToolbar
+#. 语境：} ongoingButtonOptions={{ content: 'Clear selection(s)', startIconName: 'close-line', onClick: handleClearSelections,
+#. 共 2 处使用
+#, config-value
+msgid "Clear selection(s)"
 msgstr ""
 
 #: @prg-cube/clock-tree-theia/src/browser/panel/clock-tree-context-menu-contribution.ts:230
@@ -1678,6 +2386,13 @@ msgstr ""
 #. 语境：protected readonly messageService: MessageService; static readonly ID = 'clock:tree:panel'; static readonly LABEL = 'Clock Configuration'; private loadingSpinne
 #, config-value
 msgid "Clock Configuration"
+msgstr ""
+
+#: @prg-cube/clock-tree-theia/src/browser/panel/clock-tree-graph-panel.ts:770
+#. 界面位置：clock-tree-theia → ClockTreePanel
+#. 语境：if (result && this.hasDisabledMuxInput(result)) { const detail = 'No valid input found to replace disabled multiplexor source'; void this.messageService.error( 
+#, config-value
+msgid "No valid input found to replace disabled multiplexor source"
 msgstr ""
 
 #: @prg-cube/clock-tree-theia/src/browser/panel/clock-viewbar-widget.tsx:47
@@ -2001,6 +2716,13 @@ msgstr "必须是数组"
 msgid "Add Build Target: Compiler"
 msgstr ""
 
+#: libs/features/core/ext/core-project-export/src/browser/commands/add-build-target.ts:65
+#. 界面位置：core-project-export → addBuildTarget
+#. 语境：if (typeof selectedBuildTargetName !== 'undefined' && typeof selectedCompiler !== 'undefined') { if (!validBuildTargetName(selectedBuildTargetName)) { const err
+#, config-value
+msgid "Failed to create build target, invalid target name"
+msgstr ""
+
 #: libs/features/core/ext/core-project-export/src/browser/export-ui/project-export/dialogs/export-dialogs.tsx:66
 #. 界面位置：core-project-export → GENERATION_WARNING_DIALOG
 #. 语境：const GENERATION_WARNING_DIALOG: DialogProps = { title: 'IDE Code generation', content: ( <DialogContent
@@ -2309,6 +3031,13 @@ msgstr ""
 #. 共 2 处使用
 #, jsx-child, config-value
 msgid "Pack"
+msgstr ""
+
+#: libs/features/core/ext/core-project-export/src/browser/export-ui/project-export/fields/custom-pack-directories.tsx:50
+#. 界面位置：core-project-export → CustomPackDirectories
+#. 语境：/* Render configured items */ customPackPathsToDisplay?.map((customPackPath, i) => { const halfConfiguredPackError = !PackInstallPath.isComplete(customPackPath)
+#, config-value
+msgid "Pack requires a directory path"
 msgstr ""
 
 #: libs/features/core/ext/core-project-export/src/browser/export-ui/project-export/fields/default-pack-directory.tsx:38
@@ -2636,6 +3365,15 @@ msgstr "代码预览"
 msgid "Deleted line"
 msgstr ""
 
+#: @prg-cube/cube-code-preview/src/browser/components/code-preview.tsx:255
+#: @prg-cube/cube-code-preview/src/browser/components/code-preview.tsx:268
+#. 界面位置：cube-code-preview → CodePreviewComponent
+#. 语境：variant="description_medium" color="text_secondary" highlightedText="t" highlightedTextColor="text_brand_dark" align="left"
+#. 共 2 处使用
+#, jsx-prop
+msgid "t"
+msgstr ""
+
 #: @prg-cube/cube-code-preview/src/browser/components/code-preview.tsx:259
 #. 界面位置：cube-code-preview → CodePreviewComponent
 #. 语境：align="left" > Deleted </Typography> </span>
@@ -2700,6 +3438,13 @@ msgstr ""
 #. 共 3 处使用
 #, jsx-child
 msgid "Refresh"
+msgstr ""
+
+#: @prg-cube/cube-code-preview/src/browser/components/ErrorView.tsx:18
+#. 界面位置：cube-code-preview → FIRST_LINE
+#. 语境：} export const FIRST_LINE = 'Failed to load the code preview'; export const SECOND_LINE = 'we encountred an unexpected issue while loading the code preview'; //
+#, config-value
+msgid "Failed to load the code preview"
 msgstr ""
 
 #: @prg-cube/cube-code-preview/src/browser/components/ErrorView.tsx:68
@@ -2819,6 +3564,49 @@ msgstr ""
 msgid "Show"
 msgstr ""
 
+#: @prg-cube/cube-domain-model-frontend-shared/src/browser/shared-components/reset-configuration-dialog.tsx:62
+#: @prg-cube/cube-frontend-commons/src/browser/domains/config-page/hooks/useConfirmAction.ts:17
+#. 界面位置：cube-domain-model-frontend-shared → ResetConfigurationDialog，cube-frontend-commons
+#. 语境：const header = type === 'reset' ? 'Reset to default settings' : 'Your current configuration will be lost'; const description1 =
+#. 共 2 处使用
+#, config-value
+msgid "Reset to default settings"
+msgstr ""
+
+#: @prg-cube/cube-domain-model-frontend-shared/src/browser/shared-components/reset-configuration-dialog.tsx:63
+#: @prg-cube/cube-frontend-commons/src/browser/domains/config-page/hooks/useConfirmAction.ts:27
+#: @prg-cube/cube-frontend-commons/src/browser/domains/config-page/hooks/useConfirmAction.ts:34
+#: @prg-cube/theia-ext-dma-configuration/src/browser/components/move-to-menu.tsx:563
+#. 界面位置：cube-domain-model-frontend-shared → ResetConfigurationDialog，cube-frontend-commons，theia-ext-dma-configuration → MoveToMenu
+#. 语境：type === 'reset' ? 'Reset to default settings' : 'Your current configuration will be lost'; const description1 = type === 'reset'
+#. 共 4 处使用
+#, config-value, jsx-child
+msgid "Your current configuration will be lost"
+msgstr ""
+
+#: @prg-cube/cube-domain-model-frontend-shared/src/browser/shared-components/reset-configuration-dialog.tsx:66
+#. 界面位置：cube-domain-model-frontend-shared → ResetConfigurationDialog
+#. 语境：const description1 = type === 'reset' ? 'This will restore all settings to their default values.' : 'In case of re-activation, all settings will be set to their
+#, config-value
+msgid "This will restore all settings to their default values."
+msgstr ""
+
+#: @prg-cube/cube-domain-model-frontend-shared/src/browser/shared-components/reset-configuration-dialog.tsx:67
+#: @prg-cube/theia-ext-dma-configuration/src/browser/components/move-to-menu.tsx:567
+#. 界面位置：cube-domain-model-frontend-shared → ResetConfigurationDialog，theia-ext-dma-configuration → MoveToMenu
+#. 语境：type === 'reset' ? 'This will restore all settings to their default values.' : 'In case of re-activation, all settings will be set to their default values.'; co
+#. 共 2 处使用
+#, config-value, jsx-child
+msgid "In case of re-activation, all settings will be set to their default values."
+msgstr "重新激活时，所有设置将恢复为默认值。"
+
+#: @prg-cube/cube-domain-model-frontend-shared/src/browser/shared-components/reset-configuration-dialog.tsx:70
+#. 界面位置：cube-domain-model-frontend-shared → ResetConfigurationDialog
+#. 语境：const description2 = type === 'reset' ? 'Your current configuration will be lost.' : undefined; const message =
+#, config-value
+msgid "Your current configuration will be lost."
+msgstr ""
+
 #: @prg-cube/cube-frontend-commons/src/browser/domains/config-page/components/main-toolbar/components/DocumentationButton.tsx:39
 #: @prg-cube/theia-ext-pinout-configuration/src/browser/components/common/buttons/OpenDocumentationButton.tsx:26
 #. 界面位置：cube-frontend-commons → DocumentationButton，theia-ext-pinout-configuration → OpenDocumentationButton
@@ -2827,23 +3615,6 @@ msgstr ""
 #, jsx-child
 msgid "Open STM32 documentation"
 msgstr "打开 STM32 文档"
-
-#: @prg-cube/cube-frontend-commons/src/browser/domains/config-page/hooks/useConfirmAction.ts:17
-#. 界面位置：cube-frontend-commons
-#. 语境：reset: { title: 'Reset configuration', header: 'Reset to default settings', message: [ 'This will restore all settings to their default values.',
-#, config-value
-msgid "Reset to default settings"
-msgstr ""
-
-#: @prg-cube/cube-frontend-commons/src/browser/domains/config-page/hooks/useConfirmAction.ts:27
-#: @prg-cube/cube-frontend-commons/src/browser/domains/config-page/hooks/useConfirmAction.ts:34
-#: @prg-cube/theia-ext-dma-configuration/src/browser/components/move-to-menu.tsx:563
-#. 界面位置：cube-frontend-commons，theia-ext-dma-configuration → MoveToMenu
-#. 语境：disable: { title: 'Deactivate', header: 'Your current configuration will be lost', message: ['In case of re-activation, all settings will be set to their defaul
-#. 共 3 处使用
-#, config-value, jsx-child
-msgid "Your current configuration will be lost"
-msgstr ""
 
 #: @prg-cube/cube-frontend-commons/src/browser/domains/config-page/hooks/useConfirmAction.ts:33
 #. 界面位置：cube-frontend-commons
@@ -2960,6 +3731,22 @@ msgstr ""
 #, config-value, jsx-child
 msgid "STM32CubeMX2"
 msgstr "STM32CubeMX2"
+
+#: @prg-cube/cube-menu/src/browser/utils/constants.ts:21
+#: @prg-cube/getting-started-mx2/src/browser/config/constants.ts:13
+#. 界面位置：cube-menu → NO_VERSION_FOUND，getting-started-mx2 → NO_VERSION_FOUND
+#. 语境：// Fallback URL for STM32CubeMX2 online documentation when not provided via configuration. export const STM32CUBEMX2_DOCUMENTATION_FALLBACK_URL = 'https://qa-de
+#. 共 2 处使用
+#, config-value
+msgid "No version found"
+msgstr ""
+
+#: @prg-cube/cube-menu/src/browser/utils/constants.ts:22
+#. 界面位置：cube-menu → NO_RELEASE_DATE_FOUND
+#. 语境：export const STM32CUBEMX2_DOCUMENTATION_FALLBACK_URL = 'https://qa-dev.st.com/stm32cube-docs/STM32CubeMX2/0.8.0/index.html'; export const NO_VERSION_FOUND = 'No
+#, config-value
+msgid "No release date found"
+msgstr ""
 
 #: @prg-cube/cube-menu/src/browser/utils/menus.ts:77
 #. 界面位置：cube-menu → MENU_ACTIONS
@@ -3215,6 +4002,20 @@ msgstr ""
 msgid "Add utilities..."
 msgstr ""
 
+#: @prg-cube/cube-middleware-utilities/src/browser/components/middleware-utilities-selection-dialog.tsx:81
+#. 界面位置：cube-middleware-utilities → MiddlewareUtilitiesSelectionDialog
+#. 语境：const title = isMiddleware ? 'Middleware' : 'Utility'; const emptyMessage = isMiddleware ? 'No middleware found' : 'No utility found'; const defaultColumnFields
+#, config-value
+msgid "No middleware found"
+msgstr ""
+
+#: @prg-cube/cube-middleware-utilities/src/browser/components/middleware-utilities-selection-dialog.tsx:82
+#. 界面位置：cube-middleware-utilities → MiddlewareUtilitiesSelectionDialog
+#. 语境：const emptyMessage = isMiddleware ? 'No middleware found' : 'No utility found'; const defaultColumnFields = isMiddleware ? ['middleware.name', 'middleware.categ
+#, config-value
+msgid "No utility found"
+msgstr ""
+
 #: @prg-cube/cube-middleware-utilities/src/browser/components/middleware-utilities-selection-dialog.tsx:244
 #. 界面位置：cube-middleware-utilities → MiddlewareUtilitiesSelectionDialog
 #. 语境：data-testid="middleware-dialog-instruction-text" > Select your {title} from the list </CoreTypography> <CoreDataGrid
@@ -3368,6 +4169,20 @@ msgstr ""
 msgid "View License Terms"
 msgstr "查看许可条款"
 
+#: @prg-cube/cube-package-manager/src/browser/component/detailed-view.tsx:28
+#. 界面位置：cube-package-manager → FIRST_LINE
+#. 语境：import * as React from '@theia/core/shared/react'; export const FIRST_LINE = 'No selection made'; export const SECOND_LINE = 'Select a pack from the list to vie
+#, config-value
+msgid "No selection made"
+msgstr ""
+
+#: @prg-cube/cube-package-manager/src/browser/component/detailed-view.tsx:30
+#. 界面位置：cube-package-manager → SECOND_LINE
+#. 语境：export const FIRST_LINE = 'No selection made'; export const SECOND_LINE = 'Select a pack from the list to view its details, version history, compatibility, and 
+#, config-value
+msgid "Select a pack from the list to view its details, version history, compatibility, and resources."
+msgstr ""
+
 #: @prg-cube/cube-package-manager/src/browser/component/detailed-view.tsx:75
 #. 界面位置：cube-package-manager → DetailedView
 #. 语境：<SubHeaderPanel data-testid={detailViewPanelHeaderTid} title={'Select an item in a data table'} /> <div
@@ -3481,6 +4296,13 @@ msgstr ""
 msgid "Pack file selection"
 msgstr ""
 
+#: @prg-cube/cube-package-manager/src/browser/cube-package-manager-main-tab.tsx:363
+#. 界面位置：cube-package-manager → PackageManagerMainTabWidget
+#. 语境：} } catch (error) { const titleMessage = 'Error installing pack'; if (error.message) { new ErrorWidget(titleMessage, error.message);
+#, config-value
+msgid "Error installing pack"
+msgstr ""
+
 #: @prg-cube/cube-package-manager/src/browser/cube-package-manager-side-panel-icon.tsx:21
 #. 界面位置：cube-package-manager → PackageManagerSidePanelIcon
 #. 语境：<SideBarButton iconName="classes-extension-board-line" aria-label="Package-manager Icon" tooltip="Pack manager" />
@@ -3494,6 +4316,55 @@ msgstr ""
 #. 首尾空格有意义：该片段会与相邻内容拼接，翻译时请原样保留
 #, jsx-child, needs-review, keep-whitespace
 msgid " Error"
+msgstr ""
+
+#: @prg-cube/cube-package-manager/src/common/protocol.ts:309
+#. 界面位置：cube-package-manager → PACK_NOT_FOUND
+#. 语境：// messages export const PACK_NOT_FOUND = 'No pack found.'; export const PACK_NOT_INSTALLED = 'The pack could not be installed.'; export const PACK_NOT_SUPPORTE
+#, config-value
+msgid "No pack found."
+msgstr ""
+
+#: @prg-cube/cube-package-manager/src/common/protocol.ts:310
+#. 界面位置：cube-package-manager → PACK_NOT_INSTALLED
+#. 语境：// messages export const PACK_NOT_FOUND = 'No pack found.'; export const PACK_NOT_INSTALLED = 'The pack could not be installed.'; export const PACK_NOT_SUPPORTE
+#, config-value
+msgid "The pack could not be installed."
+msgstr ""
+
+#: @prg-cube/cube-package-manager/src/common/protocol.ts:311
+#. 界面位置：cube-package-manager → PACK_NOT_SUPPORTED
+#. 语境：export const PACK_NOT_FOUND = 'No pack found.'; export const PACK_NOT_INSTALLED = 'The pack could not be installed.'; export const PACK_NOT_SUPPORTED = 'The pac
+#, config-value
+msgid "The pack is not supported by STM32CubeMX2."
+msgstr ""
+
+#: @prg-cube/cube-package-manager/src/common/protocol.ts:312
+#. 界面位置：cube-package-manager → PACK_ALREADY_INSTALLED
+#. 语境：export const PACK_NOT_INSTALLED = 'The pack could not be installed.'; export const PACK_NOT_SUPPORTED = 'The pack is not supported by STM32CubeMX2.'; export con
+#, config-value
+msgid "The Pack version is already installed."
+msgstr ""
+
+#: @prg-cube/cube-package-manager/src/common/protocol.ts:313
+#. 界面位置：cube-package-manager → CMSIS_PACK_ROOT_NOT_DEFINED
+#. 语境：export const PACK_NOT_SUPPORTED = 'The pack is not supported by STM32CubeMX2.'; export const PACK_ALREADY_INSTALLED = 'The Pack version is already installed.'; 
+#, config-value
+msgid "CMSIS_PACK_ROOT not defined."
+msgstr ""
+
+#: @prg-cube/cube-package-manager/src/common/protocol.ts:314
+#. 界面位置：cube-package-manager → ERROR_INSTALLING_PACK
+#. 语境：export const PACK_ALREADY_INSTALLED = 'The Pack version is already installed.'; export const CMSIS_PACK_ROOT_NOT_DEFINED = 'CMSIS_PACK_ROOT not defined.'; expor
+#, config-value
+msgid "Error installing pack..."
+msgstr ""
+
+#: @prg-cube/cube-package-manager/src/common/protocol.ts:315
+#. 界面位置：cube-package-manager → ERROR_REMOVING_PACK
+#. 语境：export const CMSIS_PACK_ROOT_NOT_DEFINED = 'CMSIS_PACK_ROOT not defined.'; export const ERROR_INSTALLING_PACK = 'Error installing pack...'; export const ERROR_R
+#, config-value
+msgid "Error removing pack..."
 msgstr ""
 
 #: @prg-cube/cube-package-manager/src/common/types.ts:11
@@ -3804,13 +4675,6 @@ msgstr ""
 msgid "Close part main tab"
 msgstr ""
 
-#: @prg-cube/cube-peripherals/src/browser/app/context.tsx:52
-#. 界面位置：cube-peripherals → AppContextProvider
-#. 语境：const softwareProjectUri = useAppSelector(selectSoftwareProjectURI); if (!softwareProjectUri) return <>{Error && <Error errorMessage="No software project found"
-#, jsx-prop
-msgid "No software project found"
-msgstr ""
-
 #: @prg-cube/cube-peripherals/src/browser/integration/side-bar/peripherals-side-panel-icon.tsx:40
 #. 界面位置：cube-peripherals → PeripheralsSidePanelIcon
 #. 语境：<SideBarButton iconName="branded-peripheral-line" aria-label="Peripherals Icon" allowExpander expanded={selectedView === 'peripherals'}
@@ -3946,18 +4810,136 @@ msgstr "用户登录"
 msgid "User Password"
 msgstr "用户密码"
 
+#: @prg-cube/cube-resource-manager-registry/src/common/helpers/messages.ts:11
+#: @prg-cube/cube-resource-manager-registry/src/common/helpers/messages.ts:16
+#. 界面位置：cube-resource-manager-registry → MESSAGE_UNBIND_RESOURCE，cube-resource-manager-registry → MESSAGE_DELETE_RESOURCE
+#. 语境：// Unbind MessageService export const MESSAGE_UNBIND_RESOURCE = 'Do you really want to unbind your resource?'; export const CONFIRM_UNBIND_RESOURCE = 'Yes, unbi
+#. 共 2 处使用
+#, config-value
+msgid "Do you really want to unbind your resource?"
+msgstr ""
+
+#: @prg-cube/cube-resource-manager-registry/src/common/helpers/messages.ts:12
+#: @prg-cube/cube-resource-manager-registry/src/common/helpers/messages.ts:17
+#. 界面位置：cube-resource-manager-registry → CONFIRM_UNBIND_RESOURCE，cube-resource-manager-registry → CONFIRM_DELETE_RESOURCE
+#. 语境：// Unbind MessageService export const MESSAGE_UNBIND_RESOURCE = 'Do you really want to unbind your resource?'; export const CONFIRM_UNBIND_RESOURCE = 'Yes, unbi
+#. 共 2 处使用
+#, config-value
+msgid "Yes, unbind"
+msgstr ""
+
+#: @prg-cube/cube-resource-manager-registry/src/common/helpers/messages.ts:20
+#. 界面位置：cube-resource-manager-registry → BIND_RESOURCE_PROGRESS
+#. 语境：// Bind MessageService export const BIND_RESOURCE_PROGRESS = 'Binding resource to a software project in progress'; export const CANCEL_BIND_RESOURCE_BASE = 'Can
+#, config-value
+msgid "Binding resource to a software project in progress"
+msgstr ""
+
+#: @prg-cube/cube-resource-manager-registry/src/common/helpers/messages.ts:21
+#. 界面位置：cube-resource-manager-registry → CANCEL_BIND_RESOURCE_BASE
+#. 语境：// Bind MessageService export const BIND_RESOURCE_PROGRESS = 'Binding resource to a software project in progress'; export const CANCEL_BIND_RESOURCE_BASE = 'Can
+#, config-value
+msgid "Cannot bind resource to software project,"
+msgstr ""
+
+#: @prg-cube/cube-resource-manager-registry/src/common/helpers/messages.ts:25
+#. 界面位置：cube-resource-manager-registry → ERROR_BIND_RESOURCE_TO_COMPONENT_INSTANCE
+#. 语境：export const CANCEL_BIND_RESOURCE_FIND_COMPONENT_INSTANCE = `${CANCEL_BIND_RESOURCE_BASE} component instance cannot be found or due to cancel selection`; export
+#, config-value
+msgid "Error, cannot allocate resource to software component instance"
+msgstr ""
+
+#: @prg-cube/cube-resource-manager-registry/src/common/helpers/messages.ts:26
+#. 界面位置：cube-resource-manager-registry → BIND_RESOURCE_COMPLETED
+#. 语境：export const ERROR_BIND_RESOURCE_TO_COMPONENT_INSTANCE = 'Error, cannot allocate resource to software component instance'; export const BIND_RESOURCE_COMPLETED 
+#, config-value
+msgid "Bind resource completed!"
+msgstr ""
+
+#: @prg-cube/cube-resource-manager-registry/src/common/helpers/messages.ts:29
+#. 界面位置：cube-resource-manager-registry → ADD_NEW_SOFTWARE_COMPONENT_INSTANCE_LABEL
+#. 语境：// Text in Bind Dialog export const ADD_NEW_SOFTWARE_COMPONENT_INSTANCE_LABEL = 'Add a new software component instance'; export const CONFIRM_BUTTON = 'Confirm'
+#, config-value
+msgid "Add a new software component instance"
+msgstr ""
+
+#: @prg-cube/cube-resource-manager-registry/src/common/helpers/messages.ts:31
+#. 界面位置：cube-resource-manager-registry → DIALOG_TITLE
+#. 语境：export const ADD_NEW_SOFTWARE_COMPONENT_INSTANCE_LABEL = 'Add a new software component instance'; export const CONFIRM_BUTTON = 'Confirm'; export const DIALOG_T
+#, config-value
+msgid "Select your software component instance to bind your resource with"
+msgstr ""
+
+#: @prg-cube/cube-resource-manager-registry/src/common/helpers/messages.ts:34
+#. 界面位置：cube-resource-manager-registry → COMPONENT_ID_HEADER_LABEL
+#. 语境：// Header Columns TreeTable export const COMPONENT_ID_HEADER_LABEL = 'Component identifier'; export const VERSION_HEADER_LABEL = 'Component version'; export con
+#, config-value
+msgid "Component identifier"
+msgstr ""
+
+#: @prg-cube/cube-resource-manager-registry/src/common/helpers/messages.ts:35
+#. 界面位置：cube-resource-manager-registry → VERSION_HEADER_LABEL
+#. 语境：// Header Columns TreeTable export const COMPONENT_ID_HEADER_LABEL = 'Component identifier'; export const VERSION_HEADER_LABEL = 'Component version'; export con
+#, config-value
+msgid "Component version"
+msgstr ""
+
+#: @prg-cube/cube-resource-manager-registry/src/common/helpers/messages.ts:36
+#. 界面位置：cube-resource-manager-registry → COMPONENT_INSTANCE_NAME_HEADER_LABEL
+#. 语境：export const COMPONENT_ID_HEADER_LABEL = 'Component identifier'; export const VERSION_HEADER_LABEL = 'Component version'; export const COMPONENT_INSTANCE_NAME_H
+#, config-value
+msgid "Component instance name"
+msgstr ""
+
+#: @prg-cube/cube-resource-manager-registry/src/common/helpers/messages.ts:37
+#. 界面位置：cube-resource-manager-registry → IS_IN_COMPOSITION_HEADER_LABEL
+#. 语境：export const VERSION_HEADER_LABEL = 'Component version'; export const COMPONENT_INSTANCE_NAME_HEADER_LABEL = 'Component instance name'; export const IS_IN_COMPO
+#, config-value
+msgid "Is component in composition?"
+msgstr ""
+
+#: @prg-cube/cube-resource-manager-registry/src/common/helpers/messages.ts:38
+#. 界面位置：cube-resource-manager-registry → CAN_ADD_COMPONENT_INSTANCE_HEADER_LABEL
+#. 语境：export const COMPONENT_INSTANCE_NAME_HEADER_LABEL = 'Component instance name'; export const IS_IN_COMPOSITION_HEADER_LABEL = 'Is component in composition?'; exp
+#, config-value
+msgid "Can component add instance?"
+msgstr ""
+
+#: @prg-cube/cube-resource-manager-registry/src/common/helpers/messages.ts:39
+#. 界面位置：cube-resource-manager-registry → IS_NEW_INSTANCE_HEADER_LABEL
+#. 语境：export const IS_IN_COMPOSITION_HEADER_LABEL = 'Is component in composition?'; export const CAN_ADD_COMPONENT_INSTANCE_HEADER_LABEL = 'Can component add instance
+#, config-value
+msgid "Is new instance to create?"
+msgstr ""
+
+#: @prg-cube/cube-sw-composer/src/browser/components-library/common/constants.ts:14
+#: @prg-cube/cube-sw-composer/src/browser/components-library/components-library-widget.tsx:49
+#. 界面位置：cube-sw-composer → COMPONENT_LIBRARY_WIDGET_LABEL，cube-sw-composer → ComponentsLibraryWidget
+#. 语境：export const BOOKMARKED_COMPONENT_WIDGET_ID = 'bookmarked-components-widget'; export const COMPONENT_LIBRARY_WIDGET_LABEL = 'Components Library'; export const T
+#. 共 2 处使用
+#, config-value
+msgid "Components Library"
+msgstr ""
+
+#: @prg-cube/cube-sw-composer/src/browser/components-library/common/constants.ts:15
+#. 界面位置：cube-sw-composer → TAB_NAME_SEARCH_COMPONENTS
+#. 语境：export const COMPONENT_LIBRARY_WIDGET_LABEL = 'Components Library'; export const TAB_NAME_SEARCH_COMPONENTS = 'Search components'; export const TAB_NAME_BOOKMAR
+#, config-value
+msgid "Search components"
+msgstr ""
+
+#: @prg-cube/cube-sw-composer/src/browser/components-library/common/constants.ts:16
+#. 界面位置：cube-sw-composer → TAB_NAME_BOOKMARKED_COMPONENTS
+#. 语境：export const COMPONENT_LIBRARY_WIDGET_LABEL = 'Components Library'; export const TAB_NAME_SEARCH_COMPONENTS = 'Search components'; export const TAB_NAME_BOOKMAR
+#, config-value
+msgid "Bookmarked components"
+msgstr ""
+
 #: @prg-cube/cube-sw-composer/src/browser/components-library/component-library-tabs.tsx:38
 #. 界面位置：cube-sw-composer → ComponentLibraryTabs
 #. 语境：<CoreTabs value={defaultSelectedTab} aria-label="Components Library tools" onChange={handleChange} >
 #, jsx-prop
 msgid "Components Library tools"
-msgstr ""
-
-#: @prg-cube/cube-sw-composer/src/browser/components-library/components-library-widget.tsx:49
-#. 界面位置：cube-sw-composer → ComponentsLibraryWidget
-#. 语境：export class ComponentsLibraryWidget extends ReactWidget { static readonly ID = 'components-library-widget'; static readonly LABEL = 'Components Library'; @inje
-#, config-value
-msgid "Components Library"
 msgstr ""
 
 #: @prg-cube/cube-sw-composer/src/browser/components-library/components/bookmarked-components/bookmarked-components-view.tsx:160
@@ -4005,8 +4987,10 @@ msgid "Accepted Groups, Classes, Vendors..."
 msgstr ""
 
 #: @prg-cube/cube-sw-composer/src/browser/components-library/components/search-components/search-components-element.tsx:224
-#. 界面位置：cube-sw-composer → SearchComponents
+#: @prg-cube/cube-sw-composer/src/browser/components-library/components/search-components/search-components-empty.tsx:47
+#. 界面位置：cube-sw-composer → SearchComponents，cube-sw-composer → SearchComponentsEmpty
 #. 语境：<CoreInputText id={`search-components-input_${modelURI}`} placeholder="Search components..." size="small" clear
+#. 共 2 处使用
 #, jsx-prop
 msgid "Search components..."
 msgstr ""
@@ -4082,6 +5066,13 @@ msgstr "兼容性："
 #, jsx-child
 msgid "Danger Score:"
 msgstr "风险评分："
+
+#: @prg-cube/cube-sw-composer/src/browser/draggable-elements/cells/CompatibilityCell.tsx:115
+#. 界面位置：cube-sw-composer → CompatibilitySummary
+#. 语境：<CoreTypography highlightedTextColor="border_amber_20" highlightedText="Danger Score" variant="caption_small" >
+#, jsx-prop
+msgid "Danger Score"
+msgstr ""
 
 #: @prg-cube/cube-sw-composer/src/browser/draggable-elements/cells/CompatibilityCell.tsx:118
 #. 界面位置：cube-sw-composer → CompatibilitySummary
@@ -4218,11 +5209,25 @@ msgstr ""
 msgid "Add the component to your bookmark list"
 msgstr ""
 
+#: @prg-cube/cube-sw-composer/src/browser/draggable-elements/element-list.tsx:457
+#. 界面位置：cube-sw-composer → DraggableElementList
+#. 语境：activeIconName: 'bookmark-fill', activeTooltip: 'Remove the component from your bookmark list' }, {
+#, config-value
+msgid "Remove the component from your bookmark list"
+msgstr ""
+
 #: @prg-cube/cube-sw-composer/src/browser/draggable-elements/element-list.tsx:462
 #. 界面位置：cube-sw-composer → DraggableElementList
 #. 语境：iconName: 'add-circle-fill', tooltip: 'Add the component in the composition project', onClick: (event, _rowId, row) => { event.stopPropagation();
 #, config-value
 msgid "Add the component in the composition project"
+msgstr ""
+
+#: @prg-cube/cube-sw-composer/src/browser/draggable-elements/element-list.tsx:474
+#. 界面位置：cube-sw-composer → DraggableElementList
+#. 语境：activeIconName: 'check-line', activeTooltip: 'Component already in the composition project' } ]
+#, config-value
+msgid "Component already in the composition project"
 msgstr ""
 
 #: @prg-cube/cube-sw-composer/src/browser/draggable-elements/element-list.tsx:535
@@ -4268,6 +5273,83 @@ msgstr ""
 #, jsx-prop
 msgid "Resolve all dependencies"
 msgstr "解析所有依赖项"
+
+#: @prg-cube/cube-sw-composer/src/browser/preferences.ts:14
+#. 界面位置：cube-sw-composer → RESOLVE_ALL_DEPENDENCIES_DESCRIPTION
+#. 语境：const RESOLVE_ALL_DEPENDENCIES_DESCRIPTION = 'Controls the resolution dependency strategy when adding a new component into the sw project.'; //Three options for
+#, config-value
+msgid "Controls the resolution dependency strategy when adding a new component into the sw project."
+msgstr ""
+
+#: @prg-cube/cube-sw-composer/src/browser/preferences.ts:22
+#. 界面位置：cube-sw-composer → RESOLVE_ALL_DEPENDENCIES_CONSERVATIVE_HELP
+#. 语境：const RESOLVE_ALL_DEPENDENCIES_CONSERVATIVE_HELP = 'Conservative strategy will automatically apply quickfixes only when there is a single alternative to solve. 
+#, config-value
+msgid ""
+"Conservative strategy will automatically apply quickfixes only when there is a single alternative "
+"to solve. i.e. when the dependencies or fixes are considered \"trivial\". When a certain item has "
+"two or more fix alternatives, then the conservative approach will stop the resolution instead."
+msgstr ""
+
+#: @prg-cube/cube-sw-composer/src/browser/preferences.ts:24
+#. 界面位置：cube-sw-composer → RESOLVE_ALL_DEPENDENCIES_OPTIMISTIC_HELP
+#. 语境：'Conservative strategy will automatically apply quickfixes only when there is a single alternative to solve. i.e. when the dependencies or fixes are considered 
+#, config-value
+msgid ""
+"Optimistic strategy will automatically apply fix alternatives in an optimistic way. If there are "
+"multiple fix alternatives for an item, we optimistically apply the first one (after ranking the "
+"alternatives on number of added packs)."
+msgstr ""
+
+#: @prg-cube/cube-sw-composer/src/browser/preferences.ts:26
+#. 界面位置：cube-sw-composer → RESOLVE_ALL_DEPENDENCIES_MANUAL_HELP
+#. 语境：'Optimistic strategy will automatically apply fix alternatives in an optimistic way. If there are multiple fix alternatives for an item, we optimistically apply
+#, config-value
+msgid "No automatic resolve dependency strategy applied when adding a new component into the sw project."
+msgstr ""
+
+#: @prg-cube/cube-sw-composer/src/browser/preferences.ts:35
+#. 界面位置：cube-sw-composer → ST_APPLICATION_EXAMPLES_DESCRIPTION
+#. 语境：export const ST_APPLICATION_EXAMPLES_CCLASS_FILTER = 'Application'; const ST_APPLICATION_EXAMPLES_DESCRIPTION = `Displays ST Application's examples`; export con
+#, config-value
+msgid "Displays ST Application's examples"
+msgstr ""
+
+#: @prg-cube/cube-sw-composer/src/browser/table/swc-empty-state.tsx:14
+#. 界面位置：cube-sw-composer → FIRST_LINE
+#. 语境：export const FIRST_LINE = 'It looks like your software project is empty for now.'; export const SECOND_LINE = 'Explore our Component Library to discover the per
+#, config-value
+msgid "It looks like your software project is empty for now."
+msgstr ""
+
+#: @prg-cube/cube-sw-composer/src/browser/table/swc-empty-state.tsx:16
+#. 界面位置：cube-sw-composer → SECOND_LINE
+#. 语境：'It looks like your software project is empty for now.'; export const SECOND_LINE = 'Explore our Component Library to discover the perfect software for your pro
+#, config-value
+msgid "Explore our Component Library to discover the perfect software for your project."
+msgstr ""
+
+#: @prg-cube/cube-sw-composer/src/browser/table/swc-empty-state.tsx:18
+#. 界面位置：cube-sw-composer → THIRD_LINE
+#. 语境：'Explore our Component Library to discover the perfect software for your project.'; export const THIRD_LINE = " You can click the '+' button to add software com
+#. 首尾空格有意义：该片段会与相邻内容拼接，翻译时请原样保留
+#, config-value, needs-review, keep-whitespace
+msgid " You can click the '+' button to add software components to this project."
+msgstr ""
+
+#: @prg-cube/cube-sw-composer/src/browser/table/swc-empty-state.tsx:55
+#. 界面位置：cube-sw-composer → Empty
+#. 语境：color="surface_inverse" align="center" highlightedText="Component Library" > {SECOND_LINE}
+#, jsx-prop
+msgid "Component Library"
+msgstr ""
+
+#: @prg-cube/cube-sw-composer/src/browser/table/swc-table-widget.tsx:83
+#. 界面位置：cube-sw-composer → SwcTable
+#. 语境：icon: 'git-merge-line', iconColor: 'neutral_grey_6', content: 'X', textColor: 'border_inverse', backgroundColor: 'border_error_main',
+#, config-value
+msgid "X"
+msgstr ""
 
 #: @prg-cube/cube-sw-composer/src/browser/table/swc-table-widget.tsx:86
 #. 界面位置：cube-sw-composer → SwcTable
@@ -4432,6 +5514,13 @@ msgstr ""
 msgid "ACTIONS"
 msgstr ""
 
+#: @prg-cube/cube-sw-composer/src/browser/table/swc-table-widget.tsx:442
+#. 界面位置：cube-sw-composer → SwcTable
+#. 语境：}, deleteAction: { deleteTooltipText: 'Remove component or instance', weight: 1, hideInMenuMore: true,
+#, config-value
+msgid "Remove component or instance"
+msgstr ""
+
 #: @prg-cube/cube-sw-composer/src/browser/table/swc-table-widget.tsx:463
 #. 界面位置：cube-sw-composer → SwcTable
 #. 语境：{ iconName: 'add-fill', tooltip: 'Add a software component instance', weight: 3, hideButton: options => {
@@ -4487,6 +5576,13 @@ msgstr "导出选项"
 #. 语境：label={EXPORT_OPTIONS.PROJECT_CONFIG} disabled={!projectOpened} tooltip={!projectOpened ? 'No opened project found. Configuration cannot be exported' : undefine
 #, jsx-prop
 msgid "No opened project found. Configuration cannot be exported"
+msgstr ""
+
+#: libs/features/cube-user-environment-exporter/ext/cube-user-environment-exporter/src/browser/components/IssueReporter.tsx:66
+#. 界面位置：cube-user-environment-exporter → handleExport
+#. 语境：try { const archivePath = await props.createZip(createZipParameters); const buttonTitle = 'Open directory'; setOngoingExport(false); props.onWidgetClose();
+#, config-value
+msgid "Open directory"
 msgstr ""
 
 #: libs/features/cube-user-environment-exporter/ext/cube-user-environment-exporter/src/browser/components/IssueReporter.tsx:98
@@ -4549,6 +5645,34 @@ msgstr ""
 msgid "Cube: Issue Reporter"
 msgstr ""
 
+#: @prg-cube/envvar-configuration/src/browser/components/envvar-component.tsx:37
+#. 界面位置：envvar-configuration → EnvVarComponent
+#. 语境：if (!EnvVarService) { const errorMessage = 'EnvVarService is not defined'; logger.error(errorMessage); throw new Error(errorMessage);
+#, config-value
+msgid "EnvVarService is not defined"
+msgstr ""
+
+#: @prg-cube/envvar-configuration/src/browser/components/envvar-component.tsx:43
+#. 界面位置：envvar-configuration → EnvVarComponent
+#. 语境：if (!key) { const errorMessage = 'Key is required'; logger.error(errorMessage); throw new Error(errorMessage);
+#, config-value
+msgid "Key is required"
+msgstr ""
+
+#: @prg-cube/envvar-configuration/src/browser/components/envvar-component.tsx:49
+#. 界面位置：envvar-configuration → EnvVarComponent
+#. 语境：if (!valueEnv) { const errorMessage = 'Value is required'; logger.error(errorMessage); throw new Error(errorMessage);
+#, config-value
+msgid "Value is required"
+msgstr ""
+
+#: @prg-cube/envvar-configuration/src/browser/components/envvar-component.tsx:55
+#. 界面位置：envvar-configuration → EnvVarComponent
+#. 语境：if (!originator) { const errorMessage = 'Originator is required'; logger.error(errorMessage); throw new Error(errorMessage);
+#, config-value
+msgid "Originator is required"
+msgstr ""
+
 #: @prg-cube/envvar-configuration/src/browser/components/envvar-component.tsx:77
 #. 界面位置：envvar-configuration → EnvVarComponent
 #. 语境：> <TextField label="Key" required variant="outlined"
@@ -4583,13 +5707,6 @@ msgstr "您的 EXTI 线列表为空"
 #, jsx-child
 msgid "No exti line used right now"
 msgstr "当前未使用任何 EXTI 线"
-
-#: libs/features/exti/ext/exti-configuration/src/browser/components/exti-table-view.tsx:144
-#. 界面位置：exti-configuration → ExtiTableView
-#. 语境：{ field: 'line', header: 'Line', sortable: true, cell: {
-#, config-value
-msgid "Line"
-msgstr ""
 
 #: libs/features/exti/ext/exti-configuration/src/browser/components/exti-table-view.tsx:171
 #. 界面位置：exti-configuration → ExtiTableView
@@ -4646,6 +5763,13 @@ msgstr ""
 msgid "Used only"
 msgstr ""
 
+#: libs/features/exti/ext/exti-configuration/src/browser/components/exti-table-view.tsx:489
+#. 界面位置：exti-configuration → ExtiTableView
+#. 语境：filterMode="menu" showDataExport={true} dataExportButtonText="Export List" onDataExport={data => handleExport(data)} enableCellEditMode
+#, jsx-prop
+msgid "Export List"
+msgstr ""
+
 #: libs/features/exti/ext/exti-configuration/src/browser/components/exti-tagmenu.tsx:168
 #: @prg-cube/theia-ext-dma-configuration/src/browser/components/assign-to-view.tsx:387
 #. 界面位置：exti-configuration → ExtiSourceTagMenu，theia-ext-dma-configuration → AssignToComponent
@@ -4671,6 +5795,50 @@ msgstr "EXTI"
 msgid "Search line, source ..."
 msgstr ""
 
+#: libs/features/exti/ext/exti-configuration/src/browser/exti-widget.tsx:17
+#: libs/features/nvic/ext/nvic-configuration/src/common/constants.ts:13
+#: libs/features/nvic/ext/nvic-configuration/src/common/errors.ts:12
+#: @prg-cube/theia-ext-dma-configuration/src/common/error.ts:9
+#. 界面位置：exti-configuration → EXTI_DISPLAY_MESSAGE_FAILED，nvic-configuration → NVIC_DISPLAY_MESSAGE_FAILED，theia-ext-dma-configuration → DMA_DISPLAY_MESSAGE_FAILED
+#. 语境：import { ExtiSystemView } from './components/exti-system-view'; export const EXTI_DISPLAY_MESSAGE_FAILED = 'Unable to display message'; export const EXTI_LOAD_V
+#. 共 4 处使用
+#, config-value
+msgid "Unable to display message"
+msgstr ""
+
+#: libs/features/exti/ext/exti-configuration/src/browser/exti-widget.tsx:18
+#. 界面位置：exti-configuration → EXTI_LOAD_VIEW_ERROR
+#. 语境：export const EXTI_DISPLAY_MESSAGE_FAILED = 'Unable to display message'; export const EXTI_LOAD_VIEW_ERROR = 'Unable to load view'; export const EXTI_UPDATE_VIEW
+#, config-value
+msgid "Unable to load view"
+msgstr ""
+
+#: libs/features/exti/ext/exti-configuration/src/browser/exti-widget.tsx:19
+#: libs/features/nvic/ext/nvic-configuration/src/common/errors.ts:11
+#: @prg-cube/theia-ext-dma-configuration/src/common/error.ts:11
+#. 界面位置：exti-configuration → EXTI_UPDATE_VIEW_ERROR，nvic-configuration → NVIC_UPDATE_VIEW_ERROR，theia-ext-dma-configuration → DMA_UPDATE_VIEW_ERROR
+#. 语境：export const EXTI_DISPLAY_MESSAGE_FAILED = 'Unable to display message'; export const EXTI_LOAD_VIEW_ERROR = 'Unable to load view'; export const EXTI_UPDATE_VIEW
+#. 共 3 处使用
+#, config-value
+msgid "Unable to update the view"
+msgstr ""
+
+#: libs/features/exti/ext/exti-configuration/src/browser/exti-widget.tsx:20
+#. 界面位置：exti-configuration → EXTI_OPEN_CONFIG_FAILED
+#. 语境：export const EXTI_LOAD_VIEW_ERROR = 'Unable to load view'; export const EXTI_UPDATE_VIEW_ERROR = 'Unable to update the view'; const EXTI_OPEN_CONFIG_FAILED = 'U
+#, config-value
+msgid "Unable to open the exti Configuration panel"
+msgstr ""
+
+#: libs/features/exti/ext/exti-configuration/src/browser/exti-widget.tsx:21
+#: @prg-cube/theia-ext-dma-configuration/src/common/error.ts:17
+#. 界面位置：exti-configuration → EXTI_NAV_TO_APP_PROJECT，theia-ext-dma-configuration → DMA_NAV_TO_APP_PROJECT
+#. 语境：export const EXTI_UPDATE_VIEW_ERROR = 'Unable to update the view'; const EXTI_OPEN_CONFIG_FAILED = 'Unable to open the exti Configuration panel'; const EXTI_NAV
+#. 共 2 处使用
+#, config-value
+msgid "Unable to navigate to the Application Project panel"
+msgstr ""
+
 #: libs/features/exti/ext/exti-configuration/src/browser/exti-widget.tsx:237
 #. 界面位置：exti-configuration → EXTIWidget
 #. 语境：render(): React.ReactNode { if (!this.applicationProjectURI) { return <div data-testid="exti-widget-loading">...loading exti view</div>; } else { return (
@@ -4690,6 +5858,31 @@ msgstr ""
 #. 语境：</Typography> <Typography align="center" color="surface_inverse" variant="description"> Begin your journey by creating or importing a project </Typography> </St
 #, jsx-child
 msgid "Begin your journey by creating or importing a project"
+msgstr ""
+
+#: @prg-cube/getting-started-mx2/src/browser/components/project/current-project-card/current-project-card.tsx:61
+#: @prg-cube/getting-started-mx2/src/browser/components/project/recent-project-card-actions/recent-project-card-actions.tsx:43
+#. 界面位置：getting-started-mx2 → CurrentProjectCard，getting-started-mx2 → RecentProjectCardActions
+#. 语境：key: 'copy-path', onClick: () => copyProjectPath(ioc2Path), children: 'Copy project path', 'data-testid': `${dataTestId}-contextual-menu-project-copy-path`, },
+#. 共 2 处使用
+#, config-value
+msgid "Copy project path"
+msgstr ""
+
+#: @prg-cube/getting-started-mx2/src/browser/components/project/current-project-card/current-project-card.tsx:67
+#: @prg-cube/getting-started-mx2/src/browser/components/project/recent-project-card-actions/recent-project-card-actions.tsx:49
+#. 界面位置：getting-started-mx2 → CurrentProjectCard，getting-started-mx2 → RecentProjectCardActions
+#. 语境：key: 'go-to-location', onClick: () => goToProjectLocation(ioc2Path), children: 'Go to project location', 'data-testid': `${dataTestId}-contextual-menu-project-l
+#. 共 2 处使用
+#, config-value
+msgid "Go to project location"
+msgstr ""
+
+#: @prg-cube/getting-started-mx2/src/browser/components/project/current-project-card/current-project-card.tsx:75
+#. 界面位置：getting-started-mx2 → CurrentProjectCard
+#. 语境：key: 'close-project', onClick: async () => await closeProject(), children: 'Close project', 'data-testid': `${dataTestId}-contextual-menu-close-project`, },
+#, config-value
+msgid "Close project"
 msgstr ""
 
 #: @prg-cube/getting-started-mx2/src/browser/components/project/current-project-card/current-project-card.tsx:103
@@ -4727,26 +5920,18 @@ msgstr ""
 msgid "Not found"
 msgstr ""
 
-#: @prg-cube/getting-started-mx2/src/browser/components/project/recent-project-card-actions/recent-project-card-actions.tsx:64
-#: @prg-cube/ui-core/src/components/DataGrid/filter/iconDropdown.tsx:48
-#: @prg-cube/ui-core/src/components/DataGrid/filter/inputFloat.tsx:43
-#: @prg-cube/ui-core/src/components/DataGrid/filter/inputFloat.tsx:80
-#: @prg-cube/ui-core/src/components/DataGrid/filter/inputInteger.tsx:45
-#: @prg-cube/ui-core/src/components/DataGrid/filter/inputInteger.tsx:82
-#: @prg-cube/ui-core/src/components/DataGrid/filter/inputText.tsx:40
-#: @prg-cube/ui-core/src/components/DataGrid/filter/inputText.tsx:72
-#. 界面位置：getting-started-mx2 → RecentProjectCardActions，ui-core → IconDropdownFilter，ui-core → DebouncedInputFloatFilter，ui-core → InputFloatFilter
-#. 语境：onClick={() => deleteProject(ioc2Path)} > Clear </Button> ) : (
-#. 共 14 处使用
-#, jsx-child, config-value, jsx-prop
-msgid "Clear"
-msgstr ""
-
 #: @prg-cube/getting-started-mx2/src/browser/components/project/recent-project-card-actions/recent-project-card-actions.tsx:75
 #. 界面位置：getting-started-mx2 → RecentProjectCardActions
 #. 语境：color="normal_medium_blue" > Open project </Button> <ContextualMenu
 #, jsx-child
 msgid "Open project"
+msgstr ""
+
+#: @prg-cube/getting-started-mx2/src/browser/components/project/recent-project-card/recent-project-card.tsx:67
+#. 界面位置：getting-started-mx2 → RecentProjectCard
+#. 语境：const boardValue = boardType ? `${boardType} (${boardName})` : boardName; const formattedLastOpenedDate = isCurrent ? 'Currently opened' : `${formatDateAsDelay(
+#, config-value
+msgid "Currently opened"
 msgstr ""
 
 #: @prg-cube/getting-started-mx2/src/browser/components/project/recent-project-card/recent-project-card.tsx:152
@@ -4768,6 +5953,48 @@ msgstr "上次修改时间"
 #. 语境：data-testid={`${dataTestId}-last-updated-with`} > Last modified with </Typography> <Typography
 #, jsx-child
 msgid "Last modified with"
+msgstr ""
+
+#: @prg-cube/getting-started-mx2/src/browser/constants/header-component-texts.tsx:9
+#. 界面位置：getting-started-mx2 → GREETING_MESSAGE_NO_PROJECTS
+#. 语境：// unauthorized manner without written consent. // ***************************************************************************** export const GREETING_MESSAGE_N
+#, config-value
+msgid "Welcome to Your Development Space -"
+msgstr ""
+
+#: @prg-cube/getting-started-mx2/src/browser/constants/header-component-texts.tsx:10
+#. 界面位置：getting-started-mx2 → GREETING_HIGHLIGHT_MESSAGE_NO_PROJECTS
+#. 语境：// ***************************************************************************** export const GREETING_MESSAGE_NO_PROJECTS = 'Welcome to Your Development Space 
+#, config-value
+msgid "Let's build."
+msgstr ""
+
+#: @prg-cube/getting-started-mx2/src/browser/constants/header-component-texts.tsx:12
+#. 界面位置：getting-started-mx2 → GREETING_MESSAGE_PROJECTS
+#. 语境：export const GREETING_HIGHLIGHT_MESSAGE_NO_PROJECTS = "Let's build."; export const GREETING_MESSAGE_PROJECTS = "Back to Work? Let's"; export const GREETING_HIGH
+#, config-value
+msgid "Back to Work? Let's"
+msgstr ""
+
+#: @prg-cube/getting-started-mx2/src/browser/constants/header-component-texts.tsx:13
+#. 界面位置：getting-started-mx2 → GREETING_HIGHLIGHT_MESSAGE_PROJECTS
+#. 语境：export const GREETING_MESSAGE_PROJECTS = "Back to Work? Let's"; export const GREETING_HIGHLIGHT_MESSAGE_PROJECTS = 'Create Something New.'; export const GREETIN
+#, config-value
+msgid "Create Something New."
+msgstr ""
+
+#: @prg-cube/getting-started-mx2/src/browser/constants/header-component-texts.tsx:15
+#. 界面位置：getting-started-mx2 → GREETING_MESSAGE_PROJECT_ACTIVE
+#. 语境：export const GREETING_HIGHLIGHT_MESSAGE_PROJECTS = 'Create Something New.'; export const GREETING_MESSAGE_PROJECT_ACTIVE = 'Project Loaded -'; export const GREE
+#, config-value
+msgid "Project Loaded -"
+msgstr ""
+
+#: @prg-cube/getting-started-mx2/src/browser/constants/header-component-texts.tsx:16
+#. 界面位置：getting-started-mx2 → GREETING_HIGHLIGHT_MESSAGE_PROJECT_ACTIVE
+#. 语境：export const GREETING_MESSAGE_PROJECT_ACTIVE = 'Project Loaded -'; export const GREETING_HIGHLIGHT_MESSAGE_PROJECT_ACTIVE = 'Time to create!';
+#, config-value
+msgid "Time to create!"
 msgstr ""
 
 #: @prg-cube/getting-started-mx2/src/browser/constants/sideNavLinks.tsx:23
@@ -4854,6 +6081,20 @@ msgstr ""
 msgid "MCU"
 msgstr ""
 
+#: @prg-cube/getting-started-mx2/src/browser/hooks/use-init-action-buttons.tsx:47
+#. 界面位置：getting-started-mx2
+#. 语境：illustration: 'project', title: 'Project', subTitle: 'Open from file system', disabled: false, dataTestId: 'gs-button-from-open',
+#, config-value
+msgid "Open from file system"
+msgstr ""
+
+#: @prg-cube/getting-started-mx2/src/browser/hooks/use-subscribe-to-dirty-state.ts:35
+#. 界面位置：getting-started-mx2
+#. 语境：return { icon: 'sync~spin', text: 'Saving...', tooltip: 'Saving in progress', className: 'dirty-state-saving',
+#, config-value
+msgid "Saving..."
+msgstr ""
+
 #: @prg-cube/getting-started-mx2/src/browser/hooks/use-subscribe-to-dirty-state.ts:36
 #. 界面位置：getting-started-mx2
 #. 语境：icon: 'sync~spin', text: 'Saving...', tooltip: 'Saving in progress', className: 'dirty-state-saving', };
@@ -4861,11 +6102,25 @@ msgstr ""
 msgid "Saving in progress"
 msgstr ""
 
+#: @prg-cube/getting-started-mx2/src/browser/hooks/use-subscribe-to-dirty-state.ts:43
+#. 界面位置：getting-started-mx2
+#. 语境：return { icon: 'pass', text: 'Saved', tooltip: 'All changes saved', className: 'dirty-state-saved',
+#, config-value
+msgid "Saved"
+msgstr ""
+
 #: @prg-cube/getting-started-mx2/src/browser/hooks/use-subscribe-to-dirty-state.ts:44
 #. 界面位置：getting-started-mx2
 #. 语境：icon: 'pass', text: 'Saved', tooltip: 'All changes saved', className: 'dirty-state-saved', };
 #, config-value
 msgid "All changes saved"
+msgstr ""
+
+#: @prg-cube/getting-started-mx2/src/browser/hooks/use-subscribe-to-dirty-state.ts:50
+#. 界面位置：getting-started-mx2
+#. 语境：return { icon: 'save', text: 'Click to save', tooltip: 'Unsaved changes', className: 'dirty-state-status',
+#, config-value
+msgid "Click to save"
 msgstr ""
 
 #: @prg-cube/getting-started-mx2/src/browser/hooks/use-subscribe-to-dirty-state.ts:51
@@ -4909,6 +6164,13 @@ msgstr ""
 msgid "Opened project"
 msgstr ""
 
+#: @prg-cube/getting-started-mx2/src/browser/section/projects-overview/recent-projects-list/recent-projects-list.tsx:53
+#. 界面位置：getting-started-mx2 → RecentProjectList
+#. 语境：name="recentProjectSearch" clear={!!searchValue} clearText="clear" onChange={onFilterHandler} fullWidth
+#, jsx-prop
+msgid "clear"
+msgstr ""
+
 #: @prg-cube/getting-started-mx2/src/browser/section/projects-overview/recent-projects-list/recent-projects-list.tsx:56
 #. 界面位置：getting-started-mx2 → RecentProjectList
 #. 语境：onChange={onFilterHandler} fullWidth placeholder="Search project" value={searchValue ?? ''} />
@@ -4950,6 +6212,50 @@ msgstr ""
 #, config-value
 msgid "Controls when the Getting Started Page should close all other panels."
 msgstr "控制入门页面何时应关闭所有其他面板。"
+
+#: @prg-cube/getting-started-mx2/src/common/protocol.ts:14
+#. 界面位置：getting-started-mx2 → ACTION_CARD_CONFIRMATION_POPUP_TITLE
+#. 语境：export const MESSAGE_SERVICE_ERROR = 'Not able to display message: '; export const ACTION_CARD_CONFIRMATION_POPUP_TITLE = 'Close current project ?'; export cons
+#, config-value
+msgid "Close current project ?"
+msgstr ""
+
+#: @prg-cube/getting-started-mx2/src/common/protocol.ts:15
+#. 界面位置：getting-started-mx2 → ACTION_CARD_CONFIRMATION_POPUP_MESSAGE
+#. 语境：export const MESSAGE_SERVICE_ERROR = 'Not able to display message: '; export const ACTION_CARD_CONFIRMATION_POPUP_TITLE = 'Close current project ?'; export cons
+#, config-value
+msgid "You have unsaved changes on your project"
+msgstr ""
+
+#: @prg-cube/getting-started-mx2/src/common/protocol.ts:16
+#. 界面位置：getting-started-mx2 → RECENT_PROJECT_CONFIRMATION_POPUP_TITLE
+#. 语境：export const ACTION_CARD_CONFIRMATION_POPUP_TITLE = 'Close current project ?'; export const ACTION_CARD_CONFIRMATION_POPUP_MESSAGE = 'You have unsaved changes o
+#, config-value
+msgid "Switch project ?"
+msgstr ""
+
+#: @prg-cube/getting-started-mx2/src/common/protocol.ts:17
+#. 界面位置：getting-started-mx2 → RECENT_PROJECT_CONFIRMATION_POPUP_MESSAGE_TEMPLATE
+#. 语境：export const ACTION_CARD_CONFIRMATION_POPUP_MESSAGE = 'You have unsaved changes on your project'; export const RECENT_PROJECT_CONFIRMATION_POPUP_TITLE = 'Switch
+#, config-value
+msgid ""
+"Any unsaved change on the current project will be lost, do you really want to switch to project "
+"\"__PROJECT_NAME__\" ?"
+msgstr ""
+
+#: @prg-cube/getting-started-mx2/src/common/protocol.ts:30
+#. 界面位置：getting-started-mx2 → SHOW_MORE_BUTTON_LABEL
+#. 语境：export const EXTENDED_MAX_RECENT_PROJECTS = 30; export const SHOW_MORE_BUTTON_LABEL = 'Show more'; export const SHOW_LESS_BUTTON_LABEL = 'Show less';
+#, config-value
+msgid "Show more"
+msgstr ""
+
+#: @prg-cube/getting-started-mx2/src/common/protocol.ts:31
+#. 界面位置：getting-started-mx2 → SHOW_LESS_BUTTON_LABEL
+#. 语境：export const SHOW_MORE_BUTTON_LABEL = 'Show more'; export const SHOW_LESS_BUTTON_LABEL = 'Show less'; /**
+#, config-value
+msgid "Show less"
+msgstr ""
 
 #: @prg-cube/left-panel/src/browser/sidebar/features/code-generation/code-generation.sidebar-contribution.tsx:78
 #. 界面位置：left-panel → CodeGenerationIconComponent
@@ -5110,6 +6416,52 @@ msgstr "重置 NVIC 配置："
 msgid "...loading NVIC view"
 msgstr "...正在加载 NVIC 视图"
 
+#: libs/features/nvic/ext/nvic-configuration/src/common/constants.ts:12
+#: @prg-cube/theia-ext-dma-configuration/src/common/error.ts:16
+#. 界面位置：nvic-configuration → NVIC_OPEN_CONFIG_FAILED，theia-ext-dma-configuration → DMA_OPEN_CONFIG_FAILED
+#. 语境：export const NVIC_MODEL_ID = 'nvic'; export const NVIC_VIEW_ID = 'nvic-view-id'; export const NVIC_OPEN_CONFIG_FAILED = 'Unable to open the Configuration panel'
+#. 共 2 处使用
+#, config-value
+msgid "Unable to open the Configuration panel"
+msgstr ""
+
+#: libs/features/nvic/ext/nvic-configuration/src/common/errors.ts:10
+#. 界面位置：nvic-configuration → NVIC_STORE_INIT_FAILED
+#. 语境：// ***************************************************************************** export const NVIC_STORE_INIT_FAILED = 'Unable to initialize NVIC data store'; e
+#, config-value
+msgid "Unable to initialize NVIC data store"
+msgstr ""
+
+#: libs/features/nvic/ext/nvic-configuration/src/common/errors.ts:13
+#. 界面位置：nvic-configuration → NVIC_ADD_SWP_FAILED
+#. 语境：export const NVIC_UPDATE_VIEW_ERROR = 'Unable to update the view'; export const NVIC_DISPLAY_MESSAGE_FAILED = 'Unable to display message'; export const NVIC_ADD
+#, config-value
+msgid "Unable to add new SWP"
+msgstr ""
+
+#: libs/features/nvic/ext/nvic-configuration/src/common/errors.ts:14
+#. 界面位置：nvic-configuration → NVIC_REMOVE_SWP_FAILED
+#. 语境：export const NVIC_DISPLAY_MESSAGE_FAILED = 'Unable to display message'; export const NVIC_ADD_SWP_FAILED = 'Unable to add new SWP'; export const NVIC_REMOVE_SWP
+#, config-value
+msgid "Unable to remove SWP"
+msgstr ""
+
+#: libs/features/nvic/ext/nvic-configuration/src/common/errors.ts:15
+#: @prg-cube/theia-ext-dma-configuration/src/common/error.ts:10
+#. 界面位置：nvic-configuration → NVIC_LOAD_VIEW_ERROR，theia-ext-dma-configuration → DMA_LOAD_VIEW_ERROR
+#. 语境：export const NVIC_ADD_SWP_FAILED = 'Unable to add new SWP'; export const NVIC_REMOVE_SWP_FAILED = 'Unable to remove SWP'; export const NVIC_LOAD_VIEW_ERROR = 'U
+#. 共 2 处使用
+#, config-value
+msgid "Unable to load the view"
+msgstr ""
+
+#: libs/features/nvic/ext/nvic-configuration/src/common/errors.ts:16
+#. 界面位置：nvic-configuration → NVIC_GET_PERIPH_NAME
+#. 语境：export const NVIC_REMOVE_SWP_FAILED = 'Unable to remove SWP'; export const NVIC_LOAD_VIEW_ERROR = 'Unable to load the view'; export const NVIC_GET_PERIPH_NAME =
+#, config-value
+msgid "Unable to get the peripheral name"
+msgstr ""
+
 #: @prg-cube/sw-configuration-form/src/components/FormComponent/FormContent.tsx:87
 #. 界面位置：sw-configuration-form → FormContent
 #. 语境：{!rootLayoutIds ? ( <Typography variant="body_small" data-testid="loading-form"> Loading the form... </Typography> ) : (
@@ -5146,6 +6498,16 @@ msgstr "正在加载属性..."
 msgid "Error loading property: "
 msgstr ""
 
+#: @prg-cube/sw-configuration-form/src/components/renderers/composites/GpioBinding.tsx:161
+#: @prg-cube/sw-configuration-form/src/components/renderers/composites/PeripheralBinding.tsx:153
+#: @prg-cube/sw-configuration-form/src/components/renderers/composites/Query.tsx:183
+#. 界面位置：sw-configuration-form → GpioBinding，sw-configuration-form → PeripheralBinding，sw-configuration-form → Query
+#. 语境：onOpen={handleOpen} loading={loading} loadingText="Query in progress..." disabled={disabled} data-testid={`gpio-binding-autocomplete-input`}
+#. 共 3 处使用
+#, jsx-prop
+msgid "Query in progress..."
+msgstr ""
+
 #: @prg-cube/sw-configuration-form/src/components/renderers/composites/Polynomial.tsx:166
 #. 界面位置：sw-configuration-form → SizeControl
 #. 语境：<div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'nowrap', alignItems: 'center', gap: '1.5em' }}> <Typography variant="description" color="text_br
@@ -5159,6 +6521,13 @@ msgstr ""
 #, jsx-child
 msgid "Hex value"
 msgstr "十六进制值"
+
+#: @prg-cube/sw-configuration-form/src/components/renderers/composites/Polynomial.tsx:406
+#. 界面位置：sw-configuration-form → HexEdit
+#. 语境：const hexEditorInputValidationError = decimalValueFromInput ? isValidValue(decimalValueFromInput) : 'Invalid hex value'; const isInvalidHexInput = hexEditorInpu
+#, config-value
+msgid "Invalid hex value"
+msgstr ""
 
 #: @prg-cube/sw-configuration-form/src/components/renderers/composites/Query.tsx:40
 #. 界面位置：sw-configuration-form
@@ -5255,6 +6624,20 @@ msgstr ""
 msgid "No items in array"
 msgstr "数组中没有条目"
 
+#: @prg-cube/sw-configuration-form/src/components/renderers/layouts/GridArrayRenderer.tsx:100
+#. 界面位置：sw-configuration-form
+#. 语境：type: 'action', deleteAction: { deleteTooltipText: 'Delete current row', disableButton: !canDeleteItem }
+#, config-value
+msgid "Delete current row"
+msgstr ""
+
+#: @prg-cube/sw-configuration-form/src/components/renderers/layouts/TagInputArrayRenderer.tsx:56
+#. 界面位置：sw-configuration-form → TagInputChip
+#. 语境：const itemErrors = directErrors.length > 0 ? directErrors : inferredErrors; const hasItemError = itemErrors.length > 0; const removeAriaLabel = item.length > 0 
+#, config-value
+msgid "Remove empty entry"
+msgstr ""
+
 #: @prg-cube/sw-configuration-form/src/components/renderers/layouts/TagInputArrayRenderer.tsx:135
 #. 界面位置：sw-configuration-form → TagInputArrayControl
 #. 语境：<InputText size="small" placeholder="Type text" value={pendingValue} disabled={!canAddItem}
@@ -5276,6 +6659,27 @@ msgstr ""
 #, jsx-child, needs-review, keep-whitespace
 msgid " in nested parameters"
 msgstr " 位于嵌套参数中"
+
+#: @prg-cube/sw-configuration-form/src/components/renderers/SectionDetailsRenderer.tsx:218
+#. 界面位置：sw-configuration-form → SECTION_INFO_ICON_TOOLTIP
+#. 语境：}; export const SECTION_INFO_ICON_TOOLTIP = 'Click on the "i" info icon to see section details'; /**
+#, config-value
+msgid "Click on the \"i\" info icon to see section details"
+msgstr ""
+
+#: @prg-cube/sw-configuration-form/src/utils/renderer-utils.ts:48
+#. 界面位置：sw-configuration-form → HOW_TO_TITLE
+#. 语境：export const generateHowToTitle = (property: PropertyType): string => { const HOW_TO_TITLE = 'How to'; const INFORMATION_TITLE = 'Information'; const HOW_TO_INF
+#, config-value
+msgid "How to"
+msgstr ""
+
+#: @prg-cube/sw-configuration-form/src/utils/renderer-utils.ts:126
+#. 界面位置：sw-configuration-form → PARAMETER_DETAILS_INFO_ICON_TOOLTIP
+#. 语境：}; export const PARAMETER_DETAILS_INFO_ICON_TOOLTIP = `Click on the "i" info icon to see parameter details`; interface ErrorWarningProps {
+#, config-value
+msgid "Click on the \"i\" info icon to see parameter details"
+msgstr ""
 
 #: @prg-cube/sw-configuration-form/src/utils/renderer-utils.ts:156
 #. 界面位置：sw-configuration-form
@@ -5304,6 +6708,20 @@ msgstr ""
 #, config-value
 msgid "Reset SW Configuration Parameters Json Cache"
 msgstr "重置软件配置参数 Json 缓存"
+
+#: @prg-cube/sw-configuration-view/src/browser/sw-configuration-form-contribution.ts:56
+#. 界面位置：sw-configuration-view → SwConfigurationFormContribution
+#. 语境：}) .catch(error => { const message = 'Failed to reset parameters.json cache'; void this.messageService.error(message); logger.error(message + ` (project: ${proj
+#, config-value
+msgid "Failed to reset parameters.json cache"
+msgstr ""
+
+#: @prg-cube/sw-configuration-view/src/browser/sw-configuration-form-contribution.ts:62
+#. 界面位置：sw-configuration-view → SwConfigurationFormContribution
+#. 语境：}) .catch(error => { const message = 'Failed to connect to model server for parameters.json cache reset'; void this.messageService.error(message); logger.error(
+#, config-value
+msgid "Failed to connect to model server for parameters.json cache reset"
+msgstr ""
 
 #: @prg-cube/theia-ext-dma-configuration/src/browser/components/assign-to-view.tsx:202
 #: @prg-cube/theia-ext-dma-configuration/src/browser/components/assign-to-view.tsx:368
@@ -5511,13 +6929,6 @@ msgid ""
 "the Mem-To-Mem transfer."
 msgstr ""
 
-#: @prg-cube/theia-ext-dma-configuration/src/browser/components/move-to-menu.tsx:567
-#. 界面位置：theia-ext-dma-configuration → MoveToMenu
-#. 语境：</Stack> <Typography variant="body_medium" color="text_default"> In case of re-activation, all settings will be set to their default values. </Typography> <Sepa
-#, jsx-child
-msgid "In case of re-activation, all settings will be set to their default values."
-msgstr "重新激活时，所有设置将恢复为默认值。"
-
 #: @prg-cube/theia-ext-dma-configuration/src/browser/components/standalone-configuration/dma-configuration-panel.tsx:42
 #. 界面位置：theia-ext-dma-configuration → DmaConfigurationPanel
 #. 语境：return ( <Stack data-testid={blockId} direction="column" gap="16px" flex="none" maxWidth="720px" minWidth="720px" overflow="auto" id={blockId}> <ParamCard hideO
@@ -5567,6 +6978,76 @@ msgstr ""
 #. 语境：export class DmaConfigurationWidget extends SplitDmaWidget { static readonly ID: string = 'dma-configuration'; static readonly LABEL: string = 'configuration'; 
 #, config-value
 msgid "configuration"
+msgstr ""
+
+#: @prg-cube/theia-ext-dma-configuration/src/common/error.ts:12
+#. 界面位置：theia-ext-dma-configuration → DMA_STORE_INIT_FAILED
+#. 语境：export const DMA_LOAD_VIEW_ERROR = 'Unable to load the view'; export const DMA_UPDATE_VIEW_ERROR = 'Unable to update the view'; export const DMA_STORE_INIT_FAIL
+#, config-value
+msgid "Unable to initialize DMA data store"
+msgstr ""
+
+#: @prg-cube/theia-ext-dma-configuration/src/common/error.ts:13
+#. 界面位置：theia-ext-dma-configuration → DMA_REMOVE_SWP_FAILED
+#. 语境：export const DMA_UPDATE_VIEW_ERROR = 'Unable to update the view'; export const DMA_STORE_INIT_FAILED = 'Unable to initialize DMA data store'; export const DMA_R
+#, config-value
+msgid "Unable to delete the software project"
+msgstr ""
+
+#: @prg-cube/theia-ext-dma-configuration/src/common/error.ts:14
+#. 界面位置：theia-ext-dma-configuration → DMA_ADD_SWP_FAILED
+#. 语境：export const DMA_STORE_INIT_FAILED = 'Unable to initialize DMA data store'; export const DMA_REMOVE_SWP_FAILED = 'Unable to delete the software project'; export
+#, config-value
+msgid "Unable to add the software project"
+msgstr ""
+
+#: @prg-cube/theia-ext-dma-configuration/src/common/error.ts:15
+#. 界面位置：theia-ext-dma-configuration → DMA_SAVE_STATE_FAILED
+#. 语境：export const DMA_REMOVE_SWP_FAILED = 'Unable to delete the software project'; export const DMA_ADD_SWP_FAILED = 'Unable to add the software project'; export con
+#, config-value
+msgid "Unable to save state"
+msgstr ""
+
+#: @prg-cube/theia-ext-dma-configuration/src/common/error.ts:18
+#. 界面位置：theia-ext-dma-configuration → DMA_LOAD_APP_PROJECT
+#. 语境：export const DMA_OPEN_CONFIG_FAILED = 'Unable to open the Configuration panel'; export const DMA_NAV_TO_APP_PROJECT = 'Unable to navigate to the Application Pro
+#, config-value
+msgid "Unable to load the Application Project"
+msgstr ""
+
+#: @prg-cube/theia-ext-dma-configuration/src/common/error.ts:19
+#. 界面位置：theia-ext-dma-configuration → DMA_UNBIND_FAILED
+#. 语境：export const DMA_NAV_TO_APP_PROJECT = 'Unable to navigate to the Application Project panel'; export const DMA_LOAD_APP_PROJECT = 'Unable to load the Application
+#, config-value
+msgid "Unable to unbind the DMA resource"
+msgstr ""
+
+#: @prg-cube/theia-ext-dma-configuration/src/common/error.ts:20
+#. 界面位置：theia-ext-dma-configuration → DMA_BIND_FAILED
+#. 语境：export const DMA_LOAD_APP_PROJECT = 'Unable to load the Application Project'; export const DMA_UNBIND_FAILED = 'Unable to unbind the DMA resource'; export const
+#, config-value
+msgid "Unable to bind the DMA resource: no software component found that can drive this resource type"
+msgstr ""
+
+#: @prg-cube/theia-ext-dma-configuration/src/common/error.ts:21
+#. 界面位置：theia-ext-dma-configuration → DMA_REMOVE_COMPONENT_INSTANCE
+#. 语境：export const DMA_UNBIND_FAILED = 'Unable to unbind the DMA resource'; export const DMA_BIND_FAILED = 'Unable to bind the DMA resource: no software component fou
+#, config-value
+msgid "Unable to delete the component instance"
+msgstr ""
+
+#: @prg-cube/theia-ext-dma-configuration/src/common/error.ts:22
+#. 界面位置：theia-ext-dma-configuration → DMA_REMOVE_RESERVATION_FAILED
+#. 语境：export const DMA_BIND_FAILED = 'Unable to bind the DMA resource: no software component found that can drive this resource type'; export const DMA_REMOVE_COMPONE
+#, config-value
+msgid "Unable to delete the reservation"
+msgstr ""
+
+#: @prg-cube/theia-ext-dma-configuration/src/common/error.ts:23
+#. 界面位置：theia-ext-dma-configuration → DMA_CLOSE_VIEW_ERROR
+#. 语境：export const DMA_REMOVE_COMPONENT_INSTANCE = 'Unable to delete the component instance'; export const DMA_REMOVE_RESERVATION_FAILED = 'Unable to delete the reser
+#, config-value
+msgid "Unable to close the view"
 msgstr ""
 
 #: @prg-cube/theia-ext-pinout-configuration/src/browser/components/common/PinMenuItems/MenuItemAssignSignal.tsx:67
@@ -5757,6 +7238,48 @@ msgstr "被排除的引脚将被恢复"
 #, jsx-child
 msgid "Export the pinout with its configuration to a CSV file"
 msgstr "将引脚配置及其配置导出为 CSV 文件"
+
+#: @prg-cube/theia-ext-pinout-configuration/src/browser/components/common/tooltips.tsx:25
+#. 界面位置：theia-ext-pinout-configuration
+#. 语境：export const exportPinoutTooltip: React.ReactNode = <>Export the pinout with its configuration to a CSV file</>; export const reservedPinText = 'This pin is res
+#, config-value
+msgid "This pin is reserved"
+msgstr ""
+
+#: @prg-cube/theia-ext-pinout-configuration/src/browser/components/common/tooltips.tsx:28
+#. 界面位置：theia-ext-pinout-configuration
+#. 语境：export const reservedPinTooltip: React.ReactNode = <>{reservedPinText}</>; export const configuredPinText = 'This pin is configured'; export const configuredPin
+#, config-value
+msgid "This pin is configured"
+msgstr ""
+
+#: @prg-cube/theia-ext-pinout-configuration/src/browser/components/common/tooltips.tsx:31
+#. 界面位置：theia-ext-pinout-configuration
+#. 语境：export const configuredPinTooltip: React.ReactNode = <>{configuredPinText}</>; export const configurationErrorText = 'This pin has configuration error'; export 
+#, config-value
+msgid "This pin has configuration error"
+msgstr ""
+
+#: @prg-cube/theia-ext-pinout-configuration/src/browser/components/common/tooltips.tsx:34
+#. 界面位置：theia-ext-pinout-configuration
+#. 语境：export const configurationErrorTooltip: React.ReactNode = <>{configurationErrorText}</>; export const configurationWarningText = 'This pin has configuration war
+#, config-value
+msgid "This pin has configuration warning"
+msgstr ""
+
+#: @prg-cube/theia-ext-pinout-configuration/src/browser/components/common/tooltips.tsx:37
+#. 界面位置：theia-ext-pinout-configuration
+#. 语境：export const configurationWarningTooltip: React.ReactNode = <>{configurationWarningText}</>; export const pinnedSignalText = 'This pin has pinned signal'; expor
+#, config-value
+msgid "This pin has pinned signal"
+msgstr ""
+
+#: @prg-cube/theia-ext-pinout-configuration/src/browser/components/common/tooltips.tsx:40
+#. 界面位置：theia-ext-pinout-configuration
+#. 语境：export const pinnedSignalTooltip: React.ReactNode = <>{pinnedSignalText}</>; export const excludedPinText = 'This pin is excluded (not used)'; export const excl
+#, config-value
+msgid "This pin is excluded (not used)"
+msgstr ""
 
 #: @prg-cube/theia-ext-pinout-configuration/src/browser/components/common/UserLabelsEditor/UserLabelsEditor.tsx:153
 #. 界面位置：theia-ext-pinout-configuration → UserLabelsEditor
@@ -6203,6 +7726,20 @@ msgstr ""
 msgid "Signals"
 msgstr ""
 
+#: @prg-cube/theia-ext-pinout-configuration/src/browser/components/table-view/PinTableComponent.tsx:453
+#. 界面位置：theia-ext-pinout-configuration → PinTableComponent
+#. 语境：cell: { type: 'tagMenu', inputPlaceholder: 'Assign signal...', menuProps: { size: 'small', maxHeight: 'unset' }, // override maxHeight set by DataGrid to avoid 
+#, config-value
+msgid "Assign signal..."
+msgstr ""
+
+#: @prg-cube/theia-ext-pinout-configuration/src/browser/components/table-view/PinTableComponent.tsx:477
+#. 界面位置：theia-ext-pinout-configuration → PinTableComponent
+#. 语境：cell: { type: 'tagMenu', inputPlaceholder: 'Add label...', readOnly: (row) => isPadRow(row.id), // pad lines are not editable content: (cellProps) => getPinLabe
+#, config-value
+msgid "Add label..."
+msgstr ""
+
 #: @prg-cube/theia-ext-pinout-configuration/src/browser/components/table-view/PinTableComponent.tsx:502
 #. 界面位置：theia-ext-pinout-configuration → PinTableComponent
 #. 语境：const boardLabelColumnProps: DataGridColumnProps = { field: 'boardLabel', header: 'Board track name', width: '180px', cell: {
@@ -6257,6 +7794,17 @@ msgstr ""
 #. 共 5 处使用
 #, jsx-prop, config-value
 msgid "Pinout"
+msgstr ""
+
+#: @prg-cube/theia-ext-pinout-configuration/src/browser/components/Toolbar/PinoutToolbar.tsx:527
+#: @prg-cube/theia-ext-pinout-configuration/src/browser/components/Toolbar/PinoutToolbar.tsx:879
+#: @prg-cube/theia-ext-pinout-configuration/src/browser/components/Toolbar/PinoutToolbar.tsx:983
+#: @prg-cube/theia-ext-pinout-configuration/src/browser/components/Toolbar/PinoutToolbar.tsx:1077
+#. 界面位置：theia-ext-pinout-configuration → PinoutToolbar，theia-ext-pinout-configuration → filteringModeSelector，theia-ext-pinout-configuration → typeSelector，theia-ext-pinout-configuration → ioStructureSelector
+#. 语境：placeholder={getPlaceholderText(searchType)} clear clearText="Clear filter" error={ searchText.length > 0 &&
+#. 共 4 处使用
+#, jsx-prop
+msgid "Clear filter"
 msgstr ""
 
 #: @prg-cube/theia-ext-pinout-configuration/src/browser/components/Toolbar/PinoutToolbar.tsx:642
@@ -6343,6 +7891,13 @@ msgstr ""
 msgid "GPIO"
 msgstr "GPIO"
 
+#: @prg-cube/theia-ext-pinout-configuration/src/browser/widgets/panel/pinout-panel-widget.tsx:517
+#. 界面位置：theia-ext-pinout-configuration → OPEN_FOLDER_LABEL
+#. 语境：outputPath = `${outputPath}.csv`; } const OPEN_FOLDER_LABEL = 'Open folder'; const COPY_PATH_LABEL = 'Copy path'; // Export the full pinout to a CSV file
+#, config-value
+msgid "Open folder"
+msgstr ""
+
 #: @prg-cube/theia-ext-pinout-configuration/src/common/preferences.ts:35
 #. 界面位置：theia-ext-pinout-configuration → PinoutPreferenceSchema
 #. 语境：minimum: RIGHT_SIDE_PANEL_DEFAULT_WIDTH, default: RIGHT_SIDE_PANEL_DEFAULT_WIDTH, description: 'Width of Pinout Detail View panel' }, [PINS_LIST_SORT_CRITERIA_U
@@ -6383,6 +7938,13 @@ msgstr ""
 #. 语境：iconName="close-line" onClick={onClose} aria-label="close alert" size="small" />
 #, jsx-prop
 msgid "close alert"
+msgstr ""
+
+#: @prg-cube/ui-core/src/components/AnimatedCubeLogo/AnimatedCubeLogo.tsx:52
+#. 界面位置：ui-core → AnimatedCubeLogo
+#. 语境：xmlns="http://www.w3.org/2000/svg" sx={animatedCubeLogoCss} titleAccess="Animated cube logo" > <path
+#, jsx-prop
+msgid "Animated cube logo"
 msgstr ""
 
 #: @prg-cube/ui-core/src/components/Chip/Chip.tsx:230
@@ -6440,6 +8002,48 @@ msgstr ""
 #. 共 3 处使用
 #, jsx-prop
 msgid "DataGrid checkbox input"
+msgstr ""
+
+#: @prg-cube/ui-core/src/components/DataGrid/cells/common/TagCellPreview/TagCellPreview.tsx:89
+#: @prg-cube/ui-core/src/components/DataGrid/cells/Dropdown.tsx:61
+#: @prg-cube/ui-core/src/components/DataGrid/cells/tagDropdown.tsx:65
+#: @prg-cube/ui-core/src/components/DataGrid/DataGridList/DataGridListItem/DataGridListItemEditionFormatter.tsx:172
+#: @prg-cube/ui-core/src/components/DataGrid/DataGridList/DataGridListItem/DataGridListItemEditionFormatter.tsx:371
+#: @prg-cube/ui-core/src/components/DataGrid/DataGridList/DataGridListItem/DataGridListItemEditionFormatter.tsx:698
+#. 界面位置：ui-core → TagCellPreview，ui-core → DropdownCell，ui-core → TagDropdownCell，ui-core → TagMenuRender
+#. 语境：row, inputPlaceholder: cell?.inputPlaceholder, defaultPlaceholder: defaultPlaceholder ?? 'Select...', });
+#. 共 6 处使用
+#, config-value, jsx-prop
+msgid "Select..."
+msgstr ""
+
+#: @prg-cube/ui-core/src/components/DataGrid/cells/inputNumber.tsx:52
+#: @prg-cube/ui-core/src/components/DataGrid/DataGridList/DataGridListItem/DataGridListItemEditionFormatter.tsx:310
+#. 界面位置：ui-core → InputNumberCell，ui-core → InputNumberRender
+#. 语境：row, inputPlaceholder: cell.inputPlaceholder, defaultPlaceholder: 'Enter Number', });
+#. 共 2 处使用
+#, config-value, jsx-prop
+msgid "Enter Number"
+msgstr ""
+
+#: @prg-cube/ui-core/src/components/DataGrid/cells/inputText.tsx:58
+#: @prg-cube/ui-core/src/components/DataGrid/DataGridList/DataGridListItem/DataGridListItemEditionFormatter.tsx:549
+#. 界面位置：ui-core → InputTextCell，ui-core → RENDERERS
+#. 语境：row, inputPlaceholder: cell.inputPlaceholder, defaultPlaceholder: 'Enter text', });
+#. 共 2 处使用
+#, config-value, jsx-prop
+msgid "Enter text"
+msgstr ""
+
+#: @prg-cube/ui-core/src/components/DataGrid/cells/MultiLabel/MultiLabel.tsx:115
+#: @prg-cube/ui-core/src/components/DataGrid/cells/MultiTagLabel/MultiTagLabel.tsx:285
+#: @prg-cube/ui-core/src/components/DataGrid/DataGridList/DataGridListItem/DataGridListItemEditionFormatter.tsx:631
+#: @prg-cube/ui-core/src/components/DataGrid/DataGridList/DataGridListItem/DataGridListItemEditionFormatter.tsx:847
+#. 界面位置：ui-core → MultiLabelCell，ui-core → DEFAULT_PLACEHOLDER，ui-core → RENDERERS
+#. 语境：row, inputPlaceholder: cell.inputPlaceholder, defaultPlaceholder: 'Add label', });
+#. 共 4 处使用
+#, config-value, jsx-prop
+msgid "Add label"
 msgstr ""
 
 #: @prg-cube/ui-core/src/components/DataGrid/cells/MultiTagLabel/MultiTagLabel.tsx:145
@@ -6522,29 +8126,6 @@ msgstr ""
 #. 共 2 处使用
 #, jsx-child
 msgid "Apply"
-msgstr ""
-
-#: @prg-cube/ui-core/src/components/DataGrid/DataGridList/DataGridListItem/DataGridListItemEditionFormatter.tsx:310
-#. 界面位置：ui-core → InputNumberRender
-#. 语境：(rowInEditMode && resolveRowCallbackProp(rowInEditMode, cell.inputPlaceholder)) ?? 'Enter Number' } startAdornment={
-#, jsx-prop
-msgid "Enter Number"
-msgstr ""
-
-#: @prg-cube/ui-core/src/components/DataGrid/DataGridList/DataGridListItem/DataGridListItemEditionFormatter.tsx:371
-#: @prg-cube/ui-core/src/components/DataGrid/DataGridList/DataGridListItem/DataGridListItemEditionFormatter.tsx:698
-#. 界面位置：ui-core → DropdownRender，ui-core → RENDERERS
-#. 语境：(rowInEditMode && resolveRowCallbackProp(rowInEditMode, cell.inputPlaceholder)) ?? 'Select...' } startAdornment={
-#. 共 2 处使用
-#, jsx-prop
-msgid "Select..."
-msgstr ""
-
-#: @prg-cube/ui-core/src/components/DataGrid/DataGridList/DataGridListItem/DataGridListItemEditionFormatter.tsx:549
-#. 界面位置：ui-core → RENDERERS
-#. 语境：(rowInEditMode && resolveRowCallbackProp(rowInEditMode, cell.inputPlaceholder)) ?? 'Enter text' } fullWidth
-#, jsx-prop
-msgid "Enter text"
 msgstr ""
 
 #: @prg-cube/ui-core/src/components/DataGrid/DataGridList/DataGridListItem/DataGridListItemStartAdornments.tsx:86
@@ -6787,6 +8368,24 @@ msgstr ""
 msgid "Hide columns menu"
 msgstr ""
 
+#: @prg-cube/ui-core/src/components/DmaRightPanel/DmaLegendItem/ConfiguredLegendIcon.tsx:20
+#: @prg-cube/ui-mx2/src/patterns/DmaLegendItem/ConfiguredLegendIcon.tsx:20
+#. 界面位置：ui-core → ConfiguredLegendIcon，ui-mx2 → ConfiguredLegendIcon
+#. 语境：<MuiSvgIcon className="CubeLegendIcon" titleAccess="dma configured legend icon" width="28" height="28"
+#. 共 2 处使用
+#, jsx-prop
+msgid "dma configured legend icon"
+msgstr ""
+
+#: @prg-cube/ui-core/src/components/DmaRightPanel/DmaLegendItem/ReservedLegendIcon.tsx:20
+#: @prg-cube/ui-mx2/src/patterns/DmaLegendItem/ReservedLegendIcon.tsx:20
+#. 界面位置：ui-core → ReservedLegendIcon，ui-mx2 → ReservedLegendIcon
+#. 语境：<MuiSvgIcon className="CubeLegendIcon" titleAccess="dma reserved legend icon" width="28" height="28"
+#. 共 2 处使用
+#, jsx-prop
+msgid "dma reserved legend icon"
+msgstr ""
+
 #: @prg-cube/ui-core/src/components/EditableFields/EditableBaseField/EditableBaseFieldEditMode/EditableBaseFieldEditMode.tsx:162
 #. 界面位置：ui-core → EditableBaseFieldEditMode
 #. 语境：autoFocus clear aria-label="edit mode" /> </FormControl>
@@ -6862,6 +8461,69 @@ msgstr ""
 #. 语境：className={`CubeGauge CubeGauge-${size}`} > <div className="CubeGauge-bar" aria-label="cube gauge bar"> <Typography variant={size === 'large' ? 'body_small' : '
 #, jsx-prop
 msgid "cube gauge bar"
+msgstr ""
+
+#: @prg-cube/ui-core/src/components/GettingStarted/GsButton/GsButtonIllustration/icons/CreateIcon.tsx:15
+#: @prg-cube/ui-mx2/src/patterns/GsButton/GsButtonIllustration/icons/CreateIcon.tsx:15
+#. 界面位置：ui-core → CreateIcon，ui-mx2 → CreateIcon
+#. 语境：export default function CreateIcon() { return ( <IconContainer titleAccess="create icon"> <path d="M8.66667 15.3333C4.98467 15.3333 2 12.3487 2 8.66667C2 4.9846
+#. 共 2 处使用
+#, jsx-prop
+msgid "create icon"
+msgstr ""
+
+#: @prg-cube/ui-core/src/components/GettingStarted/GsButton/GsButtonIllustration/icons/OpenIcon.tsx:15
+#: @prg-cube/ui-mx2/src/patterns/GsButton/GsButtonIllustration/icons/OpenIcon.tsx:15
+#. 界面位置：ui-core → openIcon，ui-mx2 → OpenIcon
+#. 语境：export default function openIcon() { return ( <IconContainer titleAccess="open icon"> <path d="M7.66667 14.7476C3.98467 14.7476 1 11.763 1 8.08097C1 4.39897 3.9
+#. 共 2 处使用
+#, jsx-prop
+msgid "open icon"
+msgstr ""
+
+#: @prg-cube/ui-core/src/components/GettingStarted/GsButton/GsButtonIllustration/illustrations/BoardIllustration.tsx:15
+#: @prg-cube/ui-mx2/src/patterns/GsButton/GsButtonIllustration/illustrations/BoardIllustration.tsx:15
+#. 界面位置：ui-core → BoardIllustration，ui-mx2 → BoardIllustration
+#. 语境：export default function BoardIllustration() { return ( <IllustrationContainer titleAccess="board illustration"> <ellipse opacity="0.1"
+#. 共 2 处使用
+#, jsx-prop
+msgid "board illustration"
+msgstr ""
+
+#: @prg-cube/ui-core/src/components/GettingStarted/GsButton/GsButtonIllustration/illustrations/McuIllustration.tsx:15
+#: @prg-cube/ui-mx2/src/patterns/GsButton/GsButtonIllustration/illustrations/McuIllustration.tsx:15
+#. 界面位置：ui-core → McuIllustration，ui-mx2 → McuIllustration
+#. 语境：export default function McuIllustration() { return ( <IllustrationContainer titleAccess="mcu illustration"> <circle opacity="0.1" cx="32.9642" cy="35.1001" r="2
+#. 共 2 处使用
+#, jsx-prop
+msgid "mcu illustration"
+msgstr ""
+
+#: @prg-cube/ui-core/src/components/GettingStarted/GsButton/GsButtonIllustration/illustrations/ProjectIllustration.tsx:15
+#: @prg-cube/ui-mx2/src/patterns/GsButton/GsButtonIllustration/illustrations/ProjectIllustration.tsx:15
+#. 界面位置：ui-core → McuIllustration，ui-mx2 → McuIllustration
+#. 语境：export default function McuIllustration() { return ( <IllustrationContainer titleAccess="project illustration"> <circle opacity="0.1" cx="33.2972" cy="35.1001" 
+#. 共 2 处使用
+#, jsx-prop
+msgid "project illustration"
+msgstr ""
+
+#: @prg-cube/ui-core/src/components/GettingStarted/GsLinkWeb/GsLinkWebImage/SVG/StImage.tsx:22
+#: @prg-cube/ui-mx2/src/patterns/GsLinkWeb/GsLinkWebImage/SVG/StImage.tsx:22
+#. 界面位置：ui-core → StImage，ui-mx2 → StImage
+#. 语境：fill="none" className="CubeGSLinkWeb-image" titleAccess="st link" > <svg
+#. 共 2 处使用
+#, jsx-prop
+msgid "st link"
+msgstr ""
+
+#: @prg-cube/ui-core/src/components/GettingStarted/GsLinkWeb/GsLinkWebImage/SVG/WikiImage.tsx:22
+#: @prg-cube/ui-mx2/src/patterns/GsLinkWeb/GsLinkWebImage/SVG/WikiImage.tsx:22
+#. 界面位置：ui-core → WikiImage，ui-mx2 → WikiImage
+#. 语境：fill="none" className="CubeGSLinkWeb-image" titleAccess="wiki link" > <svg
+#. 共 2 处使用
+#, jsx-prop
+msgid "wiki link"
 msgstr ""
 
 #: @prg-cube/ui-core/src/components/InputNumber/InputNumberStepper/InputNumberStepper.tsx:78
@@ -6941,6 +8603,13 @@ msgstr ""
 msgid "expand list"
 msgstr ""
 
+#: @prg-cube/ui-core/src/components/Logo/LogoMX2Display/LogoMX2Display.tsx:64
+#. 界面位置：ui-core → LogoMX2Display
+#. 语境：{...safeAriaAttributesProps(props)} {...safeCommonAttributesProps(props)} titleAccess="Logo MX2Display" sx={svgIconCss({ maxWidth, maxHeight })} viewBox={`0 0 $
+#, jsx-prop
+msgid "Logo MX2Display"
+msgstr ""
+
 #: @prg-cube/ui-core/src/components/MenuItem/MenuItem.tsx:423
 #. 界面位置：ui-core → MenuItem
 #. 语境：} onClick={onChevronClick} aria-label="chevron button" tabIndex={!keepEndAdornmentEnabled && disabled ? -1 : 0} />
@@ -7002,6 +8671,15 @@ msgstr ""
 #. 共 4 处使用
 #, jsx-prop
 msgid "Table view"
+msgstr ""
+
+#: @prg-cube/ui-core/src/components/MxToolbar/MxSecondaryToolbar/MxSecondaryToolbar.tsx:401
+#: @prg-cube/ui-mx2/src/patterns/MxToolbar/MxSecondaryToolbar/MxSecondaryToolbar.tsx:403
+#. 界面位置：ui-core → CenterActions，ui-mx2 → CenterActions
+#. 语境：const ongoingButtonLabel = ongoingButtonOptions?.content ?? 'Stop highlight all paths'; return (
+#. 共 2 处使用
+#, config-value
+msgid "Stop highlight all paths"
 msgstr ""
 
 #: @prg-cube/ui-core/src/components/MxToolbar/MxSecondaryToolbar/MxSecondaryToolbar.tsx:531
@@ -7272,6 +8950,13 @@ msgstr ""
 #. 语境：<Checkbox id="dont-ask-again-checkbox" label={"Don't ask me again"} labelPlacement="end" checked={dontAskAgainChecked}
 #, jsx-prop
 msgid "Don't ask me again"
+msgstr ""
+
+#: @prg-cube/ui-mx2/src/patterns/GsLinkWeb/GsLinkWebImage/SVG/SidekickImage.tsx:22
+#. 界面位置：ui-mx2 → SidekickImage
+#. 语境：fill="none" className="CubeGSLinkWeb-image" titleAccess="sidekick link" > <svg
+#, jsx-prop
+msgid "sidekick link"
 msgstr ""
 
 #: @prg-cube/ui-theia-branding/src/browser/CubeMessage/constants.ts:12

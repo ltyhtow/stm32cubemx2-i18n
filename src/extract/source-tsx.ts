@@ -1,3 +1,7 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+
 /**
  * 从 sourcemap 的 sourcesContent 里抽取界面文案。
  *
@@ -76,6 +80,26 @@ const TEXT_PROPS = new Set([
   'menuLabel',
   'shortTitle',
   'longTitle',
+  // 以下由 propscan 对 ST 源码实测统计补全，都是真实承载界面文字的属性
+  'subTitle',
+  'text',
+  'children',
+  'prettyName',
+  'clearText',
+  'loadingText',
+  'highlightedText',
+  'dataExportButtonText',
+  'defaultPlaceholder',
+  'inputPlaceholder',
+  'note',
+  'lockedLabel',
+  'collapsibleLabel',
+  'activeTooltip',
+  'deleteTooltipText',
+  'titleAccess',
+  'buttonTitle',
+  'showDetailsAction',
+  'content',
 ]);
 
 /** 类里以常量形式声明的界面文案，形如 `static LABEL = 'Cube: Issue Reporter'`。 */
@@ -201,6 +225,29 @@ export function looksLikeCode(text: string, strictness: Strictness): ExclusionRe
   }
   return undefined;
 }
+
+/**
+ * 判断一个值是否像「给人看的句子」。
+ *
+ * 用于捕捉白名单覆盖不到的位置——尤其是模块级导出的界面文案常量
+ * （`export const PROJECT_SAVED_SUCCESSFULLY = 'The project was saved successfully !'`）。
+ *
+ * 这里可以比属性白名单放开一档，因为**运行时才是安全网**：静态多收一条
+ * logger 消息，代价只是浪费翻译人员一点时间（它不走 React 渲染，运行时永远不会替换它）；
+ * 而静态漏收一条，界面上就是永久的英文。
+ */
+export function looksLikeSentence(text: string): boolean {
+  const t = text.trim();
+  if (t.length < 4 || t.length > 300) return false;
+  if (!/\s/.test(t)) return false;              // 单个词交给属性白名单判断
+  if (!/^[A-Z]/.test(t)) return false;          // 界面文案通常首字母大写
+  if (/[{}<>|\\]|\$\{|^\w+:\/\//.test(t)) return false; // 模板、标签、URL
+  if (/^[a-z-]+\s*:/.test(t)) return false;     // CSS 声明
+  return /[A-Za-z]{3}/.test(t);
+}
+
+/** 名字表明这不是界面文案的常量。 */
+const NON_UI_CONST = /URL|URI|PATH|REGEX|PATTERN|SCHEME|CHANNEL|COMMAND_ID|_KEY$|_ID$|^ID_|SELECTOR|CLASS_?NAME|TEST_?ID/i;
 
 /** 首尾空格承载语义的片段：它会被拼接到相邻内容上。 */
 export function hasSignificantWhitespace(text: string): boolean {
@@ -416,6 +463,22 @@ export function extractFromSource(fileName: string, content: string): RawString[
   /** <Foo>{"文本"}</Foo> 与 <Foo>{cond ? "A" : "B"}</Foo>。 */
   const visitJsxExprChild = (node: ts.JsxExpression) => {
     if (!node.expression) return;
+
+    // 带插值的模板：运行时拿到的是拼好的整句，而我们表里只有各个片段，
+    // 按值查表永远对不上。收录并标明原因，免得开发者日后去猜为什么没翻。
+    if (ts.isTemplateExpression(node.expression)) {
+      const shape =
+        node.expression.head.text +
+        node.expression.templateSpans.map((s2) => '{}' + s2.literal.text).join('');
+      if (shape.trim() && /[A-Za-z]{3}/.test(shape)) {
+        push(shape, 'jsx-child', node.expression, {
+          translatable: false,
+          reason: 'template-concat',
+        });
+      }
+      return;
+    }
+
     for (const lit of stringBranches(node.expression)) {
       record(lit.text, 'jsx-child', lit, 'jsx-child');
     }
@@ -491,6 +554,20 @@ export function extractFromSource(fileName: string, content: string): RawString[
     }
   };
 
+  /**
+   * 模块级的界面文案常量：`export const NO_VERSION_FOUND = 'No version found'`。
+   * ST 的源码里有 170 多个这样的常量，是白名单覆盖不到的一大片。
+   */
+  const visitVariable = (node: ts.VariableDeclaration) => {
+    if (!node.initializer || !ts.isIdentifier(node.name)) return;
+    const name = node.name.text;
+    if (NON_UI_CONST.test(name)) return;
+    for (const lit of stringBranches(node.initializer)) {
+      if (!looksLikeSentence(lit.text)) continue;
+      record(lit.text, 'config-value', lit, 'jsx-child', name);
+    }
+  };
+
   /** 类里的界面文案常量：`static LABEL = 'Cube: Issue Reporter'`。 */
   const visitClassProperty = (node: ts.PropertyDeclaration) => {
     if (!node.initializer || !ts.isIdentifier(node.name)) return;
@@ -536,6 +613,7 @@ export function extractFromSource(fileName: string, content: string): RawString[
     else if (ts.isJsxAttribute(node)) visitJsxAttribute(node);
     else if (ts.isPropertyAssignment(node)) visitProperty(node);
     else if (ts.isPropertyDeclaration(node)) visitClassProperty(node);
+    else if (ts.isVariableDeclaration(node)) visitVariable(node);
     else if (ts.isCallExpression(node)) visitCall(node);
     ts.forEachChild(node, walk);
   };

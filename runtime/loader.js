@@ -1,3 +1,7 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+
 /*
  * STM32CubeMX2-translator 运行时。
  *
@@ -43,7 +47,9 @@
   function loadTable(locale) {
     try {
       var xhr = new XMLHttpRequest();
-      xhr.open('GET', './st-i18n/' + encodeURIComponent(locale) + '.json', false);
+      // Theia 注册的语言 id 是小写（zh-cn），而 Gettext 惯例是 zh-CN。
+      // 统一按小写找文件，install 也按小写写盘。
+      xhr.open('GET', './st-i18n/' + encodeURIComponent(locale.toLowerCase()) + '.json', false);
       xhr.send(null);
       if (xhr.status !== 0 && (xhr.status < 200 || xhr.status >= 400)) return null;
       var data = JSON.parse(xhr.responseText);

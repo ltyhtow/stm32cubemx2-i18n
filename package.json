@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "Multi-language localization toolkit for STM32CubeMX2. Extracts UI strings with AST + sourcemap precision, produces Gettext catalogs for translators, and applies translations through runtime hooks instead of binary string replacement.",
   "type": "module",
-  "license": "Apache-2.0",
+  "license": "MPL-2.0",
   "bin": {
     "cubemx2-translator": "./dist/cli.js"
   },
@@ -15,7 +15,7 @@
     "dist/**/*.js",
     "runtime/loader.js",
     "LICENSE",
-    "NOTICE",
+    "DISCLAIMER.md",
     "README.md"
   ],
   "scripts": {

@@ -1,3 +1,7 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+
 /**
  * Gettext PO 工作流。
  *
@@ -220,6 +224,28 @@ export function poToRuntimeTable(data: PoData, locale: string): RuntimeTable {
   }
 
   return { locale, strings, scoped };
+}
+
+/**
+ * 生成伪翻译表。
+ *
+ * 把每条可译原文包成 `⟦原文⟧`，不需要任何真实译文。用途是验证：
+ *   - 运行时挂钩是否真的生效
+ *   - 哪些界面文案真的流经了挂钩点（带括号的就是命中了）
+ *   - 哪些抽到了却在界面上看不见（说明走的不是 React 渲染路径）
+ *
+ * 这比拿半成品译文去装信息量大得多——未加括号的英文一眼就是覆盖缺口。
+ */
+export function pseudoTable(catalog: Catalog, locale = 'pseudo'): RuntimeTable {
+  const strings: Record<string, string> = {};
+  for (const e of catalog.entries) {
+    if (!e.translatable) continue;
+    // 首尾空格留在括号外，否则拼接位置会看不出原本的空格
+    const lead = e.text.slice(0, e.text.length - e.text.trimStart().length);
+    const trail = e.text.slice(e.text.trimEnd().length);
+    strings[e.text] = `${lead}⟦${e.text.trim()}⟧${trail}`;
+  }
+  return { locale, strings, scoped: {} };
 }
 
 /** 统计一个 PO 的完成度。 */

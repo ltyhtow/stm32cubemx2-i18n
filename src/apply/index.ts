@@ -1,3 +1,7 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+
 /**
  * 安装 / 回滚 / 体检。
  */
@@ -12,7 +16,7 @@ import {
 } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import type { Installation, RuntimeTable } from '../types.js';
+import type { Catalog, Installation, RuntimeTable } from '../types.js';
 import {
   inject,
   injectHtml,
@@ -22,7 +26,7 @@ import {
   syncGzip,
   MARKER,
 } from '../runtime/inject.js';
-import { parsePo, poToRuntimeTable, poStats } from '../catalog/po.js';
+import { parsePo, poToRuntimeTable, poStats, pseudoTable } from '../catalog/po.js';
 
 /** 包内 runtime/loader.js 的路径。dist/apply/ -> 包根 */
 export function runtimeAssetPath(): string {
@@ -34,6 +38,8 @@ export interface InstallOptions {
   /** 要部署的语言，如 zh-CN。对应 locales/<locale>.po */
   locales: string[];
   localesDir: string;
+  /** 给了 catalog 就部署伪翻译而非读 PO，用于验证挂钩与覆盖率 */
+  pseudoCatalog?: Catalog;
   dryRun?: boolean;
 }
 
@@ -50,9 +56,16 @@ export function install(install_: Installation, opts: InstallOptions): InstallRe
   const outDir = i18nDir(install_);
   const deployed: InstallReport['deployed'] = [];
 
-  // 1. 译文表：PO -> 运行时 JSON
+  // 1. 译文表：PO -> 运行时 JSON（伪翻译模式则直接由 catalog 生成）
   const tables: { locale: string; table: RuntimeTable }[] = [];
   for (const locale of opts.locales) {
+    if (opts.pseudoCatalog) {
+      const table = pseudoTable(opts.pseudoCatalog, locale);
+      tables.push({ locale, table });
+      const n = Object.keys(table.strings).length;
+      deployed.push({ locale, entries: n, translated: n });
+      continue;
+    }
     const poPath = path.join(opts.localesDir, `${locale}.po`);
     if (!existsSync(poPath)) {
       throw new Error(`未找到译文文件：${poPath}\n  先跑 extract 生成 .pot，再用 Poedit 翻译。`);
@@ -67,7 +80,8 @@ export function install(install_: Installation, opts: InstallOptions): InstallRe
   if (!opts.dryRun) {
     mkdirSync(outDir, { recursive: true });
     for (const { locale, table } of tables) {
-      writeFileSync(path.join(outDir, `${locale}.json`), JSON.stringify(table), 'utf8');
+      // 文件名统一小写，与 Theia 的 localeId（zh-cn）对齐
+      writeFileSync(path.join(outDir, `${locale.toLowerCase()}.json`), JSON.stringify(table), 'utf8');
     }
     copyFileSync(runtimeAssetPath(), path.join(outDir, 'loader.js'));
   }

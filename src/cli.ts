@@ -1,8 +1,12 @@
 #!/usr/bin/env node
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+
 /**
  * cubemx2-translator —— STM32CubeMX2 多语言本地化工具。
  *
- * 与 STMicroelectronics 无关联。详见 NOTICE。
+ * 与 STMicroelectronics 无关联。详见 DISCLAIMER.md。
  */
 import { Command } from 'commander';
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
@@ -19,6 +23,7 @@ import {
   parsePo,
   poStats,
   poToRuntimeTable,
+  pseudoTable,
 } from './catalog/po.js';
 import { install as doInstall, rollback as doRollbackCmd, doctor as doDoctor } from './apply/index.js';
 import { parseLegacyCsv, importLegacy } from './catalog/import-legacy.js';
@@ -148,14 +153,29 @@ program
   .description('把 PO 编译成运行时译文表')
   .requiredOption('--locale <locale>', '语言代码')
   .option('-o, --out <dir>', '输出目录', 'out')
-  .action((cmd: { locale: string; out: string }) => {
+  .option(
+    '--pseudo',
+    '生成伪翻译表（每条原文包成 ⟦原文⟧）。不读 PO，直接由 catalog 生成，' +
+      '用于验证挂钩是否生效、界面上还有哪些文案没被覆盖',
+  )
+  .action((cmd: { locale: string; out: string; pseudo?: boolean }) => {
     const o = opts();
+    mkdirSync(cmd.out, { recursive: true });
+    const outFile = path.join(cmd.out, `${cmd.locale.toLowerCase()}.json`);
+
+    if (cmd.pseudo) {
+      const catalog = loadCatalog(need(o.catalog, '先执行 extract'));
+      const table = pseudoTable(catalog, cmd.locale);
+      writeFileSync(outFile, JSON.stringify(table), 'utf8');
+      console.log(`${outFile}：伪翻译 ${Object.keys(table.strings).length} 条`);
+      console.log('界面上带 ⟦⟧ 的即为已覆盖，裸英文即为覆盖缺口。');
+      return;
+    }
+
     const poPath = need(path.join(o.locales, `${cmd.locale}.po`), '先执行 sync 并翻译');
     const data = parsePo(readFileSync(poPath));
     const table = poToRuntimeTable(data, cmd.locale);
     const st = poStats(data);
-    mkdirSync(cmd.out, { recursive: true });
-    const outFile = path.join(cmd.out, `${cmd.locale}.json`);
     writeFileSync(outFile, JSON.stringify(table), 'utf8');
     console.log(`${outFile}：${Object.keys(table.strings).length} 条译文（PO 完成度 ${st.translated}/${st.total}）`);
   });
@@ -166,8 +186,9 @@ program
   .command('install')
   .description('注入运行时并部署译文表')
   .option('--locale <locales>', '要部署的语言，逗号分隔', 'zh-CN')
+  .option('--pseudo', '部署伪翻译而非真实译文，用于验证挂钩与覆盖率')
   .option('--dry-run', '只校验不写盘')
-  .action((cmd: { locale: string; dryRun?: boolean }) => {
+  .action((cmd: { locale: string; pseudo?: boolean; dryRun?: boolean }) => {
     const o = opts();
     const install = locate(o.app);
     const locales = cmd.locale.split(',').map((s) => s.trim()).filter(Boolean);
@@ -176,11 +197,16 @@ program
     const r = doInstall(install, {
       locales,
       localesDir: o.locales,
+      ...(cmd.pseudo ? { pseudoCatalog: loadCatalog(need(o.catalog, '先执行 extract')) } : {}),
       ...(cmd.dryRun ? { dryRun: true } : {}),
     });
 
     for (const d of r.deployed) {
-      console.log(`  ${d.locale}: ${d.translated}/${d.entries} 条已翻译`);
+      console.log(
+        cmd.pseudo
+          ? `  ${d.locale}: 伪翻译 ${d.translated} 条`
+          : `  ${d.locale}: ${d.translated}/${d.entries} 条已翻译`,
+      );
     }
     console.log(`  注入 2 处运行时包装，产物增加 ${r.bytesDelta} 字节`);
     console.log(`  index.html: ${r.htmlPatched === 'inserted' ? '已插入运行时加载' : '已存在加载行'}`);

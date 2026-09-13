@@ -1,3 +1,7 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+
 /**
  * 开发者文本清单（静态 HTML）。
  *
@@ -17,6 +21,7 @@ const REASON_LABEL: Record<string, string> = {
   'enum-value': '枚举/状态值',
   identifier: '标识符',
   'framework-nls': '框架 NLS 已翻译（Tier 0）',
+  'template-concat': '渲染时模板拼装，按值查表够不到',
   'not-ui-position': '非界面文本位置',
 };
 
