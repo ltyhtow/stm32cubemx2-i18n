@@ -22,7 +22,7 @@
 | :-- | :-- | :-- |
 | 判断依据 | 正则猜测 | 原始 TSX 的语法位置 |
 | 判定方向 | 默认可译，出事再排除 | **默认不可译**，只收明确的 UI 文本位置 |
-| 产物改动 | 数千处字节替换 | **2 处**函数包装，约 260 字节 |
+| 产物改动 | 数千处字节替换 | **6 处**函数包装，约 640 字节 |
 | 切换语言 | 重新打一遍补丁 | 改 `localStorage` 后重载 |
 | 应用升级后 | 全部偏移失效 | 译文表照用，未命中回落英文 |
 | 译文未覆盖时 | 可能替换错位置 | 原样显示英文 |
@@ -33,21 +33,37 @@
 
 ---
 
-## 三层覆盖
+## 覆盖分层
 
-能用上层解决的绝不下沉：
+**Tier 2 — 运行时挂钩（当前唯一真正生效的一层）。** ST 自研界面的文案没有走任何国际化框架，
+是硬编码在 JSX 里的。本工具在 `bundle.js` 里包装六个渲染咽喉，渲染时查表替换：
 
-**Tier 0 — 零改动。** STM32CubeMX2 基于 Eclipse Theia，而 Theia 已内置 14 种语言
-（zh-cn、zh-tw、fr、de、it、es、ja、ko、ru、pt-br、tr、pl、cs、hu）。框架自身的菜单、
-编辑器、设置界面早就有官方翻译，只是默认没开。按 F1 执行 **Configure Display Language** 即可，
-本工具一行代码都不用装。
+| 挂钩点 | 覆盖 |
+| :-- | :-- |
+| `React.createElement` | JSX 文本子节点与文本属性 |
+| `jsx` / `jsxs` | 新 JSX 转换产物 |
+| `CommandRegistry.doRegisterCommand` | 命令面板里的命令标签 |
+| `MenuModelRegistry.registerSubmenu` | 主菜单与右键菜单的子菜单标题 |
+| `MenuModelRegistry.registerMenuAction` | 菜单项标签 |
+| `Lumino Title.label` | 标签页与菜单栏标题 |
 
-**Tier 1 — 语言包插件。** 插件贡献的命令标题走 VS Code 标准的 `contributes.localizations`
-机制，新增目录即可，不动任何既有文件。（规划中）
+前两个覆盖 React 渲染的内容，后四个覆盖 Theia/Lumino 渲染的菜单与标签页——后者 React 够不到。
+六处合计约 640 字节。
 
-**Tier 2 — 运行时挂钩。** ST 自研界面的文案没有走任何国际化框架，是硬编码在 JSX 里的。
-这部分由本工具处理：在 `bundle.js` 里包装 React 的 `createElement` 与 `jsx`/`jsxs`，
-渲染时查表替换。
+**Tier 0 / Tier 1 — 尚未打通，勿依赖。** STM32CubeMX2 基于 Eclipse Theia，后端确实内置了
+14 种语言的翻译（zh-cn、zh-tw、fr、de、it、es、ja、ko、ru、pt-br、tr、pl、cs、hu）。
+但**仅把 `localStorage.localeId` 设成 `zh-cn` 并不会让它们生效**，实测界面上一个中文字符都没有。
+
+原因在 Theia 的两处代码：后端 `registerLocalizationFromRequire()` 注册内置翻译时
+没有设 `languagePack: true`，而前端 `I18nPreloadContribution` 只在
+`p.languagePack` 为真时才装载显示语言包，否则把 locale 退回默认值。
+
+试过放一个声明 `contributes.localizations` 的最小语言包插件（含完整 VSIX manifest）。
+插件确实被部署了——Theia 为它生成了 `~/.theia-cubemx2/localization-cache/zh-cn/nls.config.zh-cn.json`
+且指向该插件的翻译文件——但界面依然全英文。要激活内置翻译还缺条件，属待解决项。
+
+**因此当前所有可见的翻译都来自 Tier 2。** 框架文案（编辑器、设置、Theia 自带命令）
+暂时仍是英文，除非你把它们也翻进 PO 里让运行时挂钩去替换。
 
 ---
 
@@ -70,7 +86,8 @@ node dist/cli.js sync --locale zh-CN
 # 5. 注入运行时并部署译文
 node dist/cli.js install --locale zh-CN
 
-# 6. 启动 STM32CubeMX2，F1 → Configure Display Language → 选择语言
+# 6. 启动 STM32CubeMX2，设置显示语言后重载
+#    在开发者工具控制台执行：localStorage.setItem('localeId','zh-cn'); location.reload()
 ```
 
 出问题随时 `node dist/cli.js rollback`。
@@ -134,14 +151,14 @@ title={`Last Opened project - ${formatDateAsDelay(...)}`}
 
 运行时看到的是拼好的整句，而译文表里只有各个片段，永远对不上。这类条目会被收录进
 文本清单并标为 `template-concat`，明确告诉开发者「不是漏了，是够不到」。
-同理，Theia 主菜单与命令面板由 Lumino 而非 React 渲染，也不在 React 挂钩的覆盖范围内（见分期规划）。
+Theia 主菜单、命令面板与标签页由 Lumino 而非 React 渲染，已由另外四个挂钩点覆盖。
 
 ### 实测覆盖率
 
 静态分析只能告诉你抽到了什么，告诉不了你界面上还剩什么没翻。有两个办法：
 
-**伪翻译**——把每条原文包成 `⟦原文⟧` 装进去，启动即可肉眼分辨：中文＝框架已翻译（Tier 0），
-`⟦括号⟧`＝我们的挂钩命中，裸英文＝覆盖缺口。
+**伪翻译**——把每条原文包成 `⟦原文⟧` 装进去，启动即可肉眼分辨：
+`⟦括号⟧`＝挂钩命中，裸英文＝覆盖缺口。
 
 ```bash
 node dist/cli.js install --locale zh-cn --pseudo

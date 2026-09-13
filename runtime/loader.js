@@ -204,12 +204,54 @@
     return wrapped;
   }
 
+  /**
+   * 翻译命令/菜单项对象的 label。
+   *
+   * 就地改写而不是返回副本——Theia 里 `CommonCommands.SAVE` 这类命令常量会被
+   * 按引用比较，换成副本会让相等判断失败。
+   */
+  function translateCommand(cmd) {
+    try {
+      if (!cmd || typeof cmd !== 'object') return cmd;
+      var owner = typeof cmd.category === 'string' ? cmd.category : '';
+      if (typeof cmd.label === 'string' && cmd.label) {
+        var t = translate(cmd.label, owner);
+        if (t !== cmd.label) cmd.label = t;
+      }
+    } catch (e) { /* 对象可能被冻结，忽略 */ }
+    return cmd;
+  }
+
+  /** 翻译子菜单标题（纯字符串参数）。 */
+  function translateMenuLabel(label) {
+    try {
+      return typeof label === 'string' ? translate(label, '') : label;
+    } catch (e) {
+      return label;
+    }
+  }
+
+  /**
+   * 翻译 Lumino Title 的 label。
+   * 这条路径也会流过编辑器标签页的文件名——文件名不在表里，原样返回即可。
+   */
+  function translateTitle(label) {
+    try {
+      return typeof label === 'string' ? translate(label, '') : label;
+    } catch (e) {
+      return label;
+    }
+  }
+
   var api = {
     version: 1,
     locale: table.locale,
     size: Object.keys(strings).length,
     wrapCreateElement: wrapCreateElement,
     wrapJsx: wrapJsx,
+    translateCommand: translateCommand,
+    translateMenuLabel: translateMenuLabel,
+    translateTitle: translateTitle,
     translate: translate,
     stats: stats,
     /** 审计模式：导出界面上出现过、但译文表里没有的英文。 */

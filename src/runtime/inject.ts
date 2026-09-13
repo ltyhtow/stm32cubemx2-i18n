@@ -26,7 +26,7 @@ export const MARKER = '/*cubemx2-translator*/';
 const GLOBAL = 'window.__CUBEMX2_I18N__';
 
 export interface InjectSite {
-  what: 'createElement' | 'jsx' | 'jsxs';
+  what: string;
   index: number;
   original: string;
   replacement: string;
@@ -98,7 +98,74 @@ function findJsxRuntime(src: string): InjectSite[] {
 }
 
 export function findSites(src: string): InjectSite[] {
-  return [findCreateElement(src), ...findJsxRuntime(src)];
+  return [findCreateElement(src), ...findJsxRuntime(src), ...findMethodSites(src)];
+}
+
+/**
+ * 在方法体开头插一句翻译调用的注入点。
+ *
+ * React 挂钩只覆盖 React 渲染的内容；Theia 的命令面板、主菜单、标签页标题
+ * 由 Lumino 渲染，够不到。这几处是它们的注册咽喉：所有命令与菜单项的标签
+ * 都要流经，且都是单点匹配。
+ */
+interface MethodSite {
+  what: string;
+  /** 必须恰好匹配一次；第一个捕获组是要改写的参数名 */
+  pattern: RegExp;
+  /** 运行时 API 名 */
+  api: 'translateCommand' | 'translateMenuLabel' | 'translateTitle';
+  note: string;
+}
+
+const METHOD_SITES: MethodSite[] = [
+  {
+    what: 'CommandRegistry.doRegisterCommand',
+    pattern: /doRegisterCommand\((\w+)\)\{(?=return this\._commands\[)/,
+    api: 'translateCommand',
+    note: '命令面板与快捷键提示里的命令标签',
+  },
+  {
+    what: 'MenuModelRegistry.registerSubmenu',
+    pattern: /registerSubmenu\(\w+,(\w+),\w+=\{\}\)\{(?=const\{)/,
+    api: 'translateMenuLabel',
+    note: '主菜单与右键菜单的子菜单标题',
+  },
+  {
+    what: 'MenuModelRegistry.registerMenuAction',
+    pattern: /registerMenuAction\(\w+,(\w+)\)\{(?=const \w+=this\.root\.getOrCreate\()/,
+    api: 'translateCommand',
+    note: '菜单项标签',
+  },
+  {
+    what: 'Lumino Title.label',
+    pattern: /set label\((\w+)\)\{(?=this\._label!==\1&&\(this\._label=\1,this\._changed\.emit\()/,
+    api: 'translateTitle',
+    note: '标签页与菜单栏的标题',
+  },
+];
+
+function findMethodSites(src: string): InjectSite[] {
+  const out: InjectSite[] = [];
+  for (const site of METHOD_SITES) {
+    const re = new RegExp(site.pattern.source, 'g');
+    const hits = [...src.matchAll(re)];
+    if (hits.length === 0) {
+      // 产物结构变化时跳过该挂钩点而不是整体失败——少翻一处好过装不上
+      continue;
+    }
+    if (hits.length > 1) {
+      throw new InjectError(`${site.what} 有 ${hits.length} 处匹配，无法确定注入点`);
+    }
+    const m = hits[0]!;
+    const param = m[1]!;
+    out.push({
+      what: site.what as InjectSite['what'],
+      index: m.index!,
+      original: m[0],
+      replacement: `${m[0]}${MARKER}${param}=${GLOBAL}?${GLOBAL}.${site.api}(${param}):${param};`,
+    });
+  }
+  return out;
 }
 
 export interface InjectResult {
