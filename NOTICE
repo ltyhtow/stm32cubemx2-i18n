@@ -1,0 +1,23 @@
+STM32CubeMX2-translator
+Copyright 2026 STM32CubeMX2-translator contributors
+
+This product includes software developed by the
+STM32CubeMX2-translator contributors.
+
+--------------------------------------------------------------------------------
+Relationship to third parties
+--------------------------------------------------------------------------------
+
+This project is an independent, community-developed localization toolkit. It is
+NOT affiliated with, endorsed by, or sponsored by STMicroelectronics.
+
+"STM32", "STM32Cube" and "STM32CubeMX" are trademarks or registered trademarks
+of STMicroelectronics. They are used here only to identify the software this
+toolkit operates on.
+
+This project ships no code, translations, user-interface text, or other material
+extracted from STM32CubeMX2. String catalogs are generated locally by the end
+user, from the user's own installed copy of that software.
+
+This project is an independent implementation. It contains no code derived from
+any other STM32CubeMX2 localization project.

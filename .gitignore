@@ -1,0 +1,13 @@
+node_modules/
+dist/
+*.log
+
+# 本地抽取产物：内容全部来自使用者自有的 STM32CubeMX2 副本，不进仓库。
+# catalog/ 是完整文本清单，.pot 是纯抽取模板，两者都可在本机用 extract 重新生成。
+/catalog/
+/out/
+/locales/*.pot
+
+# locales/*.po 是要进仓库的——译文是本项目的成果。
+# 注意 PO 格式要求 msgid 为英文原文，因此 .po 必然内嵌被翻译软件的界面字符串。
+# 这一点在公开发布前请自行评估，见 README「合规」一节。

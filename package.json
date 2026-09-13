@@ -1,0 +1,46 @@
+{
+  "name": "stm32cubemx2-translator",
+  "version": "0.1.0",
+  "description": "Multi-language localization toolkit for STM32CubeMX2. Extracts UI strings with AST + sourcemap precision, produces Gettext catalogs for translators, and applies translations through runtime hooks instead of binary string replacement.",
+  "type": "module",
+  "license": "Apache-2.0",
+  "bin": {
+    "cubemx2-translator": "./dist/cli.js"
+  },
+  "main": "./dist/cli.js",
+  "engines": {
+    "node": ">=20"
+  },
+  "files": [
+    "dist/**/*.js",
+    "runtime/loader.js",
+    "LICENSE",
+    "NOTICE",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsc -p tsconfig.json --watch",
+    "test": "npm run build && node --test dist/**/*.test.js",
+    "clean": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\""
+  },
+  "keywords": [
+    "stm32cubemx2",
+    "localization",
+    "i18n",
+    "theia",
+    "gettext"
+  ],
+  "dependencies": {
+    "@jridgewell/sourcemap-codec": "^1.5.0",
+    "acorn": "^8.14.0",
+    "acorn-walk": "^8.3.4",
+    "commander": "^12.1.0",
+    "gettext-parser": "^8.0.0",
+    "typescript": "^5.7.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "@types/gettext-parser": "^4.0.4"
+  }
+}
