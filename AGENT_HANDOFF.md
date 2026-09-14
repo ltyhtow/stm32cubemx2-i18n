@@ -309,20 +309,38 @@ node dist/cli.js lint --locale zh-CN --json > lint.json   # 有问题把报告�
 
 - **zh-CN 完成度 1246/1246**，lint error 0，warning 6（全是有意保留英文的产品名与内部标识）。
 - 抽取 1725 条可译。语言包 `vscode-language-pack-zh-hans` 1.108.0 已装在用户目录。
-- 两层已在真实应用里叠加验证过。
-- 30 项测试通过。
+- 两层已在真实应用里用**伪翻译**叠加验证过（菜单栏同时出现 `⟦Project⟧` 与 `查看(V)`）。
+- 36 项测试通过。
 
 翻译由外部 AI 完成后我做了独立复核，改了 26 条：`Line` 的语义冲突、省略号统一为 `…`、
 裸 `part` 统一为「器件」（`part no` 仍用「型号」）、`Detail view` 两种译法统一、
-中间件对话框拼接句的语序断裂。详见 git log。
+中间件对话框拼接句的语序断裂。改动清单在 `work/review-fix/fix.json`，详见 git log。
+外部 AI 交回的批次文件在 `work/zh-CN/`（已全部导入，导入时没带 `--source`，
+所以 PO 注释里分不出哪些是它译的；要区分就 diff `a7b64e7` 之前的 PO）。
+
+### ⚠ 应用此刻不是干净状态
+
+复核结束后我执行了 `install --locale zh-CN` 把**真实译文**部署进了应用（6 处注入 + `index.html` 一行 +
+`st-i18n/zh-cn.json`），准备做活体验证。应用带 `--remote-debugging-port=9222` 启动了两次，
+CDP 端口都没起来（`127.0.0.1:9222` 拒绝连接），原因没查出来，验证**没做完**。
+可能原因：上一个实例没退干净、或 Electron 这次没接受该参数。
+
+接手后先跑 `node dist/cli.js doctor` 确认状态，然后二选一：
+
+- **要验证**：确认没有残留进程后重新带调试端口启动，用 `.claude/jobs/*/tmp/both-tiers.mjs` 探针读菜单栏与 `window.__CUBEMX2_I18N__.stats`；
+  或者不走 CDP，直接开应用肉眼看首页与菜单是否中文。
+- **要还原**：`node dist/cli.js rollback`，再删 `lib/frontend/st-i18n/`，
+  用 SHA256 比对 `bundle.js == bundle.js.orig`、`bundle.js.gz == bundle.js.gz.orig`。语言包留在用户目录无害。
+
+伪翻译层面两层叠加已验证过，真实译文只是换了表的内容，运行时路径完全相同，风险很低——但没亲眼看过就不要对用户说「已验证」。
 
 ### 还没做的
 
+- **真实译文的活体验证**（见上）。
 - **第二语言验证多语言链路**。目前只跑过 zh-CN，`langpack` 的 locale 映射表里另外 14 种没实测。
 - **CubeMX2 升级后的 catalog diff 流程**。稳定 ID 的设计支持译文继承，但没有工具化的 diff 报告。
-- **`export-work` 可以在 note 里标注「此原文在 N 个不同模块出现」**，让翻译方提前知道译文要同时适用于多处。
-  §5.1 那类语义冲突就是这么漏过去的。
 - CSS `content` 与 Electron 原生对话框的残留（如确有必要，用窄范围静态补丁兜底）。
+- 仓库目前**私有**。公开前过一遍 §1 的合规清单，并决定是否保留 `locales/zh-CN.po` 里内嵌的英文 msgid。
 
 ---
 
