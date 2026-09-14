@@ -4036,13 +4036,14 @@ msgstr ""
 msgid " from the list"
 msgstr " 从该列表中"
 
+# 译者: review
 #: @prg-cube/cube-middleware-utilities/src/browser/components/middleware-utilities-selection-dialog.tsx:338
 #. 界面位置：cube-middleware-utilities → MiddlewareUtilitiesSelectionDialog
 #. 语境：data-testid="middleware-dialog-title-text" > Add {type} to your {type} panel </CoreTypography> </div>
 #. 首尾空格有意义：该片段会与相邻内容拼接，翻译时请原样保留
 #, jsx-child, needs-review, keep-whitespace
 msgid "Add "
-msgstr "Add"
+msgstr "添加 "
 
 #: @prg-cube/cube-middleware-utilities/src/browser/components/middleware-utilities-selection-dialog.tsx:338
 #: @prg-cube/cube-middleware-utilities/src/browser/components/middleware-utilities-selection-dialog.tsx:384

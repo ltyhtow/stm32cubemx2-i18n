@@ -141,6 +141,21 @@ msgstr "风险评分："
 同一句英文默认只出现一次，译文全局生效。确实需要按位置区分时，
 可以给条目加 `msgctxt`（填组件名），运行时会优先用带 `msgctxt` 的译文。
 
+### 交给 AI 翻译
+
+不想开 Poedit 也行。把待翻条目打包成 JSON 批次，连同 `TRANSLATION_HANDOFF.md` 一起交给翻译方
+（人或 AI），交回后灌回 PO 并自动校验：
+
+```bash
+node dist/cli.js export-work --locale zh-CN            # → work/zh-CN/batch-001.json …
+#   把 work/zh-CN/ 与 TRANSLATION_HANDOFF.md 交给翻译方，交回到 work/zh-CN/done/
+node dist/cli.js import-json --locale zh-CN --from work/zh-CN/done --source claude
+node dist/cli.js lint --locale zh-CN --json > lint.json  # 有问题时把报告回给翻译方
+```
+
+批次 JSON 每条自带界面位置、原始 JSX 语境和注意事项，翻译方不需要接触仓库里的任何其它文件；
+导回按 `msgid` 对齐，批次可以任意拆分、乱序、部分交回。`lint` 的规则与交接说明里的硬性规则一一对应。
+
 ---
 
 ## 给开发者
@@ -217,12 +232,18 @@ node dist/cli.js audit   # 打印操作步骤
 | `extract` | 抽取文本，生成 `catalog.json` 与 `.pot` 模板 |
 | `catalog` | 生成开发者 HTML 文本清单 |
 | `sync --locale <x>` | 用最新模板更新语言 PO，保留已有译文 |
+| `export-work --locale <x>` | 把待翻条目打包成 JSON 批次，交给翻译人员或 AI |
+| `import-json --locale <x> --from <路径>` | 把交回的 JSON 灌回 PO 并立即校验 |
+| `lint --locale <x>` | 校验译文：占位符、禁译词、空格、助记符、术语、中文标点 |
 | `build --locale <x>` | 把 PO 编译成运行时译文表（`--pseudo` 生成伪翻译） |
 | `install --locale <x>` | 注入运行时并部署译文（`--pseudo` 部署伪翻译） |
 | `rollback` | 还原 `bundle.js` 与 `index.html` |
 | `doctor` | 体检安装、备份、注入状态、语言包 |
 | `audit` | 打印实测覆盖率的操作步骤 |
 | `import-legacy` | 从旧 CSV 工作表导入译文 |
+
+`build` 与 `install` 会先跑 `lint`，有 error（占位符丢失、禁译词被改、首尾空格丢失等）就拒绝，
+`--force` 可跳过。
 
 全局选项：`--app <路径>` 指定安装目录，`--locales <目录>` 指定译文目录。
 

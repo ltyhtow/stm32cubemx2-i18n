@@ -9,7 +9,7 @@
  * 与 STMicroelectronics 无关联。详见 DISCLAIMER.md。
  */
 import { Command } from 'commander';
-import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, existsSync, mkdirSync, readdirSync, statSync } from 'node:fs';
 import path from 'node:path';
 import { locate, locateAll, InstallationNotFoundError } from './locate.js';
 import { SourceMapIndex } from './extract/sourcemap.js';
@@ -34,6 +34,8 @@ import {
   userPluginsDir,
 } from './apply/langpack.js';
 import { parseLegacyCsv, importLegacy } from './catalog/import-legacy.js';
+import { lintPo, formatReport, type Glossary } from './catalog/lint.js';
+import { buildWorkBatches, normalizeIncoming, applyWork } from './catalog/work.js';
 import type { Catalog } from './types.js';
 
 const program = new Command();
@@ -64,6 +66,31 @@ function loadCatalog(file: string): Catalog {
 
 function ensureDir(file: string) {
   mkdirSync(path.dirname(file), { recursive: true });
+}
+
+/** 术语表：默认 locales/<locale>.glossary.json，没有就不做术语检查。 */
+function loadGlossary(localesDir: string, locale: string, explicit?: string): Glossary | undefined {
+  const p = explicit ?? path.join(localesDir, `${locale}.glossary.json`);
+  if (!existsSync(p)) return undefined;
+  return JSON.parse(readFileSync(p, 'utf8')) as Glossary;
+}
+
+/**
+ * build / install 前的校验闸。
+ * 有 error（占位符丢失、禁译词被改、首尾空格丢失……）就拒绝，因为这些会让界面文案失真；
+ * warning 与 style 不拦。确认无误可 --force。
+ */
+function lintGate(localesDir: string, locale: string, force: boolean | undefined): void {
+  const poPath = path.join(localesDir, `${locale}.po`);
+  if (!existsSync(poPath)) return;
+  const report = lintPo(parsePo(readFileSync(poPath)), {
+    locale,
+    glossary: loadGlossary(localesDir, locale),
+  });
+  if (report.errors === 0) return;
+  console.error(`[lint] ${locale}.po 有 ${report.errors} 处错误，会让界面文案失真。`);
+  console.error(`       运行 lint --locale ${locale} 查看详情；确认无误可加 --force 跳过。`);
+  if (!force) process.exit(1);
 }
 
 // ---------------------------------------------------------------- extract
@@ -165,7 +192,8 @@ program
     '生成伪翻译表（每条原文包成 ⟦原文⟧）。不读 PO，直接由 catalog 生成，' +
       '用于验证挂钩是否生效、界面上还有哪些文案没被覆盖',
   )
-  .action((cmd: { locale: string; out: string; pseudo?: boolean }) => {
+  .option('--force', '即使 lint 有错误也继续')
+  .action((cmd: { locale: string; out: string; pseudo?: boolean; force?: boolean }) => {
     const o = opts();
     mkdirSync(cmd.out, { recursive: true });
     const outFile = path.join(cmd.out, `${cmd.locale.toLowerCase()}.json`);
@@ -180,6 +208,7 @@ program
     }
 
     const poPath = need(path.join(o.locales, `${cmd.locale}.po`), '先执行 sync 并翻译');
+    lintGate(o.locales, cmd.locale, cmd.force);
     const data = parsePo(readFileSync(poPath));
     const table = poToRuntimeTable(data, cmd.locale);
     const st = poStats(data);
@@ -194,12 +223,17 @@ program
   .description('注入运行时并部署译文表')
   .option('--locale <locales>', '要部署的语言，逗号分隔', 'zh-CN')
   .option('--pseudo', '部署伪翻译而非真实译文，用于验证挂钩与覆盖率')
+  .option('--force', '即使 lint 有错误也继续')
   .option('--dry-run', '只校验不写盘')
-  .action((cmd: { locale: string; pseudo?: boolean; dryRun?: boolean }) => {
+  .action((cmd: { locale: string; pseudo?: boolean; force?: boolean; dryRun?: boolean }) => {
     const o = opts();
     const install = locate(o.app);
     const locales = cmd.locale.split(',').map((s) => s.trim()).filter(Boolean);
     console.log(`安装: ${install.root}  (v${install.version})`);
+
+    if (!cmd.pseudo) {
+      for (const l of locales) lintGate(o.locales, l, cmd.force);
+    }
 
     const r = doInstall(install, {
       locales,
@@ -390,6 +424,115 @@ program
     console.log(`\n${poPath}：完成度 ${st.translated}/${st.total}`);
     if (cmd.includeForeign) {
       console.log('\n[警告] 已包含来源存疑的译文，该 PO 不可公开分发。');
+    }
+  });
+
+// ---------------------------------------------------------------- lint
+
+program
+  .command('lint')
+  .description('校验 PO 译文：占位符、禁译词、首尾空格、助记符、术语、中文标点')
+  .requiredOption('--locale <locale>', '语言代码')
+  .option('--glossary <path>', '术语表 JSON（默认 locales/<locale>.glossary.json）')
+  .option('--json', '以 JSON 输出，供程序或翻译 AI 消费')
+  .option('--strict', '警告也视为失败')
+  .option('--max <n>', '最多显示多少条', '200')
+  .action((cmd: { locale: string; glossary?: string; json?: boolean; strict?: boolean; max: string }) => {
+    const o = opts();
+    const poPath = need(path.join(o.locales, `${cmd.locale}.po`), '先执行 sync');
+    const report = lintPo(parsePo(readFileSync(poPath)), {
+      locale: cmd.locale,
+      glossary: loadGlossary(o.locales, cmd.locale, cmd.glossary),
+    });
+    if (cmd.json) console.log(JSON.stringify(report, null, 2));
+    else console.log(formatReport(report, { max: parseInt(cmd.max, 10) || 200 }));
+    const failed = report.errors > 0 || (!!cmd.strict && report.warnings > 0);
+    process.exit(failed ? 1 : 0);
+  });
+
+// ---------------------------------------------------------------- export-work
+
+program
+  .command('export-work')
+  .description('把待翻译条目打包成 JSON 批次，交给翻译人员或 AI')
+  .requiredOption('--locale <locale>', '语言代码')
+  .option('-o, --out <dir>', '输出目录', 'work')
+  .option('--batch-size <n>', '每批条数', '60')
+  .option('--include-translated', '连同已翻译的条目一起导出，用于复核')
+  .action((cmd: { locale: string; out: string; batchSize: string; includeTranslated?: boolean }) => {
+    const o = opts();
+    const poPath = need(path.join(o.locales, `${cmd.locale}.po`), '先执行 sync');
+    const batches = buildWorkBatches(parsePo(readFileSync(poPath)), {
+      locale: cmd.locale,
+      batchSize: parseInt(cmd.batchSize, 10) || 60,
+      includeTranslated: !!cmd.includeTranslated,
+    });
+    const dir = path.join(cmd.out, cmd.locale);
+    mkdirSync(dir, { recursive: true });
+    for (const b of batches) {
+      const file = path.join(dir, `batch-${String(b.batch).padStart(3, '0')}.json`);
+      writeFileSync(file, JSON.stringify(b, null, 2), 'utf8');
+    }
+    const total = batches.reduce((n, b) => n + b.count, 0);
+    console.log(`已导出 ${batches.length} 个批次，共 ${total} 条 → ${dir}${path.sep}`);
+    console.log('交接说明见 TRANSLATION_HANDOFF.md；翻译方交回后用 import-json 导入。');
+  });
+
+// ---------------------------------------------------------------- import-json
+
+program
+  .command('import-json')
+  .description('把翻译方交回的 JSON 灌回 PO，并立即校验')
+  .requiredOption('--locale <locale>', '语言代码')
+  .requiredOption('--from <paths...>', '文件或目录，可多个')
+  .option('--overwrite', '覆盖 PO 里已有的译文（默认只填空的）')
+  .option('--source <name>', '记录译者来源（如 claude / gpt），写进 PO 注释便于复核')
+  .action((cmd: { locale: string; from: string[]; overwrite?: boolean; source?: string }) => {
+    const o = opts();
+    const poPath = need(path.join(o.locales, `${cmd.locale}.po`), '先执行 sync');
+
+    const files: string[] = [];
+    for (const p of cmd.from) {
+      if (!existsSync(p)) {
+        console.error(`[错误] 未找到 ${p}`);
+        process.exit(1);
+      }
+      if (statSync(p).isDirectory()) {
+        for (const f of readdirSync(p).sort()) if (f.endsWith('.json')) files.push(path.join(p, f));
+      } else files.push(p);
+    }
+
+    const incoming: { msgid: string; msgstr: string }[] = [];
+    for (const f of files) {
+      try {
+        incoming.push(...normalizeIncoming(JSON.parse(readFileSync(f, 'utf8'))));
+      } catch (e) {
+        console.error(`[错误] ${f} 不是合法 JSON：${(e as Error).message}`);
+        process.exit(1);
+      }
+    }
+
+    const data = parsePo(readFileSync(poPath));
+    const r = applyWork(data, incoming, {
+      ...(cmd.overwrite ? { overwrite: true } : {}),
+      ...(cmd.source ? { source: cmd.source } : {}),
+    });
+    writeFileSync(poPath, serializePo(data));
+
+    console.log(`读取 ${files.length} 个文件，${incoming.length} 条`);
+    console.log(`  已填入            ${r.applied}`);
+    console.log(`  PO 已有译文，跳过 ${r.skippedExisting}${r.skippedExisting ? '（--overwrite 可覆盖）' : ''}`);
+    console.log(`  译文为空，跳过    ${r.emptyInput}`);
+    if (r.unknown.length) {
+      console.log(`  原文不在 PO 里    ${r.unknown.length}（msgid 被改动过？）`);
+      for (const u of r.unknown.slice(0, 5)) console.log(`     ${JSON.stringify(u.slice(0, 80))}`);
+    }
+
+    const report = lintPo(data, { locale: cmd.locale, glossary: loadGlossary(o.locales, cmd.locale) });
+    console.log('');
+    console.log(formatReport(report, { max: 40 }));
+    if (report.errors) {
+      console.log(`\n有 ${report.errors} 处错误，修正后才能 build / install。lint --json 可导出给翻译方。`);
     }
   });
 
