@@ -175,9 +175,14 @@ export function lintEntry(
     add('warning', 'colon', '原文以冒号结尾，译文也应以冒号结尾');
   }
 
-  for (const t of opts.glossary?.terms ?? []) {
-    if (!hasWordCI(msgid, t.en)) continue;
-    const bad = (t.avoid ?? []).filter((a) => msgstr.includes(a));
+  // 术语：先收齐原文里出现的全部术语，再查禁用译法。
+  // 某个禁用写法若是另一个已命中术语的正确译法的一部分（build 禁「编译」，
+  // 但同句的 compiler 正确译为「编译器」），不算违规。
+  const terms = (opts.glossary?.terms ?? []).filter((t) => hasWordCI(msgid, t.en));
+  for (const t of terms) {
+    const bad = (t.avoid ?? []).filter(
+      (a) => msgstr.includes(a) && !terms.some((o) => o !== t && o.use.includes(a)),
+    );
     if (bad.length) {
       add('warning', 'glossary', `术语「${t.en}」应译为「${t.use}」，不用「${bad.join('」「')}」${t.note ? `——${t.note}` : ''}`);
     }

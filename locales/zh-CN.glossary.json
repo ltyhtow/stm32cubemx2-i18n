@@ -37,6 +37,8 @@
     { "en": "breakpoint", "use": "断点", "avoid": ["中断点"] },
     { "en": "debug", "use": "调试", "avoid": ["除错"] },
     { "en": "build", "use": "构建", "avoid": ["编译"], "note": "build 是构建；compile 才是编译" },
+    { "en": "compiler", "use": "编译器", "avoid": [] },
+    { "en": "compile", "use": "编译", "avoid": [] },
     { "en": "flash", "use": "烧录", "avoid": ["闪存写入", "刷写"], "note": "作为动词时；作为存储器名词时保留 Flash" },
     { "en": "remove", "use": "移除", "avoid": [], "note": "remove 用移除，delete 用删除，两者要区分" },
     { "en": "delete", "use": "删除", "avoid": [] }

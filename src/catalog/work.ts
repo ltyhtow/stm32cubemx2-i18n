@@ -45,7 +45,13 @@ const README =
   '占位符 {0} ${x} `code` 原样保留；标 keep-whitespace 的条目首尾空格必须与 msgid 一致。' +
   '拿不准就把 msgstr 留空。交回时保持同一个 JSON 结构与文件名。';
 
-/** 从 PO 的 #. 注释里拆出界面位置 / 语境 / 其它提示。 */
+/**
+ * 从 PO 的 #. 注释里拆出界面位置 / 语境 / 其它提示。
+ *
+ * 界面位置横跨多个功能模块时补一条提醒。同一句英文在不同模块里可能是不同意思
+ * （`Line` 在 MCU 选择器里是产品线，在 EXTI 表格里是中断线），而运行时按原文查表，
+ * 一条原文只能有一个译文 —— 翻译方必须挑一个两边都不误导的说法。
+ */
 function parseExtracted(text: string | undefined): { where?: string; context?: string; note?: string } {
   const out: { where?: string; context?: string; note?: string } = {};
   const notes: string[] = [];
@@ -57,7 +63,25 @@ function parseExtracted(text: string | undefined): { where?: string; context?: s
     else if (/^共 \d+ 处使用$/.test(line)) continue;
     else notes.push(line);
   }
+  const modules = distinctModules(out.where);
+  if (modules.length > 1) {
+    notes.push(
+      `该文案跨 ${modules.length} 个模块使用（${modules.join('、')}），` +
+        '同一原文只能有一个译文：若各处含义不同，请挑一个在所有位置都不会误导的说法',
+    );
+  }
   if (notes.length) out.note = notes.join('；');
+  return out;
+}
+
+/** 从「模块 → 组件，模块 → 组件」形式的界面位置里取出去重后的模块名。 */
+export function distinctModules(where: string | undefined): string[] {
+  if (!where) return [];
+  const out: string[] = [];
+  for (const part of where.split('，')) {
+    const mod = part.split('→')[0]!.trim();
+    if (mod && !out.includes(mod)) out.push(mod);
+  }
   return out;
 }
 
