@@ -10,7 +10,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: STM32CubeMX2 1.1.1\n"
-"POT-Creation-Date: 2026-09-13T12:00:06.672Z\n"
+"POT-Creation-Date: 2026-09-14T00:08:17.854Z\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1115,9 +1115,11 @@ msgid "Unnamed project"
 msgstr ""
 
 #: @prg-cube/application-project/src/browser/components/settings/settings-component.tsx:96
-#. 界面位置：application-project → SettingsComponent
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-layout-provider.ts:49
+#. 界面位置：application-project → SettingsComponent，cube-preferences-manager → getLayoutLabel
 #. 语境：sectionId="project-settings-informations-general" id="project-settings-informations-general" title="General" titleMetadata={{ [SMART_MENU_METADATA_KEY.id]: 'pro
-#, jsx-prop
+#. 共 2 处使用
+#, jsx-prop, nls-default
 msgid "General"
 msgstr ""
 
@@ -3249,9 +3251,11 @@ msgid "General Setup"
 msgstr ""
 
 #: libs/features/core/ext/core-project-export/src/browser/export-ui/project-export/project-export.tsx:274
-#. 界面位置：core-project-export → ProjectExport
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-layout-provider.ts:55
+#. 界面位置：core-project-export → ProjectExport，cube-preferences-manager → getLayoutLabel
 #. 语境：<ParamBlockSection sectionId="export-2" title={'Advanced'} data-testid="project_generation_advanced_section" titleMetadata={{
-#, jsx-prop
+#. 共 2 处使用
+#, jsx-prop, nls-default
 msgid "Advanced"
 msgstr ""
 
@@ -4796,6 +4800,567 @@ msgstr ""
 msgid "Filter by"
 msgstr ""
 
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:16
+#. 界面位置：cube-preferences-manager
+#. 语境：const windowTitleDescription = [ nls.localizeByDefault('Controls the window title based on the current context such as the opened workspace or active editor. Va
+#, nls-default
+msgid ""
+"Controls the window title based on the current context such as the opened workspace or active "
+"editor. Variables are substituted based on the context:"
+msgstr ""
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:17
+#. 界面位置：cube-preferences-manager
+#. 语境：const windowTitleDescription = [ nls.localizeByDefault('Controls the window title based on the current context such as the opened workspace or active editor. Va
+#, nls-default
+msgid "`${activeEditorShort}`: the file name (e.g. myFile.txt)."
+msgstr "`${activeEditorShort}`：文件名（例如 myFile.txt）。"
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:18
+#. 界面位置：cube-preferences-manager
+#. 语境：nls.localizeByDefault('Controls the window title based on the current context such as the opened workspace or active editor. Variables are substituted based on 
+#, nls-default
+msgid ""
+"`${activeEditorMedium}`: the path of the file relative to the workspace folder (e.g. "
+"myFolder/myFileFolder/myFile.txt)."
+msgstr "`${activeEditorMedium}`：文件相对于工作区文件夹的路径（例如 myFolder/myFileFolder/myFile.txt）。"
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:19
+#. 界面位置：cube-preferences-manager
+#. 语境：nls.localizeByDefault('`${activeEditorShort}`: the file name (e.g. myFile.txt).'), nls.localizeByDefault('`${activeEditorMedium}`: the path of the file relative
+#, nls-default
+msgid ""
+"`${activeEditorLong}`: the full path of the file (e.g. "
+"/Users/Development/myFolder/myFileFolder/myFile.txt)."
+msgstr "`${activeEditorLong}`：文件的完整路径（例如 /Users/Development/myFolder/myFileFolder/myFile.txt）。"
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:20
+#. 界面位置：cube-preferences-manager
+#. 语境：nls.localizeByDefault('`${activeEditorMedium}`: the path of the file relative to the workspace folder (e.g. myFolder/myFileFolder/myFile.txt).'), nls.localizeBy
+#, nls-default
+msgid "`${activeFolderShort}`: the name of the folder the file is contained in (e.g. myFileFolder)."
+msgstr "`${activeFolderShort}`：文件所在文件夹的名称（例如 myFileFolder）。"
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:21
+#. 界面位置：cube-preferences-manager
+#. 语境：nls.localizeByDefault('`${activeEditorLong}`: the full path of the file (e.g. /Users/Development/myFolder/myFileFolder/myFile.txt).'), nls.localizeByDefault('`$
+#, nls-default
+msgid ""
+"`${activeFolderMedium}`: the path of the folder the file is contained in, relative to the workspace "
+"folder (e.g. myFolder/myFileFolder)."
+msgstr ""
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:22
+#. 界面位置：cube-preferences-manager
+#. 语境：nls.localizeByDefault('`${activeFolderShort}`: the name of the folder the file is contained in (e.g. myFileFolder).'), nls.localizeByDefault('`${activeFolderMed
+#, nls-default
+msgid ""
+"`${activeFolderLong}`: the full path of the folder the file is contained in (e.g. "
+"/Users/Development/myFolder/myFileFolder)."
+msgstr ""
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:23
+#. 界面位置：cube-preferences-manager
+#. 语境：nls.localizeByDefault('`${activeFolderMedium}`: the path of the folder the file is contained in, relative to the workspace folder (e.g. myFolder/myFileFolder).'
+#, nls-default
+msgid "`${folderName}`: name of the workspace folder the file is contained in (e.g. myFolder)."
+msgstr "`${folderName}`：文件所在工作区文件夹的名称（例如 myFolder）。"
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:24
+#. 界面位置：cube-preferences-manager
+#. 语境：nls.localizeByDefault('`${activeFolderLong}`: the full path of the folder the file is contained in (e.g. /Users/Development/myFolder/myFileFolder).'), nls.local
+#, nls-default
+msgid ""
+"`${folderPath}`: file path of the workspace folder the file is contained in (e.g. "
+"/Users/Development/myFolder)."
+msgstr "`${folderPath}`：文件所在工作区文件夹的文件路径（例如 /Users/Development/myFolder）。"
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:26
+#. 界面位置：cube-preferences-manager
+#. 语境：nls.localizeByDefault('`${folderPath}`: file path of the workspace folder the file is contained in (e.g. /Users/Development/myFolder).'), nls.localizeByDefault(
+#, nls-default
+msgid ""
+"`${rootName}`: name of the workspace with optional remote name and workspace indicator if "
+"applicable (e.g. myFolder, myRemoteFolder [SSH] or myWorkspace (Workspace))."
+msgstr ""
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:28
+#. 界面位置：cube-preferences-manager
+#. 语境：'`${rootName}`: name of the workspace with optional remote name and workspace indicator if applicable (e.g. myFolder, myRemoteFolder [SSH] or myWorkspace (Works
+#, nls-default
+msgid "`${rootPath}`: file path of the opened workspace or folder (e.g. /Users/Development/myWorkspace)."
+msgstr "`${rootPath}`：打开的工作区或文件夹的文件路径（例如 /Users/Development/myWorkspace）。"
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:29
+#. 界面位置：cube-preferences-manager
+#. 语境：), nls.localizeByDefault('`${rootPath}`: file path of the opened workspace or folder (e.g. /Users/Development/myWorkspace).'), nls.localizeByDefault('`${appName
+#, nls-default
+msgid "`${appName}`: e.g. VS Code."
+msgstr "`${appName}`：例如 VS Code。"
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:30
+#. 界面位置：cube-preferences-manager
+#. 语境：nls.localizeByDefault('`${rootPath}`: file path of the opened workspace or folder (e.g. /Users/Development/myWorkspace).'), nls.localizeByDefault('`${appName}`:
+#, nls-default
+msgid "`${remoteName}`: e.g. SSH"
+msgstr "`${remoteName}`：例如 SSH"
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:31
+#. 界面位置：cube-preferences-manager
+#. 语境：nls.localizeByDefault('`${appName}`: e.g. VS Code.'), nls.localizeByDefault('`${remoteName}`: e.g. SSH'), nls.localizeByDefault('`${dirty}`: an indicator for wh
+#, nls-default
+msgid "`${dirty}`: an indicator for when the active editor has unsaved changes."
+msgstr "`${dirty}`：指示活动编辑器何时有未保存更改的标记。"
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:32
+#. 界面位置：cube-preferences-manager
+#. 语境：nls.localizeByDefault('`${remoteName}`: e.g. SSH'), nls.localizeByDefault('`${dirty}`: an indicator for when the active editor has unsaved changes.'), nls.local
+#, nls-default
+msgid ""
+"`${separator}`: a conditional separator (\" - \") that only shows when surrounded by variables with "
+"values or static text."
+msgstr ""
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:42
+#. 界面位置：cube-preferences-manager
+#. 语境：default: 'ifRequired', //--- Customized description for MX2 description: nls.localizeByDefault('Controls whether MX2 asks for confirmation before closing the ap
+#, nls-default
+msgid "Controls whether MX2 asks for confirmation before closing the application window or browser tab."
+msgstr "控制 MX2 在关闭应用程序窗口或浏览器标签页之前是否要求确认。"
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:47
+#. 界面位置：cube-preferences-manager
+#. 语境：type: 'boolean', default: true, description: nls.localizeByDefault('Enable/disable navigation breadcrumbs.'), scope: PreferenceScope.User, },
+#, nls-default
+msgid "Enable/disable navigation breadcrumbs."
+msgstr "启用/禁用导航面包屑。"
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:54
+#. 界面位置：cube-preferences-manager
+#. 语境：enum: Object.keys(SUPPORTED_ENCODINGS), default: 'utf8', description: nls.localizeByDefault('The default character set encoding to use when reading and writing 
+#, nls-default
+msgid ""
+"The default character set encoding to use when reading and writing files. This setting can also be "
+"configured per language."
+msgstr ""
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:63
+#. 界面位置：cube-preferences-manager
+#. 语境：enum: ['code', 'keyCode'], default: 'code', markdownDescription: nls.localizeByDefault('Controls the dispatching logic for key presses to use either `code` (rec
+#, nls-default
+msgid "Controls the dispatching logic for key presses to use either `code` (recommended) or `keyCode`."
+msgstr "控制按键分发逻辑，使用 `code`（推荐）或 `keyCode`。"
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:69
+#. 界面位置：cube-preferences-manager
+#. 语境：enum: ['classic', 'enhanced', 'visual'], markdownEnumDescriptions: [ nls.localize('theia/core/enhancedPreview/classic', 'Display a simple preview of the tab wit
+#, nls-default
+msgid "Display a simple preview of the tab with basic information."
+msgstr ""
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:70
+#. 界面位置：cube-preferences-manager
+#. 语境：markdownEnumDescriptions: [ nls.localize('theia/core/enhancedPreview/classic', 'Display a simple preview of the tab with basic information.'), nls.localize('the
+#, nls-default
+msgid "Display an enhanced preview of the tab with additional information."
+msgstr ""
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:71
+#. 界面位置：cube-preferences-manager
+#. 语境：nls.localize('theia/core/enhancedPreview/classic', 'Display a simple preview of the tab with basic information.'), nls.localize('theia/core/enhancedPreview/enha
+#, nls-default
+msgid "Display a visual preview of the tab."
+msgstr ""
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:74
+#. 界面位置：cube-preferences-manager
+#. 语境：], default: 'classic', description: nls.localize('theia/core/enhancedPreview', 'Controls what information about the tab should be displayed in horizontal tab ba
+#, nls-default
+msgid "Controls what information about the tab should be displayed in horizontal tab bars, when hovering."
+msgstr "控制悬停时水平标签栏中应显示有关标签页的哪些信息。"
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:80
+#. 界面位置：cube-preferences-manager
+#. 语境：enum: ['classic', 'visible', 'hidden', 'compact'], markdownEnumDescriptions: [ nls.localizeByDefault('Menu is displayed at the top of the window and only hidden
+#, nls-default
+msgid "Menu is displayed at the top of the window and only hidden in full screen mode."
+msgstr "菜单显示在窗口顶部，仅在全屏模式下隐藏。"
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:81
+#. 界面位置：cube-preferences-manager
+#. 语境：markdownEnumDescriptions: [ nls.localizeByDefault('Menu is displayed at the top of the window and only hidden in full screen mode.'), nls.localizeByDefault('Men
+#, nls-default
+msgid "Menu is always visible at the top of the window even in full screen mode."
+msgstr "菜单始终显示在窗口顶部，即使在全屏模式下也是如此。"
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:82
+#. 界面位置：cube-preferences-manager
+#. 语境：nls.localizeByDefault('Menu is displayed at the top of the window and only hidden in full screen mode.'), nls.localizeByDefault('Menu is always visible at the t
+#, nls-default
+msgid "Menu is always hidden."
+msgstr ""
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:84
+#. 界面位置：cube-preferences-manager
+#. 语境：nls.localizeByDefault('Menu is always hidden.'), environment.electron.is() ? nls.localizeByDefault('Menu is displayed as a compact button in the side bar. This 
+#, nls-default
+msgid "Menu is displayed as a compact button in the side bar. This value is ignored when {0} is {1}."
+msgstr ""
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:85
+#. 界面位置：cube-preferences-manager
+#. 语境：environment.electron.is() ? nls.localizeByDefault('Menu is displayed as a compact button in the side bar. This value is ignored when {0} is {1}.', '`#window.tit
+#, nls-default
+msgid "Menu is displayed as a compact button in the side bar."
+msgstr "菜单在侧边栏中显示为紧凑按钮。"
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:90
+#. 界面位置：cube-preferences-manager
+#. 语境：scope: PreferenceScope.User, markdownDescription: nls.localizeByDefault( "Control the visibility of the menu bar. A setting of 'toggle' means that the menu bar 
+#, nls-default
+msgid ""
+"Control the visibility of the menu bar. A setting of 'toggle' means that the menu bar is hidden and "
+"a single press of the Alt key will show it. A setting of 'compact' will move the menu into the side "
+"bar."
+msgstr ""
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:104
+#. 界面位置：cube-preferences-manager
+#. 语境：default: ' - ', scope: PreferenceScope.User, markdownDescription: nls.localizeByDefault('Separator used by {0}.', '`#window.title#`'), }, 'window.tabCloseIconPl
+#, nls-default
+msgid "Separator used by {0}."
+msgstr ""
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:112
+#. 界面位置：cube-preferences-manager
+#. 语境：nls.localize( 'theia/core/window/tabCloseIconPlacement/end', 'Place the close icon at the end of the label. In left-to-right languages, this is the right side o
+#, nls-default
+msgid ""
+"Place the close icon at the end of the label. In left-to-right languages, this is the right side of "
+"the tab."
+msgstr "将关闭图标放在标签末尾。在从左到右书写的语言中，即标签页的右侧。"
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:116
+#. 界面位置：cube-preferences-manager
+#. 语境：nls.localize( 'theia/core/window/tabCloseIconPlacement/start', 'Place the close icon at the start of the label. In left-to-right languages, this is the left sid
+#, nls-default
+msgid ""
+"Place the close icon at the start of the label. In left-to-right languages, this is the left side "
+"of the tab."
+msgstr "将关闭图标放在标签开头。在从左到右书写的语言中，即标签页的左侧。"
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:123
+#. 界面位置：cube-preferences-manager
+#. 语境：description: nls.localize( 'theia/core/window/tabCloseIconPlacement/description', 'Place the close icons on tab titles at the start or end of the tab. The defau
+#, nls-default
+msgid ""
+"Place the close icons on tab titles at the start or end of the tab. The default is end on all "
+"platforms."
+msgstr "将标签标题上的关闭图标放在标签页的开头或结尾。所有平台默认为结尾。"
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:131
+#. 界面位置：cube-preferences-manager
+#. 语境：enum: ['originalSize', 'halfWidth', 'fullSize'], enumDescriptions: [ nls.localize('theia/core/secondaryWindow/originalSize', 'The position and size of the extra
+#, nls-default
+msgid "The position and size of the extracted widget will be the same as the original widget."
+msgstr "提取出的小部件的位置和大小将与原始小部件相同。"
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:132
+#. 界面位置：cube-preferences-manager
+#. 语境：enumDescriptions: [ nls.localize('theia/core/secondaryWindow/originalSize', 'The position and size of the extracted widget will be the same as the original widg
+#, nls-default
+msgid ""
+"The position and size of the extracted widget will be half the width of the running Theia "
+"application."
+msgstr "提取出的小部件的位置和大小将为正在运行的 Theia 应用程序宽度的一半。"
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:133
+#. 界面位置：cube-preferences-manager
+#. 语境：nls.localize('theia/core/secondaryWindow/originalSize', 'The position and size of the extracted widget will be the same as the original widget.'), nls.localize(
+#, nls-default
+msgid "The position and size of the extracted widget will be the same as the running Theia application."
+msgstr "提取出的小部件的位置和大小将与正在运行的 Theia 应用程序相同。"
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:136
+#. 界面位置：cube-preferences-manager
+#. 语境：], default: 'originalSize', description: nls.localize('theia/core/secondaryWindow/description', 'Sets the initial position and size of the extracted secondary w
+#, nls-default
+msgid "Sets the initial position and size of the extracted secondary window."
+msgstr "设置提取出的辅助窗口的初始位置和大小。"
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:143
+#. 界面位置：cube-preferences-manager
+#. 语境：description: nls.localize( 'theia/core/secondaryWindow/alwaysOnTop', 'When enabled, the secondary window stays above all other windows, including those of diffe
+#, nls-default
+msgid ""
+"When enabled, the secondary window stays above all other windows, including those of different "
+"applications."
+msgstr "启用后，辅助窗口将保持在所有其他窗口之上，包括其他应用程序的窗口。"
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:151
+#. 界面位置：cube-preferences-manager
+#. 语境：//--- Customized description for MX2 markdownDescription: nls.localizeByDefault( 'Sets the proxy server address used by MX2 to route network traffic. If not spe
+#, nls-default
+msgid ""
+"Sets the proxy server address used by MX2 to route network traffic. If not specified, MX2 will "
+"inherit system default proxy settings."
+msgstr ""
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:159
+#. 界面位置：cube-preferences-manager
+#. 语境：default: true, description: nls.localizeByDefault( 'Controls whether the proxy server certificate should be verified against the list of supplied CAs. When duri
+#, nls-default
+msgid ""
+"Controls whether the proxy server certificate should be verified against the list of supplied CAs. "
+"When during [remote development](https://aka.ms/vscode-remote) the {0} setting is disabled this "
+"setting can be configured in the local and the remote settings separately."
+msgstr ""
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:168
+#. 界面位置：cube-preferences-manager
+#. 语境：type: 'string', //--- Customized description for MX2 markdownDescription: nls.localizeByDefault('Specifies the username and password credentials MX2 uses to aut
+#, nls-default
+msgid "Specifies the username and password credentials MX2 uses to authenticate with the proxy server."
+msgstr "指定 MX2 用于向代理服务器进行身份验证的用户名和密码凭据。"
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:177
+#. 界面位置：cube-preferences-manager
+#. 语境：enum: ['off', 'on', 'fallback', 'override'], enumDescriptions: [ nls.localizeByDefault('Disable proxy support for extensions.'), nls.localizeByDefault('Enable p
+#, nls-default
+msgid "Disable proxy support for extensions."
+msgstr "禁用扩展的代理支持。"
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:178
+#. 界面位置：cube-preferences-manager
+#. 语境：enumDescriptions: [ nls.localizeByDefault('Disable proxy support for extensions.'), nls.localizeByDefault('Enable proxy support for extensions.'), nls.localizeB
+#, nls-default
+msgid "Enable proxy support for extensions."
+msgstr "启用扩展的代理支持。"
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:179
+#. 界面位置：cube-preferences-manager
+#. 语境：nls.localizeByDefault('Disable proxy support for extensions.'), nls.localizeByDefault('Enable proxy support for extensions.'), nls.localizeByDefault('Enable pro
+#, nls-default
+msgid "Enable proxy support for extensions, fall back to request options, when no proxy found."
+msgstr "启用扩展的代理支持；未找到代理时回退到请求选项。"
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:180
+#. 界面位置：cube-preferences-manager
+#. 语境：nls.localizeByDefault('Enable proxy support for extensions.'), nls.localizeByDefault('Enable proxy support for extensions, fall back to request options, when no
+#, nls-default
+msgid "Enable proxy support for extensions, override request options."
+msgstr "启用扩展的代理支持，并覆盖请求选项。"
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:184
+#. 界面位置：cube-preferences-manager
+#. 语境：default: 'override', description: nls.localizeByDefault( 'Use the proxy support for extensions. When during [remote development](https://aka.ms/vscode-remote) t
+#, nls-default
+msgid ""
+"Use the proxy support for extensions. When during [remote "
+"development](https://aka.ms/vscode-remote) the {0} setting is disabled this setting can be "
+"configured in the local and the remote settings separately."
+msgstr ""
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:194
+#. 界面位置：cube-preferences-manager
+#. 语境：default: true, description: nls.localizeByDefault( 'Controls whether CA certificates should be loaded from the OS. On Windows and macOS, a reload of the window 
+#, nls-default
+msgid ""
+"Controls whether CA certificates should be loaded from the OS. On Windows and macOS, a reload of "
+"the window is required after turning this off. When during [remote "
+"development](https://aka.ms/vscode-remote) the {0} setting is disabled this setting can be "
+"configured in the local and the remote settings separately."
+msgstr ""
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:205
+#. 界面位置：cube-preferences-manager
+#. 语境：default: 'singleClick', description: nls.localizeByDefault( 'Controls how to open items in trees and lists using the mouse (if supported). Note that some trees 
+#, nls-default
+msgid ""
+"Controls how to open items in trees and lists using the mouse (if supported). Note that some trees "
+"and lists might choose to ignore this setting if it is not applicable."
+msgstr ""
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:210
+#. 界面位置：cube-preferences-manager
+#. 语境：'workbench.editor.highlightModifiedTabs': { type: 'boolean', markdownDescription: nls.localize('theia/core/highlightModifiedTabs', 'Controls whether a top borde
+#, nls-default
+msgid "Controls whether a top border is drawn on modified (dirty) editor tabs or not."
+msgstr "控制是否在已修改（未保存）的编辑器标签页上绘制顶部边框。"
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:216
+#. 界面位置：cube-preferences-manager
+#. 语境：type: 'boolean', description: nls.localizeByDefault( 'Controls whether editors showing a file that was opened during the session should close automatically when
+#, nls-default
+msgid ""
+"Controls whether editors showing a file that was opened during the session should close "
+"automatically when getting deleted or renamed by some other process. Disabling this will keep the "
+"editor open  on such an event. Note that deleting from within the application will always close the "
+"editor and that editors with unsaved changes will never close to preserve your data."
+msgstr ""
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:222
+#. 界面位置：cube-preferences-manager
+#. 语境：'workbench.editor.mouseBackForwardToNavigate': { type: 'boolean', description: nls.localizeByDefault("Enables the use of mouse buttons four and five for command
+#, nls-default
+msgid "Enables the use of mouse buttons four and five for commands 'Go Back' and 'Go Forward'."
+msgstr "启用鼠标第四和第五个按键执行“后退”和“前进”命令。"
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:228
+#. 界面位置：cube-preferences-manager
+#. 语境：type: 'boolean', description: nls.localizeByDefault( 'Controls whether an editor is revealed in any of the visible groups if opened. If disabled, an editor will
+#, nls-default
+msgid ""
+"Controls whether an editor is revealed in any of the visible groups if opened. If disabled, an "
+"editor will prefer to open in the currently active editor group. If enabled, an already opened "
+"editor will be revealed instead of opened again in the currently active editor group. Note that "
+"there are some cases where this setting is ignored, such as when forcing an editor to open in a "
+"specific group or to the side of the currently active group."
+msgstr ""
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:234
+#. 界面位置：cube-preferences-manager
+#. 语境：'workbench.editor.decorations.badges': { type: 'boolean', description: nls.localizeByDefault('Controls whether editor file decorations should use badges.'), def
+#, nls-default
+msgid "Controls whether editor file decorations should use badges."
+msgstr "控制编辑器文件装饰是否使用徽标。"
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:241
+#. 界面位置：cube-preferences-manager
+#. 语境：default: 50, minimum: 0, description: nls.localizeByDefault('Controls the number of recently used commands to keep in history for the command palette. Set to 0 
+#, nls-default
+msgid ""
+"Controls the number of recently used commands to keep in history for the command palette. Set to 0 "
+"to disable command history."
+msgstr ""
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:249
+#. 界面位置：cube-preferences-manager
+#. 语境：default: DefaultTheme.defaultForOSTheme(FrontendApplicationConfigProvider.get().defaultTheme), //--- Customized description for MX2 description: nls.localizeByD
+#, nls-default
+msgid "Sets the color theme of the MX2 interface."
+msgstr "设置 MX2 界面的配色主题。"
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:254
+#. 界面位置：cube-preferences-manager
+#. 语境：type: ['string'], enum: ['none', 'theia-file-icons'], enumItemLabels: [nls.localizeByDefault('None'), 'File Icons (Theia)'], default: FrontendApplicationConfigP
+#, nls-default
+msgid "None"
+msgstr ""
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:256
+#. 界面位置：cube-preferences-manager
+#. 语境：enumItemLabels: [nls.localizeByDefault('None'), 'File Icons (Theia)'], default: FrontendApplicationConfigProvider.get().defaultIconTheme, description: nls.local
+#, nls-default
+msgid "Specifies the file icon theme used in the workbench or 'null' to not show any file icons."
+msgstr "指定工作台中使用的文件图标主题，或设为 'null' 以不显示任何文件图标。"
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:267
+#. 界面位置：cube-preferences-manager
+#. 语境：type: 'boolean', default: false, description: nls.localize('theia/core/silentNotifications', 'Controls whether to suppress notification popups.'), }, 'workbench
+#, nls-default
+msgid "Controls whether to suppress notification popups."
+msgstr "控制是否抑制通知弹窗。"
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:272
+#. 界面位置：cube-preferences-manager
+#. 语境：type: 'boolean', default: true, description: nls.localizeByDefault('Controls the visibility of the status bar at the bottom of the workbench.'), }, 'workbench.t
+#, nls-default
+msgid "Controls the visibility of the status bar at the bottom of the workbench."
+msgstr "控制工作台底部状态栏的可见性。"
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:278
+#. 界面位置：cube-preferences-manager
+#. 语境：enum: ['onHover', 'none', 'always'], default: 'onHover', description: nls.localizeByDefault('Controls whether the tree should render indent guides.'), }, 'workb
+#, nls-default
+msgid "Controls whether the tree should render indent guides."
+msgstr "控制树是否应渲染缩进参考线。"
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:284
+#. 界面位置：cube-preferences-manager
+#. 语境：default: isOSX ? 1500 : 500, //--- Customized description for MX2 description: nls.localizeByDefault('Sets the delay, in milliseconds, before hover information 
+#, nls-default
+msgid ""
+"Sets the delay, in milliseconds, before hover information appears in MX2, helping to prevent "
+"accidental pop-ups."
+msgstr "设置 MX2 中悬停信息出现前的延迟（以毫秒为单位），有助于防止意外弹出。"
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:291
+#. 界面位置：cube-preferences-manager
+#. 语境：minimum: 0, maximum: 2000, description: nls.localizeByDefault('Controls the hover feedback delay in milliseconds of the dragging area in between views/editors.'
+#, nls-default
+msgid "Controls the hover feedback delay in milliseconds of the dragging area in between views/editors."
+msgstr "控制视图/编辑器之间拖动区域悬停反馈的延迟（以毫秒为单位）。"
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:299
+#. 界面位置：cube-preferences-manager
+#. 语境：maximum: 20, description: nls.localizeByDefault( "Controls the feedback area size in pixels of the dragging area in between views/editors. Set it to a larger va
+#, nls-default
+msgid ""
+"Controls the feedback area size in pixels of the dragging area in between views/editors. Set it to "
+"a larger value if you feel it's hard to resize views using the mouse."
+msgstr ""
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:305
+#. 界面位置：cube-preferences-manager
+#. 语境：type: 'boolean', default: false, description: nls.localize('theia/core/tabMaximize', 'Controls whether to maximize tabs on double click.'), }, 'workbench.tab.sh
+#, nls-default
+msgid "Controls whether to maximize tabs on double click."
+msgstr "控制是否在双击时最大化标签页。"
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:310
+#. 界面位置：cube-preferences-manager
+#. 语境：type: 'boolean', default: false, description: nls.localize('theia/core/tabShrinkToFit', 'Shrink tabs to fit available space.'), }, 'workbench.tab.shrinkToFit.mi
+#, nls-default
+msgid "Shrink tabs to fit available space."
+msgstr "缩小标签页以适应可用空间。"
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:316
+#. 界面位置：cube-preferences-manager
+#. 语境：default: 50, minimum: 10, description: nls.localize('theia/core/tabMinimumSize', 'Specifies the minimum size for tabs.'), }, 'workbench.tab.shrinkToFit.defaultS
+#, nls-default
+msgid "Specifies the minimum size for tabs."
+msgstr "指定标签页的最小大小。"
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:322
+#. 界面位置：cube-preferences-manager
+#. 语境：default: 200, minimum: 10, description: nls.localize('theia/core/tabDefaultSize', 'Specifies the default size for tabs.'), }, 'workbench.editorAssociations': {
+#, nls-default
+msgid "Specifies the default size for tabs."
+msgstr "指定标签页的默认大小。"
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:327
+#. 界面位置：cube-preferences-manager
+#. 语境：type: 'object', markdownDescription: nls.localizeByDefault( 'Configure [glob patterns](https://aka.ms/vscode-glob-patterns) to editors (for example `"*.hex": "h
+#, nls-default
+msgid ""
+"Configure [glob patterns](https://aka.ms/vscode-glob-patterns) to editors (for example `\"*.hex\": "
+"\"hexEditor.hexedit\"`). These have precedence over the default behavior."
+msgstr ""
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-customCorePreferenceSchema.ts:342
+#. 界面位置：cube-preferences-manager
+#. 语境：'notification.timeout': { type: 'number', description: nls.localizeByDefault('Sets the duration, in milliseconds, that notification messages remain visible on t
+#, nls-default
+msgid ""
+"Sets the duration, in milliseconds, that notification messages remain visible on the MX2 screen "
+"before closing automatically"
+msgstr ""
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-layout-provider.ts:51
+#. 界面位置：cube-preferences-manager → getLayoutLabel
+#. 语境：return nls.localizeByDefault('General'); case 'appearance': return nls.localizeByDefault('Appearance'); case 'network': return nls.localizeByDefault('Network');
+#, nls-default
+msgid "Appearance"
+msgstr ""
+
+#: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-layout-provider.ts:53
+#. 界面位置：cube-preferences-manager → getLayoutLabel
+#. 语境：return nls.localizeByDefault('Appearance'); case 'network': return nls.localizeByDefault('Network'); case 'advanced': return nls.localizeByDefault('Advanced');
+#, nls-default
+msgid "Network"
+msgstr ""
+
 #: @prg-cube/cube-preferences-manager/src/browser/preferences-structure/cube-preferences-manager-schema.ts:15
 #. 界面位置：cube-preferences-manager → CUBE_PREFERENCES_SCHEMA
 #. 语境：login: { type: 'string', description: 'User Login', default: '', },
@@ -6276,6 +6841,42 @@ msgstr ""
 #. 语境：data-testid="left-panel-option-theme-icon" /> <Typography>Theme</Typography> </div> </MenuItem>
 #, jsx-child
 msgid "Theme"
+msgstr ""
+
+#: @prg-cube/mx-ui-filter/src/browser/mx-split-tabbar/mx-split-tabbar-contribution.ts:19
+#: @prg-cube/mx-ui-filter/src/browser/mx-split-tabbar/mx-split-tabbar-contribution.ts:97
+#. 界面位置：mx-ui-filter → MXSplitTabbarContribution
+#. 语境：private readonly SPLIT_WIDGET_UP_COMMAND: Command = { id: 'SPLIT_WIDGET_UP', label: nls.localizeByDefault('Split Up') }; private readonly SPLIT_WIDGET_DOWN_COMM
+#. 共 2 处使用
+#, nls-default
+msgid "Split Up"
+msgstr ""
+
+#: @prg-cube/mx-ui-filter/src/browser/mx-split-tabbar/mx-split-tabbar-contribution.ts:23
+#: @prg-cube/mx-ui-filter/src/browser/mx-split-tabbar/mx-split-tabbar-contribution.ts:102
+#. 界面位置：mx-ui-filter → MXSplitTabbarContribution
+#. 语境：private readonly SPLIT_WIDGET_DOWN_COMMAND: Command = { id: 'SPLIT_WIDGET_DOWN', label: nls.localizeByDefault('Split Down') }; private readonly SPLIT_WIDGET_LEF
+#. 共 2 处使用
+#, nls-default
+msgid "Split Down"
+msgstr ""
+
+#: @prg-cube/mx-ui-filter/src/browser/mx-split-tabbar/mx-split-tabbar-contribution.ts:27
+#: @prg-cube/mx-ui-filter/src/browser/mx-split-tabbar/mx-split-tabbar-contribution.ts:107
+#. 界面位置：mx-ui-filter → MXSplitTabbarContribution
+#. 语境：private readonly SPLIT_WIDGET_LEFT_COMMAND: Command = { id: 'SPLIT_WIDGET_LEFT', label: nls.localizeByDefault('Split Left') };
+#. 共 2 处使用
+#, nls-default
+msgid "Split Left"
+msgstr ""
+
+#: @prg-cube/mx-ui-filter/src/browser/mx-split-tabbar/mx-split-tabbar-contribution.ts:32
+#: @prg-cube/mx-ui-filter/src/browser/mx-split-tabbar/mx-split-tabbar-contribution.ts:112
+#. 界面位置：mx-ui-filter → MXSplitTabbarContribution
+#. 语境：private readonly SPLIT_WIDGET_RIGHT_COMMAND: Command = { id: 'SPLIT_WIDGET_RIGHT', label: nls.localizeByDefault('Split Right') };
+#. 共 2 处使用
+#, nls-default
+msgid "Split Right"
 msgstr ""
 
 #: libs/features/nvic/ext/nvic-configuration/src/browser/components/ErrorBoundary.tsx:64
@@ -8959,6 +9560,34 @@ msgstr ""
 msgid "sidekick link"
 msgstr ""
 
+#: @prg-cube/ui-theia-branding/src/browser/CubeMessage/components/Notifications.tsx:59
+#. 界面位置：ui-theia-branding → NotificationsView
+#. 语境：} > {nls.localizeByDefault('Show in logs')} </CoreButton> <CoreIconButton
+#, nls-default
+msgid "Show in logs"
+msgstr ""
+
+#: @prg-cube/ui-theia-branding/src/browser/CubeMessage/components/Notifications.tsx:66
+#. 界面位置：ui-theia-branding → NotificationsView
+#. 语境：} data-testid={SNACKBAR_SERVICE_TEST_ID.notificationsClearAllButton} tooltip={nls.localizeByDefault('Clear all')} iconName="delete-bin-2-line" onClick={clearAll
+#, nls-default
+msgid "Clear all"
+msgstr ""
+
+#: @prg-cube/ui-theia-branding/src/browser/CubeMessage/components/Notifications.tsx:76
+#. 界面位置：ui-theia-branding → NotificationsView
+#. 语境：<CoreNoNotifications localTexts={{ noNotificationTitle: nls.localizeByDefault("You're all caught up"), noNotificationDescription: nls.localizeByDefault( 'There 
+#, nls-default
+msgid "You're all caught up"
+msgstr ""
+
+#: @prg-cube/ui-theia-branding/src/browser/CubeMessage/components/Notifications.tsx:78
+#. 界面位置：ui-theia-branding → NotificationsView
+#. 语境：noNotificationTitle: nls.localizeByDefault("You're all caught up"), noNotificationDescription: nls.localizeByDefault( 'There are no new notifications to display
+#, nls-default
+msgid "There are no new notifications to display."
+msgstr ""
+
 #: @prg-cube/ui-theia-branding/src/browser/CubeMessage/constants.ts:12
 #. 界面位置：ui-theia-branding → TOGGLE_NOTIFICATIONS_VISIBILITY_COMMAND
 #. 语境：export const TOGGLE_NOTIFICATIONS_VISIBILITY_COMMAND = { id: 'cube-mx2-notifications.commands.toggle', label: 'Toggle Notifications', };
@@ -8972,6 +9601,13 @@ msgstr ""
 #, config-value
 msgid "Clear all Notifications"
 msgstr ""
+
+#: @prg-cube/ui-theia-branding/src/browser/CubeMessage/CubeNotificationConfigSchema.ts:18
+#. 界面位置：ui-theia-branding → CubeNotificationConfigSchema
+#. 语境：description: nls.localize( 'theia/messages/notificationTimeout', 'Informative notifications will be hidden after this timeout (in ms).' ), default: 8 * 1000, //
+#, nls-default
+msgid "Informative notifications will be hidden after this timeout (in ms)."
+msgstr "信息类通知将在此超时时间（毫秒）后隐藏。"
 
 #: @prg-cube/ui-theia-branding/src/browser/CubeMessage/TheiaMessageService.ts:73
 #. 界面位置：ui-theia-branding → TheiaMessageService

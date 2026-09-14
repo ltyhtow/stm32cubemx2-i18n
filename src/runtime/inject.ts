@@ -273,6 +273,17 @@ export function syncGzip(jsPath: string): boolean {
   return true;
 }
 
+/**
+ * 还原 .gz：有原始的 .gz.orig 就直接拷回（字节级一致），没有才重压。
+ * 重压出来的 .gz 内容等价但字节不同，会让「与原始安装逐字节比对」的校验失败。
+ */
+function restoreGzip(jsPath: string): void {
+  const gz = jsPath + '.gz';
+  const gzOrig = gz + '.orig';
+  if (existsSync(gzOrig)) copyFileSync(gzOrig, gz);
+  else syncGzip(jsPath);
+}
+
 const HTML_MARKER = 'st-i18n/loader.js';
 
 /** 在 index.html 的 bundle.js 之前插入一行加载我们的运行时。 */
@@ -309,14 +320,14 @@ export function rollback(install: Installation): { bundle: boolean; html: boolea
       : undefined;
   if (source) {
     copyFileSync(source, install.bundleJs);
-    syncGzip(install.bundleJs);
+    restoreGzip(install.bundleJs);
     bundle = true;
   }
 
   const htmlBackup = install.indexHtml + '.cubemx2-translator.bak';
   if (existsSync(htmlBackup)) {
     copyFileSync(htmlBackup, install.indexHtml);
-    syncGzip(install.indexHtml);
+    restoreGzip(install.indexHtml);
     html = true;
   }
 

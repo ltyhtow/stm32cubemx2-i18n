@@ -46,6 +46,8 @@ export interface InstallOptions {
 export interface InstallReport {
   deployed: { locale: string; entries: number; translated: number }[];
   injected: boolean;
+  /** 实际注入的挂钩点数 */
+  sites: number;
   htmlPatched: 'inserted' | 'already';
   foreignPatch: boolean;
   bytesDelta: number;
@@ -94,6 +96,7 @@ export function install(install_: Installation, opts: InstallOptions): InstallRe
   return {
     deployed,
     injected: true,
+    sites: injectResult.sites.length,
     htmlPatched,
     foreignPatch: injectResult.foreignPatch,
     bytesDelta: injectResult.bytesAfter - injectResult.bytesBefore,

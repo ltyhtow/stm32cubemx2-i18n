@@ -578,21 +578,24 @@ export function extractFromSource(fileName: string, content: string): RawString[
     }
   };
 
-  /** nls.localize(key, default) / localizeByDefault(text)：框架已有翻译，归 Tier 0。 */
+  /**
+   * nls.localize(key, default) / localizeByDefault(text)。
+   *
+   * 这些默认文案框架**可能**已有翻译（装了语言包后 theia/* 与 vscode/* 键都会命中），
+   * 但 ST 自己写的键（cube/…）或 ST 自创的默认文案不在任何语言包里，会原样落到界面上。
+   * 运行时是安全网：框架先译了，我们的挂钩看到的就是中文、不会再动；框架没译，
+   * 挂钩按原文替换。所以照常收进 PO，标 nls-default 角色让翻译人员知道可能已有官方译法。
+   */
   const visitCall = (node: ts.CallExpression) => {
     const callee = node.expression.getText(sf);
     if (/(^|\.)nls\.localize$|(^|\.)localize2?$/.test(callee)) {
       const arg = node.arguments[1];
-      if (arg && ts.isStringLiteral(arg)) {
-        push(arg.text, 'nls-default', arg, { translatable: false, reason: 'framework-nls' });
-      }
+      if (arg && ts.isStringLiteral(arg)) record(arg.text, 'nls-default', arg, 'jsx-child');
       return;
     }
     if (/localizeByDefault$/.test(callee)) {
       const arg = node.arguments[0];
-      if (arg && ts.isStringLiteral(arg)) {
-        push(arg.text, 'nls-default', arg, { translatable: false, reason: 'framework-nls' });
-      }
+      if (arg && ts.isStringLiteral(arg)) record(arg.text, 'nls-default', arg, 'jsx-child');
       return;
     }
     for (const [re, argIndex] of LABEL_CALLS) {

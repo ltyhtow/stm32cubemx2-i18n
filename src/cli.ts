@@ -26,6 +26,13 @@ import {
   pseudoTable,
 } from './catalog/po.js';
 import { install as doInstall, rollback as doRollbackCmd, doctor as doDoctor } from './apply/index.js';
+import {
+  installPack,
+  listInstalled,
+  removePack,
+  detectApiVersion,
+  userPluginsDir,
+} from './apply/langpack.js';
 import { parseLegacyCsv, importLegacy } from './catalog/import-legacy.js';
 import type { Catalog } from './types.js';
 
@@ -208,7 +215,7 @@ program
           : `  ${d.locale}: ${d.translated}/${d.entries} 条已翻译`,
       );
     }
-    console.log(`  注入 2 处运行时包装，产物增加 ${r.bytesDelta} 字节`);
+    console.log(`  注入 ${r.sites} 处运行时包装，产物增加 ${r.bytesDelta} 字节`);
     console.log(`  index.html: ${r.htmlPatched === 'inserted' ? '已插入运行时加载' : '已存在加载行'}`);
     console.log(`  译文表目录: ${r.i18nPath}`);
     if (r.foreignPatch) {
@@ -223,8 +230,79 @@ program
     }
     console.log(
       `\n完成。启动 STM32CubeMX2，按 F1 执行 "Configure Display Language" 选择 ${locales[0]}，重载即可生效。\n` +
-        '该命令写的是 Theia 自己的 localStorage.localeId，框架文案与 ST 文案会同时切换。',
+        '该命令写的是 Theia 自己的 localStorage.localeId，框架文案与 ST 文案会同时切换。\n' +
+        `若该语言不在列表里，先执行 langpack install --locale ${locales[0]} 装框架语言包。`,
     );
+  });
+
+// ---------------------------------------------------------------- langpack
+
+const langpack = program
+  .command('langpack')
+  .description('框架语言包（Tier 1）：激活 Theia 内置的 14 种语言，放在用户目录，不碰 ST 文件');
+
+langpack
+  .command('install')
+  .description('从 Open VSX 下载微软官方 VS Code 语言包（MIT）到 Theia 用户插件目录')
+  .requiredOption('--locale <locale>', '语言，如 zh-cn / zh-tw / ja / de / fr')
+  .option('--version <ver>', '指定版本；默认取与应用 VS Code API 版本最匹配的')
+  .option('--dry-run', '只解析与校验，不写盘')
+  .action(async (cmd: { locale: string; version?: string; dryRun?: boolean }) => {
+    const o = opts();
+    const install = locate(o.app);
+    const api = detectApiVersion(install);
+    console.log(`安装: ${install.root}  (v${install.version})`);
+    console.log(`应用内置 VS Code API: ${api ?? '未识别'}`);
+    process.stdout.write('  解析版本并下载… ');
+
+    const r = await installPack(install, cmd.locale, {
+      ...(cmd.version ? { version: cmd.version } : {}),
+      ...(cmd.dryRun ? { dryRun: true } : {}),
+    });
+    console.log(r.reused ? '已有同版本文件，跳过下载' : '完成');
+
+    console.log(`  语言包   ${r.pack} ${r.version}${r.exact ? '' : '（非精确匹配）'}`);
+    if (r.note) console.log(`  说明     ${r.note}`);
+    console.log(`  许可证   ${r.license ?? '（Open VSX 未返回）'}`);
+    console.log(`  翻译束   ${r.translations} 个`);
+    console.log(`  位置     ${r.file}`);
+    for (const old of r.removedOld) console.log(`  已移除旧版本 ${path.basename(old)}`);
+    if (cmd.dryRun) {
+      console.log('\n(dry-run，未写盘)');
+      return;
+    }
+    console.log(
+      `\n完成。重启 STM32CubeMX2，按 F1 执行 "Configure Display Language"，` +
+        `${cmd.locale} 现在会出现在列表里；选择后菜单、编辑器、设置等框架文案即切换。`,
+    );
+  });
+
+langpack
+  .command('list')
+  .description('列出用户插件目录里已装的语言包')
+  .action(() => {
+    const o = opts();
+    const install = locate(o.app);
+    const dir = userPluginsDir(install);
+    const packs = listInstalled(install);
+    console.log(`用户插件目录: ${dir}`);
+    if (!packs.length) {
+      console.log('（没有语言包）');
+      return;
+    }
+    for (const p of packs) console.log(`  ${(p.locale ?? '?').padEnd(6)} ${p.pack} ${p.version}`);
+  });
+
+langpack
+  .command('remove')
+  .description('移除某语言的语言包')
+  .requiredOption('--locale <locale>', '语言')
+  .action((cmd: { locale: string }) => {
+    const o = opts();
+    const install = locate(o.app);
+    const removed = removePack(install, cmd.locale);
+    if (!removed.length) console.log(`没有装 ${cmd.locale} 的语言包`);
+    for (const f of removed) console.log(`已移除 ${f}`);
   });
 
 // ---------------------------------------------------------------- rollback
@@ -268,6 +346,10 @@ program
     console.log(`运行时文件   ${yn(d.runtimePresent)}`);
     console.log(`译文表       ${d.i18nFiles.length ? d.i18nFiles.join(', ') : '（无）'}`);
     console.log(`bundle.js.gz ${d.gzPresent ? (d.gzStale ? '存在但已过期' : '存在且同步') : '不存在'}`);
+    const packs = listInstalled(install);
+    console.log(
+      `框架语言包   ${packs.length ? packs.map((p) => `${p.locale ?? p.pack} ${p.version}`).join(', ') : '（无，框架文案将保持英文）'}`,
+    );
     if (d.notes.length) {
       console.log('');
       for (const n of d.notes) console.log(`[注意] ${n}`);

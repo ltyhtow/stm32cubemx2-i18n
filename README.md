@@ -35,8 +35,40 @@
 
 ## 覆盖分层
 
-**Tier 2 — 运行时挂钩（当前唯一真正生效的一层）。** ST 自研界面的文案没有走任何国际化框架，
-是硬编码在 JSX 里的。本工具在 `bundle.js` 里包装六个渲染咽喉，渲染时查表替换：
+两层，各管一半，互不重叠：
+
+| 层 | 覆盖什么 | 怎么做 | 改动 ST 文件 |
+| :-- | :-- | :-- | :-- |
+| **Tier 1 语言包** | Theia / VS Code 框架文案：菜单、编辑器、设置、命令面板（约 1.7 万条，14 种语言现成） | `langpack install` 把微软官方 VS Code 语言包（MIT）放进 Theia 用户插件目录 | **零** |
+| **Tier 2 运行时挂钩** | ST 自研界面的硬编码文案（约 1700 条） | `install` 在 `bundle.js` 包装六个渲染咽喉，渲染时查表替换 | 6 处，约 640 字节 |
+
+### Tier 1：语言包为什么必须装
+
+STM32CubeMX2 基于 Eclipse Theia，后端**已内置** 14 种语言的翻译
+（zh-cn、zh-tw、fr、de、it、es、ja、ko、ru、pt-br、tr、pl、cs、hu）。但只设 `localStorage.localeId` 不会生效，
+实测界面一个中文字符都没有。原因有两层，都在 Theia 的代码里：
+
+1. 后端 `registerLocalizationFromRequire()` 注册内置翻译时不设 `languagePack: true`，而前端
+   `I18nPreloadContribution` 只装载 `languagePack` 为真的语言。**任何**声明了 `contributes.localizations`
+   的插件都会把该语言标成 `languagePack`，Theia 随即把内置的 `theia/*` 翻译（约 1300 条）一并激活。
+2. 但菜单、编辑器、设置这些大头走的是 `localizeByDefault('View')`——它通过 VS Code 的 metadata
+   把英文反查成 `vscode/menubarControl/mView` 这样的键，再去表里找。这些 `vscode/*` 键的翻译
+   只在**微软官方的 VS Code 语言包**里（约 1.55 万条）。
+
+所以 `langpack install` 做的事就是：从 Open VSX 下载 `MS-CEINTL.vscode-language-pack-<语言>`
+（MIT 许可），挑与应用内置 VS Code API 版本最匹配的那一版（键会随版本漂移，宁旧勿新），
+校验后放进 `~/.theia-cubemx2/plugins/`。实测装完后：
+
+```
+theia/* 键 1267 ・ vscode/* 键 15524
+View → 查看(V)   Help → 帮助(H)   Save → 保存(S)
+```
+
+全程不动 ST 任何文件；`langpack remove` 即可撤销。
+
+### Tier 2：运行时挂钩
+
+ST 自研界面的文案没有走任何国际化框架，是硬编码在 JSX 里的。本工具在 `bundle.js` 里包装六个渲染咽喉：
 
 | 挂钩点 | 覆盖 |
 | :-- | :-- |
@@ -48,22 +80,9 @@
 | `Lumino Title.label` | 标签页与菜单栏标题 |
 
 前两个覆盖 React 渲染的内容，后四个覆盖 Theia/Lumino 渲染的菜单与标签页——后者 React 够不到。
-六处合计约 640 字节。
 
-**Tier 0 / Tier 1 — 尚未打通，勿依赖。** STM32CubeMX2 基于 Eclipse Theia，后端确实内置了
-14 种语言的翻译（zh-cn、zh-tw、fr、de、it、es、ja、ko、ru、pt-br、tr、pl、cs、hu）。
-但**仅把 `localStorage.localeId` 设成 `zh-cn` 并不会让它们生效**，实测界面上一个中文字符都没有。
-
-原因在 Theia 的两处代码：后端 `registerLocalizationFromRequire()` 注册内置翻译时
-没有设 `languagePack: true`，而前端 `I18nPreloadContribution` 只在
-`p.languagePack` 为真时才装载显示语言包，否则把 locale 退回默认值。
-
-试过放一个声明 `contributes.localizations` 的最小语言包插件（含完整 VSIX manifest）。
-插件确实被部署了——Theia 为它生成了 `~/.theia-cubemx2/localization-cache/zh-cn/nls.config.zh-cn.json`
-且指向该插件的翻译文件——但界面依然全英文。要激活内置翻译还缺条件，属待解决项。
-
-**因此当前所有可见的翻译都来自 Tier 2。** 框架文案（编辑器、设置、Theia 自带命令）
-暂时仍是英文，除非你把它们也翻进 PO 里让运行时挂钩去替换。
+两层叠加时的规则很简单：框架先译了，挂钩看到的已是译文，不会再动；框架没译（ST 自创的文案、
+ST 自定义的 nls 键），挂钩按原文替换。运行时挂钩因此是整套方案的安全网。
 
 ---
 
@@ -72,22 +91,25 @@
 ```bash
 npm install && npm run build
 
-# 1. 从本机安装抽取界面文本
+# 1. 框架语言包（Tier 1）：菜单、编辑器、设置立刻有官方翻译，不碰 ST 文件
+node dist/cli.js langpack install --locale zh-cn
+
+# 2. 从本机安装抽取 ST 自研界面文本
 node dist/cli.js extract
 
-# 2. 生成开发者可查阅的文本清单（HTML，可搜索过滤）
+# 3. 生成开发者可查阅的文本清单（HTML，可搜索过滤）
 node dist/cli.js catalog
 
-# 3. 建立目标语言的 PO
+# 4. 建立目标语言的 PO
 node dist/cli.js sync --locale zh-CN
 
-# 4. 用 Poedit / Weblate 翻译 locales/zh-CN.po
+# 5. 用 Poedit / Weblate 翻译 locales/zh-CN.po
 
-# 5. 注入运行时并部署译文
+# 6. 注入运行时并部署译文（Tier 2）
 node dist/cli.js install --locale zh-CN
 
-# 6. 启动 STM32CubeMX2，设置显示语言后重载
-#    在开发者工具控制台执行：localStorage.setItem('localeId','zh-cn'); location.reload()
+# 7. 启动 STM32CubeMX2，F1 → Configure Display Language → 选择语言
+#    装了语言包后该语言会出现在列表里；两层翻译随这一个开关同时切换
 ```
 
 出问题随时 `node dist/cli.js rollback`。
@@ -137,8 +159,12 @@ msgstr "风险评分："
 | `keybinding` | 框架解析的键位描述符，如 `ctrlcmd+shift+t` |
 | `enum-value` | 枚举或状态字面量 |
 | `identifier` | 标识符形态（camelCase / kebab-case / CONST） |
-| `framework-nls` | 框架 NLS 已提供翻译，属 Tier 0 |
+| `template-concat` | 渲染时才由模板拼装，按值查表够不到 |
 | `not-ui-position` | 未落在任何已知 UI 文本位置 |
+
+角色标为 `nls-default` 的条目是 ST 代码里 `nls.localize()` / `localizeByDefault()` 的默认文案。
+装了语言包后其中一部分会由框架先译，但 ST 自创的文案不在任何语言包里，仍需在 PO 里翻——
+两者叠加时框架优先，挂钩兜底，翻了不会冲突。
 
 ### 方案的固有边界
 
@@ -186,13 +212,15 @@ node dist/cli.js audit   # 打印操作步骤
 
 | 命令 | 作用 |
 | :-- | :-- |
+| `langpack install --locale <x>` | 下载微软 VS Code 语言包到 Theia 用户插件目录（Tier 1） |
+| `langpack list` / `langpack remove --locale <x>` | 查看 / 移除已装语言包 |
 | `extract` | 抽取文本，生成 `catalog.json` 与 `.pot` 模板 |
 | `catalog` | 生成开发者 HTML 文本清单 |
 | `sync --locale <x>` | 用最新模板更新语言 PO，保留已有译文 |
 | `build --locale <x>` | 把 PO 编译成运行时译文表（`--pseudo` 生成伪翻译） |
 | `install --locale <x>` | 注入运行时并部署译文（`--pseudo` 部署伪翻译） |
 | `rollback` | 还原 `bundle.js` 与 `index.html` |
-| `doctor` | 体检安装、备份、注入状态 |
+| `doctor` | 体检安装、备份、注入状态、语言包 |
 | `audit` | 打印实测覆盖率的操作步骤 |
 | `import-legacy` | 从旧 CSV 工作表导入译文 |
 

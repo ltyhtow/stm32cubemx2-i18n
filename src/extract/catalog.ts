@@ -81,7 +81,8 @@ export function buildCatalog(
         confidence = 'needs-review';
       }
 
-      const tier: CatalogEntry['tier'] = raw.role === 'nls-default' ? 0 : 2;
+      // nls 默认文案：装了语言包后框架可能已译，运行时挂钩只做兜底
+      const tier: CatalogEntry['tier'] = raw.role === 'nls-default' ? 1 : 2;
 
       const entry: CatalogEntry = {
         id,
