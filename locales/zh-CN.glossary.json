@@ -1,6 +1,6 @@
 {
   "locale": "zh-CN",
-  "_comment": "lint 与 TRANSLATION_HANDOFF.md 共用的术语表。terms：原文出现该词时译文不得用 avoid 里的写法；keep：原文里出现就必须原样保留（整词、区分大小写），与 lint 内置的硬件缩写列表合并。",
+  "_comment": "lint 与 docs/TRANSLATION_HANDOFF.md 共用的术语表。terms：原文出现该词时译文不得用 avoid 里的写法；keep：原文里出现就必须原样保留（整词、区分大小写），与 lint 内置的硬件缩写列表合并。",
   "keep": [
     "Pack",
     "Cube"

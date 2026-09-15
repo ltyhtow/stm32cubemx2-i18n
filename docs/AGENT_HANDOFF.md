@@ -1,7 +1,17 @@
 # 项目交接：stm32cubemx2-translator
 
 > 给接手这个项目的 Agent。读完这份文件应当能独立继续开发，不需要复现调查过程。
-> 面向翻译人员的说明是另一份 `TRANSLATION_HANDOFF.md`，两者不要混。
+> 面向翻译人员的说明见 [TRANSLATION_HANDOFF.md](TRANSLATION_HANDOFF.md)。常用操作见 [DEVELOPMENT.md](DEVELOPMENT.md)。
+
+## 当前状态（2026-09-15，翻译交回后）
+
+正式词库和实际安装均已更新到 **5,341 条**，新增 3,445 条与交回的 58 个批次逐条一致。
+68 项测试通过；lint 为 0 错误、61 个原文与译文相同的警告、0 排版问题、0 fuzzy。
+用户已目视确认新译文在实际 GPIO 页面等位置生效，本批次尚未做语言质量复核。
+详见 [验证记录](VERIFICATION.md)。
+
+接下来主要处理译文质量、仍未命中的渲染路径（如 Saved）及 69 种模板/表达式的适配。
+下文 §8 保留开发历史，其中“待译”“未部署”等描述属于当时状态，不再代表当前交付。
 
 ---
 
@@ -11,28 +21,18 @@
 从应用自带的 sourcemap 和显式指定的 CMSIS Pack 参数 schema 抽取界面文案，
 经 Gettext PO 翻译，再用运行时挂钩把译文注入界面。
 
-仓库 `C:\Users\30496\stm32cubemx2-translator`，远端 `github.com/ltyhtow/stm32cubemx2-translator`（私有）。
+远端仓库：[ltyhtow/stm32cubemx2-translator](https://github.com/ltyhtow/stm32cubemx2-translator)。
 Node + TypeScript，MPL-2.0，每个源文件带 Exhibit A 头。本机装的应用是 v1.1.1。
 
 ---
 
-## 1. 为什么不用现成的那个
+## 1. 灵感与实现选择
 
-已有项目 `P1nkDog/STM32CubeMX2-Chinese` 的做法是**在压缩后的 `bundle.js` 里做全局字面量替换**。
-这个前提决定了它必须靠正则猜哪些字符串是界面文案，而正则区分不了
-`,"div")` 到底是 React 子节点还是 `f.bind(void 0,"div")` 的标签工厂参数。
+本项目灵感来自 [P1nkDog/STM32CubeMX2-Chinese](https://github.com/P1nkDog/STM32CubeMX2-Chinese)，感谢作者对中文本地化的探索。
 
-给它的产物做过一轮审计，实际缺陷：
-
-| 缺陷 | 数量 | 后果 |
-| :-- | :-- | :-- |
-| ID 撞车导致错译 | 121 | 译文串到别的条目上（ID 用文本 slug 截断到 60 字符，119 处重复） |
-| 代码位置字符串被翻译 | ~500 | 类名、属性名、键位描述符被改，行为出错 |
-| `nls.localize` 三参数调用被包裹 | 65 | `bundle.js` 变成语法错误的 JS，应用白屏 |
-| 键位描述符被译 | 17 | `alt+left` → `Alt+左`，快捷键失效 |
-
-**本项目的相反选择**：不扫压缩产物，改从 sourcemap 里的原始 TSX 判定语法位置；
-分类用 allowlist（默认不可译）而不是 denylist；替换发生在运行时而不是字节层面。
+本工具从 sourcemap 中的原始 TSX 判断界面文本位置，再通过运行时挂钩应用译文。
+标签名、属性值、快捷键和显示文字可能使用相同的英文，提取器因此只收录明确的显示位置。
+代码和词库独立维护。
 
 ### 合规约束（硬性）
 
@@ -142,8 +142,11 @@ scripts/verify-live.mjs  可重复的活体验证、审计与截图
 locales/
   zh-CN.po               译文（进仓库）
   zh-CN.glossary.json    术语表，lint 与交接说明共用
-TRANSLATION_HANDOFF.md   给翻译人员/AI 的说明
-VERIFICATION.md          本轮验证范围、证据与剩余限制
+docs/
+  DEVELOPMENT.md        开发与翻译操作
+  AGENT_HANDOFF.md      实现细节和开发历史
+  TRANSLATION_HANDOFF.md 给翻译人员/AI 的说明
+  VERIFICATION.md       验证范围、证据与剩余限制
 ```
 
 ### 命令
@@ -186,7 +189,7 @@ VERIFICATION.md          本轮验证范围、证据与剩余限制
 - **JSX 文本折叠必须照 Babel 的 `cleanJSXElementLiteralChild` 语义**：只裁剪与换行相邻的空白，
   行内空格保留。另外要解码 HTML 实体（`&nbsp;` `&apos;` `&hellip;` 与数字实体）。
   这条最初做错，导致 83 条抽出来的字符串在产物里找不到；改对后归零。
-- **稳定 ID** `sha1(file:role:text:ordinal).slice(0,12)`。**不要用文本 slug** —— 那正是旧项目 119 处撞车的原因。
+- **稳定 ID** `sha1(file:role:text:ordinal).slice(0,12)`。不要用截断的文本 slug，以免不同原文发生 ID 冲突。
 - 分类是 allowlist：只有明确落在 UI 文本位置的才可译，其余一律不可译并记录 `ExclusionReason`。
   `TEXT_PROPS` 有 60 多项，其中 19 项是用数据驱动的 `propscan` 补出来的。
 - **外设参数不全在前端里**。STM32C5 HAL Pack 的 `.config/*_parameters.json` 含 TIM/LPTIM
@@ -194,8 +197,8 @@ VERIFICATION.md          本轮验证范围、证据与剩余限制
   `extract --pack-config` 只访问已知 schema 子树、静态 action 提示和 attributes 显示字段，
   不执行脚本，不遍历 `computed`、`condition`、`default` 或 `const`。
   Pack ID 使用虚拟来源名、componentid 和 JSON Pointer，不含安装绝对路径或 Pack 版本。
-- **保持抽取范围一致**：现有 PO 含 TIM/LPTIM 的 650 条新增原文。省略 `--pack-config`
-  再 `sync` 会删除这些被视为失效的词条。README 有本机验证范围的完整命令。
+- **保持抽取范围一致**：现有 PO 含 C5 HAL 48 个参数文件及 DFP 4 个描述文件的文案。
+  省略 Pack 输入再 `sync` 会删除范围外的词条；[开发指南](DEVELOPMENT.md#重新提取)提供完整命令。
 
 ### 注入
 
@@ -208,7 +211,7 @@ VERIFICATION.md          本轮验证范围、证据与剩余限制
 - 注入**永远以 `.orig` 为基准**，不在别人的补丁上叠加。本工具自己的备份叫
   `bundle.js.cubemx2-translator.bak`，不覆盖另一个工具的 `.orig`。
 - 安全闸：注入后用 acorn 重新 parse，parse 失败拒绝写盘；再查括号/引号收支平衡。
-  旧项目那 65 处语法错误注入会被这一步当场拦下。
+  校验用于防止注入破坏 JavaScript 语法。
 
 ### 运行时
 
@@ -281,8 +284,8 @@ VERIFICATION.md          本轮验证范围、证据与剩余限制
 
 ```powershell
 node dist/cli.js export-work --locale zh-CN            # → work/zh-CN/batch-001.json …
-# 把 work/zh-CN/ 与 TRANSLATION_HANDOFF.md 交给翻译方，交回到 work/zh-CN/done/
-node dist/cli.js import-json --locale zh-CN --from work/zh-CN/done --source <译者名>
+# 把 work/zh-CN/ 与 docs/TRANSLATION_HANDOFF.md 交给翻译方，交回到 work/zh-CN/done/
+node dist/cli.js import-json --locale zh-CN --from work/zh-CN/done --source remote-agent
 node dist/cli.js lint --locale zh-CN --json > lint.json   # 有问题把报告回给翻译方
 ```
 
@@ -382,9 +385,9 @@ Pack 参数与 DFP 安全抽取、前端文案及运行时 shim 行为。运行�
   后端原有的 `onChanged` 初始化异常等日志在英文状态也出现；CDP 检查通过不代表后端无错误。
 - `diff` 已有精确匹配与升级继承回归测试，但未安装另一版本的 CubeMX2 做跨版本补丁适配。
 - 上述工作已于 2026-09-15 按用户要求提交为 `c20e60a`，其中还包含当时尚未完成的英文补提取代码。
-  未推送或公开发布。公开前仍需处理 §1 的第三方内容分发问题。
+  该条记录对应当时的本地提交阶段。
 
-### 最新开发状态：英文补提取（2026-09-15）
+### 历史阶段：英文补提取（2026-09-15，翻译交回前）
 
 - 修复了 `textShapes` 把 `i + 1` 当字符串拼接的问题：现在抽取为一个未知值；真正的相邻插值保持各自占位符。
 - 实际 DFP 文件存在同名、不同硬件关联的外设，ID 现包含配置类型与排序后的关联硬件；真正重复的身份仍拒绝。
@@ -401,6 +404,20 @@ Pack 参数与 DFP 安全抽取、前端文案及运行时 shim 行为。运行�
   对模板/表达式另做适配。`residual-status.json` 记录已知残留文字的现状，不能把新增抽取数量当成界面覆盖率。
 - 本轮没有运行新的 UI 测试或修改用户工程；2026-09-14 的截图与控件比对只证明前述已部署基线。
 
+### 翻译 AI 交接包（2026-09-15）
+
+- 面向远程翻译 Agent 的完整说明已更新在 `TRANSLATION_HANDOFF.md`，开头有可直接转发的指令。
+- 压缩包：`work/residual-extraction/STM32CubeMX2-zh-CN-translation-kit-2026-09-15.zip`，473380 字节。
+  解压目录为 `translator-kit/`；本机对应目录在 `work/residual-extraction/translator-kit/`。
+- 包内共 121 个文件：58 个原样复制的待译批次、58 个对应的语境文件（全部 5185 处来源）、
+  翻译说明、术语表、1896 条已有译文参考、批次清单及疑问模板。待译任务仍为 3445 条静态原文。
+- 119 个 JSON 文件均可解析，ZIP 内每个文件均已解压读取并通过 SHA256 比对。
+  ZIP SHA256：`0718b54225f90ef2eb6a2442e775e2d27eebc55a1af537a2100d9788792ce766`。
+- 远程 Agent 只修改批次的 `items[].msgstr`，可交回含 `done/batch-NNN.json` 与 `questions.md` 的 ZIP。
+  接收后只把 `done/` 中的译文批次导入 `work/residual-extraction/locales/zh-CN.po`，保留 `--locales`
+  参数；参考词库和语境文件不作译文输入。随后执行校验和质量复核，再安排部署与界面验证。
+- 批次、参考文件与 ZIP 均属于本机 `work/` 过程产物，不随 Git 分发；动态模板审查仍由工程侧单独处理。
+
 ---
 
 ## 9. 环境
@@ -410,6 +427,6 @@ Pack 参数与 DFP 安全抽取、前端文案及运行时 shim 行为。运行�
 源文件修改用 `apply_patch`；不切 Bash/WSL/cmd，不覆盖无关工作区改动。
 
 应用装在
-`C:\Users\30496\AppData\Local\STMicroelectronics\STM32CubeMX2_1.1.1\resources\stm32cubemx-application\1.1.1\dist\resources\app\`，
+`%LOCALAPPDATA%\STMicroelectronics\STM32CubeMX2_1.1.1\resources\stm32cubemx-application\1.1.1\dist\resources\app\`，
 调试入口是安装根目录的 `.bin\cube.exe mx start`（见 §7），Theia 用户目录为
-`C:\Users\30496\.theia-cubemx2\`。CMSIS Packs 位于 `%LOCALAPPDATA%\stm32cube\packs\`。
+`%USERPROFILE%\.theia-cubemx2\`。CMSIS Packs 位于 `%LOCALAPPDATA%\stm32cube\packs\`。

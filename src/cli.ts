@@ -520,7 +520,7 @@ program
     }
     const total = batches.reduce((n, b) => n + b.count, 0);
     console.log(`已导出 ${batches.length} 个批次，共 ${total} 条 → ${dir}${path.sep}`);
-    console.log('交接说明见 TRANSLATION_HANDOFF.md；翻译方交回后用 import-json 导入。');
+    console.log('交接说明见 docs/TRANSLATION_HANDOFF.md；翻译方交回后用 import-json 导入。');
   });
 
 // ---------------------------------------------------------------- import-json
