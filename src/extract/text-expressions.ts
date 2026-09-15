@@ -3,6 +3,17 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 import ts from 'typescript';
 
+/** 只有确定含字符串操作数的加法才按拼接读取，其余表达式作为一个未知值。 */
+function isStringExpression(expression: ts.Expression, depth = 0): boolean {
+  if (depth > 12) return false;
+  const next = (node: ts.Expression) => isStringExpression(node, depth + 1);
+  if (ts.isStringLiteral(expression) || ts.isNoSubstitutionTemplateLiteral(expression) || ts.isTemplateExpression(expression)) return true;
+  if (ts.isParenthesizedExpression(expression) || ts.isAsExpression(expression) || ts.isSatisfiesExpression(expression)) return next(expression.expression);
+  if (ts.isConditionalExpression(expression)) return next(expression.whenTrue) && next(expression.whenFalse);
+  return ts.isBinaryExpression(expression) && expression.operatorToken.kind === ts.SyntaxKind.PlusToken &&
+    (next(expression.left) || next(expression.right));
+}
+
 /** 只读 AST 中的字面量与分支，未知值记为 {}。结果是审查线索，不执行表达式。 */
 export function textShapes(expression: ts.Expression, depth = 0): string[] {
   if (depth > 12) return ['{}'];
@@ -22,7 +33,7 @@ export function textShapes(expression: ts.Expression, depth = 0): string[] {
     for (const span of expression.templateSpans) shapes = join(shapes, next(span.expression)).map(shape => shape + span.literal.text);
     return shapes;
   }
-  if (ts.isBinaryExpression(expression) && expression.operatorToken.kind === ts.SyntaxKind.PlusToken) {
+  if (ts.isBinaryExpression(expression) && expression.operatorToken.kind === ts.SyntaxKind.PlusToken && isStringExpression(expression)) {
     return join(next(expression.left), next(expression.right));
   }
   return ['{}'];

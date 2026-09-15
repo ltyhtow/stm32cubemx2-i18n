@@ -121,6 +121,8 @@ src/
     bundle-scan.ts       acorn tokenizer 单遍扫描压缩产物，统计字面量 + 识别代码位置
     catalog.ts           合并三路信号，生成稳定 ID
     pack-config.ts       读取 Pack 的 *_parameters.json，按 schema 显示字段白名单抽取
+    pack-descriptor.ts   DFP 分类、外设说明、功能标签和定时器通道名称
+    text-expressions.ts  静态读取模板与拼接表达式的文案形状，不执行代码
   catalog/
     diff.ts              升级清单差异，另统计按原文可继承的翻译范围
     po.ts                catalogToPot / mergePo（msgmerge 语义）/ poToRuntimeTable / pseudoTable / poStats
@@ -151,6 +153,7 @@ VERIFICATION.md          本轮验证范围、证据与剩余限制
 | `langpack install/list/remove --locale <x>` | Tier 1 语言包 |
 | `extract` | 抽取文案 → `catalog/catalog.json` + `.pot` |
 | `extract --pack-config <路径...>` | 同时抽取指定 Pack 参数文件/目录，包含隐藏 `.config` |
+| `extract --pack-descriptor <文件...>` | 同时抽取 DFP 映射与外设描述文件的显示字段 |
 | `catalog` | 生成开发者 HTML 清单 |
 | `diff --before <旧清单> [--after <新清单>]` | 报告条目与可译原文的新增、移除、变化 |
 | `sync --locale <x>` | 用新模板更新 PO，保留已有译文 |
@@ -337,12 +340,12 @@ Page.reload 会关闭部分外设标签页，重载后先重新打开待测页�
 
 ### 测试
 
-`npm test` 先编译再运行，当前 **56 项**：lint、语言包、PO 同步、升级 diff、
-Pack 参数安全抽取和运行时 shim 行为。运行时测试在 vm 沙箱中使用假的 window/localStorage/XHR。
+`npm test` 先编译再运行，当前 **68 项**：lint、语言包、PO 同步、升级 diff、
+Pack 参数与 DFP 安全抽取、前端文案及运行时 shim 行为。运行时测试在 vm 沙箱中使用假的 window/localStorage/XHR。
 
 ---
 
-## 8. 当前状态（2026-09-14）
+## 8. 已部署基线（2026-09-14）
 
 - **zh-CN 1896/1896**，lint error 0、warning 6、style 0。警告是原来有意保留的产品名/内部标识。
 - 前端基线 20271 条 catalog 记录，1811 个可译位置、1246 条不同原文。
@@ -371,13 +374,32 @@ Pack 参数安全抽取和运行时 shim 行为。运行时测试在 vm 沙箱�
 
 - `doctor` 应看到 6 处挂钩对应的注入状态、HTML/runtime、同步的 gzip 和 `zh-cn.json`。
   本工具备份与 `.orig` 未被覆盖；要恢复英文原始文件可运行 `rollback`。
-- **词库完成度不是全应用覆盖率。** 外设树分类（如 `Timers`）、运行时生成的
+- **词库完成度不是全应用覆盖率。** 外设树分类（如 `Timers`）、未补译的
   `Channel 1`、其他 Pack 参数、CSS 文本及部分第三方/原生控件仍有英文。
+  TIM 的 `Channel 1`～`Channel 7` 已确认来自 DFP 静态名称，LPTIM 的通道名才由模板生成。
   整个 HAL 2.1.0 `.config` 的 48 个 schema 可读取（8006 个显示字段），但本轮只补译 TIM/LPTIM。
 - UI 检查覆盖实际观察到的状态，不覆盖全部外设模式组合或代码生成结果。
   后端原有的 `onChanged` 初始化异常等日志在英文状态也出现；CDP 检查通过不代表后端无错误。
 - `diff` 已有精确匹配与升级继承回归测试，但未安装另一版本的 CubeMX2 做跨版本补丁适配。
-- 远端保持私有，本轮未提交、推送或公开发布。公开前仍需处理 §1 的第三方内容分发问题。
+- 上述工作已于 2026-09-15 按用户要求提交为 `c20e60a`，其中还包含当时尚未完成的英文补提取代码。
+  未推送或公开发布。公开前仍需处理 §1 的第三方内容分发问题。
+
+### 最新开发状态：英文补提取（2026-09-15）
+
+- 修复了 `textShapes` 把 `i + 1` 当字符串拼接的问题：现在抽取为一个未知值；真正的相邻插值保持各自占位符。
+- 实际 DFP 文件存在同名、不同硬件关联的外设，ID 现包含配置类型与排序后的关联硬件；真正重复的身份仍拒绝。
+- 文案常量表中的 camelCase 和枚举键可读取，但 `variant` / `color` 等已知代码属性不会被误收为文案。
+- **68 项测试通过**。已从前端、STM32C5 HAL 2.1.0 的 48 个参数文件、DFP 2.1.0 的 4 个描述文件完成抽取。
+  合并清单 **28659 个位置、9582 个可译位置、5341 条不同静态原文**。
+- 相对已部署基线新增 **3445 条原文**，旧 1896 条全部保留；另有 **69 种模板/表达式线索（89 个位置）**。
+- 结果入口：`work/residual-extraction/REPORT.md`；`new-english.json` 带全部来源，
+  `translation-work/zh-CN/` 有 **58 批**可直接交给翻译方，`dynamic-review.json` 供适配审查。
+  `pack-sources.json` 保存实际读取的 Pack 文件路径和哈希，`summary.json` 保存完整性校验结果。
+- 待译 PO 是 `work/residual-extraction/locales/zh-CN.po`，5341 条中已翻译 1896 条，
+  lint 错误 0、警告 6、排版 0；保留原有译文和译者来源。主 `locales/zh-CN.po` 与应用部署仍为 1896 条。
+- 后续工作：补译这 3445 条静态文案；检查已有译文仍显示英文的渲染路径（如首页片段、Saved）；
+  对模板/表达式另做适配。`residual-status.json` 记录已知残留文字的现状，不能把新增抽取数量当成界面覆盖率。
+- 本轮没有运行新的 UI 测试或修改用户工程；2026-09-14 的截图与控件比对只证明前述已部署基线。
 
 ---
 

@@ -137,6 +137,43 @@ node dist/cli.js install --locale zh-CN
 `--pack-config`，后续 `sync` 会把该范围之外的词条当成已失效而移除。
 换系列或扩展到其他外设时，新增原文仍需翻译，不能沿用当前完成度作为覆盖保证。
 
+### 补提取外设分类、通道与其他参数
+
+`--pack-descriptor <文件...>` 可读取 DFP 的 `peripheral_configuration_mapping.json` 和
+`*_peripherals.json`：分类、外设说明、功能标签及定时器通道显示名称进入清单，硬件标识保持原样。
+同名外设通过配置类型和关联硬件区分，条目 ID 不依赖数组顺序。
+参数文件中 `itemTitle` 引用的 `source` 表达式只做静态读取，不执行代码。
+
+2026-09-15 在本机 STM32C5 HAL/DFP 2.1.0 上扩展到 48 个参数文件和 4 个 DFP 描述文件，
+共收录 **5341 条不同静态原文**，其中 **3445 条待补译**；另有 69 种模板/表达式线索。
+已部署的中文词库仍是前述 1896 条。提取结果见本机 [报告](work/residual-extraction/REPORT.md)，
+含完整来源的 JSON、可搜索清单及 58 个翻译批次；这些过程文件不随 Git 分发。
+
+以下命令复现该范围，并在工作副本中保留已有译文：
+
+```powershell
+$packRoot = Join-Path $env:LOCALAPPDATA 'stm32cube\packs\STMicroelectronics'
+$configDir = Join-Path $packRoot 'stm32c5xx_hal_drivers\2.1.0\.config'
+$descriptorDir = Join-Path $packRoot 'stm32c5xx_dfp\2.1.0\Descriptors'
+$descriptorFiles = @(Join-Path $descriptorDir 'peripheral_configuration_mapping.json') + @(rg --files --hidden $descriptorDir -g '*_peripherals.json')
+if ($LASTEXITCODE -ne 0) { throw '未能列出 DFP 描述文件' }
+node dist\cli.js --catalog work\residual-extraction\catalog.json extract --pack-config $configDir --pack-descriptor @descriptorFiles --pot work\residual-extraction\stm32cubemx2.pot
+if ($LASTEXITCODE -ne 0) { throw '提取失败' }
+
+$workLocales = 'work\residual-extraction\locales'
+New-Item -ItemType Directory -Path $workLocales -Force | Out-Null
+if (-not (Test-Path -LiteralPath (Join-Path $workLocales 'zh-CN.po'))) {
+    Copy-Item -LiteralPath 'locales\zh-CN.po' -Destination $workLocales
+    Copy-Item -LiteralPath 'locales\zh-CN.glossary.json' -Destination $workLocales
+}
+node dist\cli.js --locales $workLocales sync --locale zh-CN --pot work\residual-extraction\stm32cubemx2.pot
+if ($LASTEXITCODE -ne 0) { throw '同步失败' }
+node dist\cli.js --locales $workLocales export-work --locale zh-CN --out work\residual-extraction\translation-work
+```
+
+翻译交回时仍应指定这个 `--locales` 工作目录。动态模板保留为 `template-concat` 审查项，
+需要确认渲染位置并适配后才能进入运行时词表；抽取到静态文案也不等于已在界面验证命中。
+
 ### 应用或 Pack 升级
 
 先保存旧清单，再用相同的源范围抽取新版本。沿用上面的 Pack 路径变量，并按实际版本更新：

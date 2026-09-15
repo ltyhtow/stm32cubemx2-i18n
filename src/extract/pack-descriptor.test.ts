@@ -28,12 +28,24 @@ test('DFP 定时器通道只读取 resources 中的显示名，不收硬件名�
   assert.equal(entries[0]!.translatable, true);
 });
 
-test('描述文件条目 ID 不随安装路径或数组重排改变，重复名称拒绝', () => {
+test('描述文件条目 ID 不随安装路径或数组重排改变，重复身份拒绝', () => {
   const a = { name: 'TIM1', category: 'Timers' };
   const b = { name: 'TIM2', category: 'Timers' };
   const ids = (file: string, elements: object[]) => extractPackDescriptor(file, mapping(elements)).map(e => e.id).sort();
   assert.deepEqual(ids('v1/mapping.json', [a,b]), ids('v2/mapping.json', [b,a]));
   assert.throws(() => ids('mapping.json', [a,a]), /重复/);
+});
+
+test('同名外设的不同关联硬件均保留，关联列表重排不改变 ID', () => {
+  const first = { name: 'RAMCFG', description: 'RAM controller', configurationType: 'ramcfg',
+    associatedPeripherals: [{ name: 'RAMCFG.SRAM1', type: 'ram' }, { name: 'RAMCFG.SRAM2', type: 'ram' }] };
+  const second = { ...first, associatedPeripherals: [{ name: 'SRAM1', type: 'ram' }, { name: 'SRAM2', type: 'ram' }] };
+  const entries = extractPackDescriptor('mapping.json', mapping([first, second]));
+  assert.equal(entries.length, 2);
+  assert.equal(new Set(entries.map(e => e.id)).size, 2);
+  const reordered = extractPackDescriptor('mapping.json', mapping([second, { ...first, associatedPeripherals: [...first.associatedPeripherals].reverse() }]));
+  assert.deepEqual(entries.map(e => e.id).sort(), reordered.map(e => e.id).sort());
+  assert.throws(() => extractPackDescriptor('mapping.json', mapping([first, first])), /重复/);
 });
 
 test('描述文件验证根结构，动态字段只登记为排除项', () => {

@@ -565,13 +565,15 @@ export function extractFromSource(fileName: string, content: string): RawString[
     if (!node.initializer || !ts.isIdentifier(node.name)) return;
     const name = node.name.text;
     if (NON_UI_CONST.test(name)) return;
-    // 明确标为文案的常量表，例如 EXPAND_COLLAPSE_LABEL；不读取 NEXTCOMMAND 等代码表。
+    // 文案常量表也可能使用 camelCase 或枚举键，但 variant/color 等代码属性仍要排除。
     if (/_LABELS?$/.test(name)) {
       let value = node.initializer;
       while (ts.isAsExpression(value) || ts.isParenthesizedExpression(value) || ts.isSatisfiesExpression(value)) value = value.expression;
       if (ts.isObjectLiteralExpression(value)) {
         for (const item of value.properties) {
           if (!ts.isPropertyAssignment(item)) continue;
+          const key = ts.isIdentifier(item.name) || ts.isStringLiteral(item.name) ? item.name.text : '';
+          if (CODE_PROPS.has(key)) continue;
           for (const lit of stringBranches(item.initializer)) record(lit.text, 'config-value', lit, 'text-prop', name);
         }
       }

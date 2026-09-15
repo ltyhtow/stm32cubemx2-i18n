@@ -23,12 +23,18 @@ test('插值中的有限文案分支连同后缀提取，仍作为拼接审查�
   assert.ok(entries.every(e => e.reason === 'template-concat' && !e.translatable));
 });
 
+test('算术插值只有一个占位符，字符串拼接和相邻插值保留各自结构', () => {
+  const entries = extractFromSource('view.tsx', '<Text>{"Value " + (offset + 1) + " ms"}</Text>; <Text>{`Channel ${index + 1}: ${"Mode " + mode}`}</Text>; <Text>{`Pair ${left}${right}`}</Text>');
+  assert.deepEqual(entries.map(e => e.text), ['Value {} ms', 'Channel {}: Mode {}', 'Pair {}{}']);
+  assert.ok(entries.every(e => !e.translatable && e.reason === 'template-concat'));
+});
+
 test('只收 this.title 的显示赋值，不收命令标识或一般对象 label 赋值', () => {
   const entries = extractFromSource('view.ts', 'class View { init() { this.title.label = id ?? "No Peripheral Selected"; this.title.caption = "A tooltip"; this.id = "internal-id"; other.label = "Not verified"; } }');
   assert.deepEqual(entries.filter(e => e.translatable).map(e => e.text), ['No Peripheral Selected', 'A tooltip']);
 });
 
-test('文案常量表与命令代码表分开，未知属性不会扩大抽取', () => {
-  const entries = extractFromSource('view.ts', 'const EXPAND_COLLAPSE_LABEL = { EXPAND_ALL: "Expand all", COLLAPSE_ALL: "Collapse all" } as const; const NEXTCOMMAND = { EXPAND_ALL: "expandAll" } as const; const COMMAND_ID_LABEL = { VALUE: "Not a display label" };');
-  assert.deepEqual(entries.filter(e => e.translatable).map(e => e.text), ['Expand all', 'Collapse all']);
+test('文案常量表与命令代码表、样式对象分开，未知属性不会扩大抽取', () => {
+  const entries = extractFromSource('view.ts', 'const EXPAND_COLLAPSE_LABEL = { EXPAND_ALL: "Expand all", COLLAPSE_ALL: "Collapse all" } as const; const NEXTCOMMAND = { EXPAND_ALL: "expandAll" } as const; const COMMAND_ID_LABEL = { VALUE: "Not a display label" }; const PROGRESS_LABEL = { variant: "h3", color: "text_default" }; const DIALOG_ARIA_LABELS = { closeIcon: "Close dialog" }; const COMPATIBILITY_LABELS = { [Status.YES]: "Yes" };');
+  assert.deepEqual(entries.filter(e => e.translatable).map(e => e.text), ['Expand all', 'Collapse all', 'Close dialog', 'Yes']);
 });

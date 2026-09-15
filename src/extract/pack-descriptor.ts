@@ -39,6 +39,19 @@ export function extractPackDescriptor(file: string, content: string): CatalogEnt
   };
   const part = (name: string) => name.replace(/~/g, '~0').replace(/\//g, '~1');
 
+  // 同名映射可以对应不同芯片/硬件实例；关联硬件属于身份，显示文案和数组顺序不属于。
+  function mappingIdentity(node: ts.ObjectLiteralExpression, name: string): string {
+    const linked = field(node, 'associatedPeripherals')?.initializer;
+    if (linked && !ts.isArrayLiteralExpression(linked)) throw new Error(`associatedPeripherals 必须是数组：${file}`);
+    const associations = linked?.elements.map(peripheral => {
+      if (!ts.isObjectLiteralExpression(peripheral) || !textOf(peripheral, 'name')) {
+        throw new Error(`associatedPeripherals 条目缺少硬件名称：${file}`);
+      }
+      return JSON.stringify([textOf(peripheral, 'name'), textOf(peripheral, 'type') ?? '']);
+    }).sort() ?? [];
+    return JSON.stringify([name, textOf(node, 'configurationType') ?? '', associations]);
+  }
+
   function add(node: ts.ObjectLiteralExpression, key: string, location: string, identity: string) {
     const value = field(node, key)?.initializer;
     if (!value || !ts.isStringLiteral(value) || !value.text.trim()) return;
@@ -63,7 +76,7 @@ export function extractPackDescriptor(file: string, content: string): CatalogEnt
       const id = textOf(node, kind === 'resource' ? 'id' : kind === 'function' ? 'configurationType' : 'name');
       if (!id) throw new Error(`描述文件条目缺少稳定标识：${file} ${location}/${key}/${index}`);
       const pointer = `${location}/${key}/${index}`;
-      const stable = `${identity}/${key}/${part(id)}`;
+      const stable = `${identity}/${key}/${part(kind === 'mapping' ? mappingIdentity(node, id) : id)}`;
       if (identifiers.has(stable)) throw new Error(`描述文件含重复标识：${stable}`);
       identifiers.add(stable);
       if (kind === 'mapping') {
