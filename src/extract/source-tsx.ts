@@ -14,6 +14,7 @@
  */
 import ts from 'typescript';
 import type { StringRole, ExclusionReason } from '../types.js';
+import { composedExpressions, textShapes } from './text-expressions.js';
 
 /** 从原始源码里抽出的一条候选。尚未与 bundle 侧信息合并。 */
 export interface RawString {
@@ -31,7 +32,7 @@ export interface RawString {
 
 /**
  * 会被渲染成可见文字的属性名。
- * 保守起见只收语义明确的；含糊的（text / content / value）不收。
+ * 属性名单由实际 UI 用法确认；value 等代码和数据属性不收。
  */
 const TEXT_PROPS = new Set([
   'label',
@@ -100,6 +101,9 @@ const TEXT_PROPS = new Set([
   'buttonTitle',
   'showDetailsAction',
   'content',
+  'columnsButtonText',
+  'topLabel',
+  'bottomLabel',
 ]);
 
 /** 类里以常量形式声明的界面文案，形如 `static LABEL = 'Cube: Issue Reporter'`。 */
@@ -398,7 +402,7 @@ export function extractFromSource(fileName: string, content: string): RawString[
     opts: { propName?: string; translatable: boolean; reason?: ExclusionReason },
   ) => {
     if (!text) return;
-    const key = `${role} ${text}`;
+    const key = `${role}\u0000${text}`;
     const ordinal = ordinals.get(key) ?? 0;
     ordinals.set(key, ordinal + 1);
     const entry: RawString = {
@@ -460,24 +464,20 @@ export function extractFromSource(fileName: string, content: string): RawString[
     record(text, 'jsx-child', node, 'jsx-child');
   };
 
+  const recordComposed = (expression: ts.Expression, role: StringRole, propName?: string) => {
+    for (const composed of composedExpressions(expression)) {
+      for (const text of textShapes(composed)) {
+        if (/[A-Za-z]{3}/.test(text)) push(text, role, composed, { propName, translatable: false, reason: 'template-concat' });
+      }
+    }
+  };
+
   /** <Foo>{"文本"}</Foo> 与 <Foo>{cond ? "A" : "B"}</Foo>。 */
   const visitJsxExprChild = (node: ts.JsxExpression) => {
     if (!node.expression) return;
 
-    // 带插值的模板：运行时拿到的是拼好的整句，而我们表里只有各个片段，
-    // 按值查表永远对不上。收录并标明原因，免得开发者日后去猜为什么没翻。
-    if (ts.isTemplateExpression(node.expression)) {
-      const shape =
-        node.expression.head.text +
-        node.expression.templateSpans.map((s2) => '{}' + s2.literal.text).join('');
-      if (shape.trim() && /[A-Za-z]{3}/.test(shape)) {
-        push(shape, 'jsx-child', node.expression, {
-          translatable: false,
-          reason: 'template-concat',
-        });
-      }
-      return;
-    }
+    // 模板与拼接记录为审查项，包括有限字面量分支；不直接进入运行时词表。
+    recordComposed(node.expression, 'jsx-child');
 
     for (const lit of stringBranches(node.expression)) {
       record(lit.text, 'jsx-child', lit, 'jsx-child');
@@ -493,6 +493,7 @@ export function extractFromSource(fileName: string, content: string): RawString[
     if (ts.isStringLiteral(init)) literals = [init];
     else if (ts.isJsxExpression(init) && init.expression) {
       literals = stringBranches(init.expression);
+      if (TEXT_PROPS.has(name)) recordComposed(init.expression, 'jsx-prop', name);
     }
     if (literals.length === 0) return;
 
@@ -536,6 +537,8 @@ export function extractFromSource(fileName: string, content: string): RawString[
         : undefined;
     if (!name) return;
 
+    if (TEXT_PROPS.has(name)) recordComposed(node.initializer, 'config-value', name);
+
     const literals = stringBranches(node.initializer);
     if (literals.length === 0) return;
 
@@ -562,6 +565,17 @@ export function extractFromSource(fileName: string, content: string): RawString[
     if (!node.initializer || !ts.isIdentifier(node.name)) return;
     const name = node.name.text;
     if (NON_UI_CONST.test(name)) return;
+    // 明确标为文案的常量表，例如 EXPAND_COLLAPSE_LABEL；不读取 NEXTCOMMAND 等代码表。
+    if (/_LABELS?$/.test(name)) {
+      let value = node.initializer;
+      while (ts.isAsExpression(value) || ts.isParenthesizedExpression(value) || ts.isSatisfiesExpression(value)) value = value.expression;
+      if (ts.isObjectLiteralExpression(value)) {
+        for (const item of value.properties) {
+          if (!ts.isPropertyAssignment(item)) continue;
+          for (const lit of stringBranches(item.initializer)) record(lit.text, 'config-value', lit, 'text-prop', name);
+        }
+      }
+    }
     for (const lit of stringBranches(node.initializer)) {
       if (!looksLikeSentence(lit.text)) continue;
       record(lit.text, 'config-value', lit, 'jsx-child', name);
@@ -573,9 +587,21 @@ export function extractFromSource(fileName: string, content: string): RawString[
     if (!node.initializer || !ts.isIdentifier(node.name)) return;
     const name = node.name.text;
     if (!TEXT_STATIC_NAMES.has(name) && !TEXT_PROPS.has(name)) return;
+    recordComposed(node.initializer, 'config-value', name);
     for (const lit of stringBranches(node.initializer)) {
       record(lit.text, 'config-value', lit, 'text-prop', name);
     }
+  };
+
+  /** Lumino 标题赋值不会落在对象字面量中，但 label/caption 都是显示文字。 */
+  const visitTitleAssignment = (node: ts.BinaryExpression) => {
+    if (node.operatorToken.kind !== ts.SyntaxKind.EqualsToken || !ts.isPropertyAccessExpression(node.left)) return;
+    const field = node.left;
+    const owner = field.expression;
+    if (!['label', 'caption'].includes(field.name.text) || !ts.isPropertyAccessExpression(owner) ||
+        owner.name.text !== 'title' || owner.expression.kind !== ts.SyntaxKind.ThisKeyword) return;
+    recordComposed(node.right, 'config-value', field.name.text);
+    for (const lit of stringBranches(node.right)) record(lit.text, 'config-value', lit, 'text-prop', field.name.text);
   };
 
   /**
@@ -618,6 +644,7 @@ export function extractFromSource(fileName: string, content: string): RawString[
     else if (ts.isPropertyDeclaration(node)) visitClassProperty(node);
     else if (ts.isVariableDeclaration(node)) visitVariable(node);
     else if (ts.isCallExpression(node)) visitCall(node);
+    else if (ts.isBinaryExpression(node)) visitTitleAssignment(node);
     ts.forEachChild(node, walk);
   };
 

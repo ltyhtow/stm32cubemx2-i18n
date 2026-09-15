@@ -14,8 +14,11 @@ import path from 'node:path';
 import { locate, locateAll, InstallationNotFoundError } from './locate.js';
 import { SourceMapIndex } from './extract/sourcemap.js';
 import { BundleScanner } from './extract/bundle-scan.js';
-import { buildCatalog } from './extract/catalog.js';
+import { buildCatalog, computeStats } from './extract/catalog.js';
+import { readPackConfigs } from './extract/pack-config.js';
+import { readPackDescriptors } from './extract/pack-descriptor.js';
 import { renderReport } from './catalog/report.js';
+import { diffCatalogs, formatDiff } from './catalog/diff.js';
 import {
   catalogToPot,
   mergePo,
@@ -99,8 +102,10 @@ program
   .command('extract')
   .description('从本机安装抽取界面文本，生成 catalog.json 与 .pot 模板')
   .option('--all-sources', '连同 Theia / 第三方源码一并抽取（默认只抽 ST 自研代码）')
+  .option('--pack-config <paths...>', '附加 CMSIS Pack 参数文件或目录（目录递归读取 *_parameters.json）')
+  .option('--pack-descriptor <files...>', '附加 DFP 外设映射或 *_peripherals.json 描述文件')
   .option('--pot <path>', 'POT 输出路径', 'locales/stm32cubemx2.pot')
-  .action((cmd: { allSources?: boolean; pot: string }) => {
+  .action((cmd: { allSources?: boolean; packConfig?: string[]; packDescriptor?: string[]; pot: string }) => {
     const o = opts();
     const install = locate(o.app);
     console.log(`安装: ${install.root}  (v${install.version})`);
@@ -123,6 +128,20 @@ program
       vendorOnly: !cmd.allSources,
     });
     console.log(`${catalog.stats.total} 条`);
+
+    if (cmd.packConfig) {
+      const packs = readPackConfigs(cmd.packConfig);
+      catalog.entries.push(...packs.entries);
+      catalog.stats = computeStats(catalog.entries);
+      console.log(`  附加 Pack 参数：${packs.files.length} 个文件，${packs.entries.length} 个显示字段`);
+    }
+
+    if (cmd.packDescriptor) {
+      const descriptors = readPackDescriptors(cmd.packDescriptor);
+      catalog.entries.push(...descriptors.entries);
+      catalog.stats = computeStats(catalog.entries);
+      console.log(`  附加 DFP 描述：${descriptors.files.length} 个文件，${descriptors.entries.length} 个显示字段`);
+    }
 
     ensureDir(o.catalog);
     writeFileSync(o.catalog, JSON.stringify(catalog, null, 2), 'utf8');
@@ -150,6 +169,32 @@ program
     ensureDir(cmd.out);
     writeFileSync(cmd.out, renderReport(catalog), 'utf8');
     console.log(`已生成 ${cmd.out}（${catalog.stats.total} 条，含全部被排除条目与理由）`);
+  });
+
+// ---------------------------------------------------------------- diff
+
+program
+  .command('diff')
+  .description('比较升级前后的 catalog，报告新增/移除/变化条目与可继承原文')
+  .requiredOption('--before <path>', '升级前的 catalog.json')
+  .option('--after <path>', '升级后的 catalog.json（默认全局 --catalog）')
+  .option('-o, --out <path>', 'JSON 差异报告路径', 'catalog/diff.json')
+  .option('--json', '标准输出也使用完整 JSON')
+  .action((cmd: { before: string; after?: string; out: string; json?: boolean }) => {
+    const after = cmd.after ?? opts().catalog;
+    const normalize = (file: string) => process.platform === 'win32' ? path.resolve(file).toLowerCase() : path.resolve(file);
+    if ([cmd.before, after].some(input => normalize(input) === normalize(cmd.out))) {
+      throw new Error('差异报告输出路径不能覆盖输入清单');
+    }
+    const report = diffCatalogs(
+      loadCatalog(need(cmd.before, '升级前先保存一份 catalog.json')),
+      loadCatalog(need(after, '针对新版本执行 extract')),
+    );
+    ensureDir(cmd.out);
+    const json = JSON.stringify(report, null, 2);
+    writeFileSync(cmd.out, json + '\n', 'utf8');
+    if (cmd.json) console.log(json);
+    else console.log(`${formatDiff(report)}\n\n差异报告：${cmd.out}`);
   });
 
 // ---------------------------------------------------------------- sync

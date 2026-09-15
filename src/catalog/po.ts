@@ -146,9 +146,16 @@ export function mergePo(
   let kept = 0;
   let added = 0;
 
+  // 头字段名不区分大小写；保留模板/原文件的拼写，避免产生重复字段。
+  const headerEntries = new Map<string, [string, string]>();
+  for (const entry of [...Object.entries(existing.headers), ...Object.entries(pot.headers)]) {
+    headerEntries.set(entry[0].toLowerCase(), entry);
+  }
+  const previousLanguage = Object.entries(existing.headers).find(([key]) => key.toLowerCase() === 'language')?.[1];
+  headerEntries.set('language', ['Language', previousLanguage || headerEntries.get('language')?.[1] || '']);
   const merged: PoData = {
     charset: 'UTF-8',
-    headers: { ...existing.headers, ...pot.headers, Language: existing.headers['Language'] ?? '' },
+    headers: Object.fromEntries(headerEntries.values()),
     translations: {},
   };
 
@@ -157,21 +164,46 @@ export function mergePo(
     for (const msgid of Object.keys(entries)) existingIds.add(`${ctxKey}${SCOPE_SEP}${msgid}`);
   }
 
+  const generatedFlags = new Set([
+    'jsx-child', 'jsx-prop', 'config-value', 'command-label', 'menu-label',
+    'nls-default', 'code-value', 'needs-review', 'keep-whitespace',
+  ]);
+  const flags = (value?: string) => value?.split(',').map(f => f.trim()).filter(Boolean) ?? [];
+  const mergeEntry = (ctxKey: string, msgid: string, entry: PoTranslation): PoTranslation => {
+    const prev = existing.translations[ctxKey]?.[msgid];
+    existingIds.delete(`${ctxKey}${SCOPE_SEP}${msgid}`);
+    if (msgid && !prev) added++;
+    if (msgid && prev?.msgstr?.some(s => s.trim())) kept++;
+    const retainedFlags = flags(prev?.comments?.flag).filter(f => !generatedFlags.has(f));
+    const mergedFlags = [...new Set([...flags(entry.comments?.flag), ...retainedFlags])];
+    return {
+      ...entry,
+      msgstr: [...(prev?.msgstr ?? entry.msgstr)],
+      comments: {
+        ...prev?.comments,
+        ...entry.comments,
+        ...(prev?.comments?.translator ? { translator: prev.comments.translator } : {}),
+        flag: mergedFlags.join(', '),
+      },
+    };
+  };
+
   for (const [ctxKey, entries] of Object.entries(pot.translations)) {
     const out: Record<string, PoTranslation> = {};
-    for (const [msgid, entry] of Object.entries(entries)) {
-      const prev = existing.translations[ctxKey]?.[msgid];
-      const prevStr = prev?.msgstr?.filter((s) => s.trim()) ?? [];
-      if (prevStr.length > 0) {
-        out[msgid] = { ...entry, msgstr: prev!.msgstr };
-        kept++;
-      } else {
-        out[msgid] = entry;
-        if (msgid) added++;
-      }
-      existingIds.delete(`${ctxKey}${SCOPE_SEP}${msgid}`);
-    }
+    for (const [msgid, entry] of Object.entries(entries)) out[msgid] = mergeEntry(ctxKey, msgid, entry);
     merged.translations[ctxKey] = out;
+  }
+
+  // extract 的模板按原文归并，不包含人工补充的组件 msgctxt。
+  // 原文仍可译时保留这些覆盖项，并更新来源/语境；原文删除时才移除。
+  for (const [ctxKey, entries] of Object.entries(existing.translations)) {
+    if (!ctxKey) continue;
+    for (const msgid of Object.keys(entries)) {
+      const template = pot.translations['']?.[msgid];
+      if (!msgid || !template || merged.translations[ctxKey]?.[msgid]) continue;
+      const out = merged.translations[ctxKey] ?? (merged.translations[ctxKey] = {});
+      out[msgid] = mergeEntry(ctxKey, msgid, { ...template, msgctxt: ctxKey });
+    }
   }
 
   // 保留 PO 头（msgid 为空的那条）
@@ -197,7 +229,11 @@ export function serializePo(data: PoData): Buffer {
 }
 
 export function parsePo(buf: Buffer | string): PoData {
-  const parsed = gtPo.parse(buf as never, 'UTF-8') as unknown as PoData;
+  // gettext-parser 8 的第二参数是 options 对象，@types 4 仍声明为 charset 字符串。
+  const parse = gtPo.parse as unknown as (
+    input: Buffer | string, options: { defaultCharset: string },
+  ) => PoData;
+  const parsed = parse(buf, { defaultCharset: 'utf-8' });
   parsed.translations ??= { '': {} };
   parsed.headers ??= {};
   return parsed;

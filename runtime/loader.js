@@ -7,7 +7,7 @@
  *
  * 由 index.html 在 bundle.js 之前同步加载，负责：
  *   1. 读取 Theia 自己的 localStorage.localeId，取出对应语言的译文表
- *   2. 暴露 wrapCreateElement / wrapJsx，供注入到 bundle 的两处包装调用
+ *   2. 暴露 React、命令、菜单与标签页的翻译入口，供 bundle 的六处挂钩调用
  *
  * 设计约束：
  *   - 全程 try/catch。译文表缺失、损坏、解析失败都必须静默回落英文，
@@ -15,14 +15,14 @@
  *   - locale 为空或 en 时不安装任何包装，零运行时开销。
  *   - 不修改传入的 props 对象；确有改动时才浅拷贝，避免影响 React 的复用假设。
  *
- * 本文件是 Apache-2.0 项目的一部分，与 STMicroelectronics 无关联。
+ * 本文件是 MPL-2.0 项目的一部分，与 STMicroelectronics 无关联。
  */
 (function () {
   'use strict';
 
   var SEP = '\u0000'; // 组件名与原文的分隔符，不可能出现在文案里
 
-  /** 会被渲染成可见文字的属性。与抽取端的 TEXT_PROPS 保持一致。 */
+  /** 可直接显示的属性。highlightedText 是查找用的匹配词，留到最终文本渲染再翻译。 */
   var TEXT_PROPS = [
     'label', 'title', 'tooltip', 'placeholder', 'ariaLabel', 'aria-label',
     'aria-description', 'aria-placeholder', 'aria-roledescription', 'aria-valuetext',
@@ -32,7 +32,13 @@
     'leftLabelTooltip', 'rightLabelTooltip', 'displayName', 'confirmLabel',
     'cancelLabel', 'okLabel', 'primaryLabel', 'secondaryLabel', 'buttonLabel',
     'tooltipLabel', 'infoText', 'labelText', 'titleText', 'noResultsMessage',
-    'loadingMessage', 'dialogTitle', 'menuLabel', 'shortTitle', 'longTitle'
+    'loadingMessage', 'dialogTitle', 'menuLabel', 'shortTitle', 'longTitle',
+    'subTitle', 'text', 'prettyName', 'clearText', 'loadingText',
+    'dataExportButtonText', 'defaultPlaceholder',
+    'inputPlaceholder', 'note', 'lockedLabel', 'collapsibleLabel',
+    'activeTooltip', 'deleteTooltipText', 'titleAccess', 'buttonTitle',
+    'showDetailsAction', 'content'
+    // children 由 translateChildren 单独处理，支持字符串数组。
   ];
 
   function readLocale() {
@@ -162,22 +168,22 @@
   function wrapCreateElement(orig) {
     if (typeof orig !== 'function') return orig;
     var wrapped = function (type, props) {
+      var args = arguments;
       try {
         var owner = nameOf(type);
         var n = arguments.length;
         var newProps = translateProps(props, owner);
-        if (n <= 2) return orig.call(this, type, newProps);
-        var args = new Array(n);
-        args[0] = type;
-        args[1] = newProps;
+        var translated = new Array(n);
+        if (n > 0) translated[0] = type;
+        if (n > 1) translated[1] = newProps;
         for (var i = 2; i < n; i++) {
           var c = arguments[i];
-          args[i] = typeof c === 'string' ? translate(c, owner) : c;
+          translated[i] = typeof c === 'string' ? translate(c, owner) : c;
         }
-        return orig.apply(this, args);
-      } catch (e) {
-        return orig.apply(this, arguments);
-      }
+        args = translated;
+      } catch (e) { /* 翻译失败时使用原始参数。 */ }
+      // 原函数的异常必须直接向上传播，不能把渲染再次执行一遍。
+      return orig.apply(this, args);
     };
     for (var key in orig) {
       if (Object.prototype.hasOwnProperty.call(orig, key)) wrapped[key] = orig[key];
@@ -189,14 +195,14 @@
   function wrapJsx(orig) {
     if (typeof orig !== 'function') return orig;
     var wrapped = function (type, props, key) {
+      var args = arguments;
       try {
         var newProps = translateProps(props, nameOf(type));
-        return arguments.length <= 2
-          ? orig.call(this, type, newProps)
-          : orig.call(this, type, newProps, key);
-      } catch (e) {
-        return orig.apply(this, arguments);
-      }
+        var translated = Array.prototype.slice.call(arguments);
+        if (translated.length > 1) translated[1] = newProps;
+        args = translated;
+      } catch (e) { /* 翻译失败时使用原始参数。 */ }
+      return orig.apply(this, args);
     };
     for (var k in orig) {
       if (Object.prototype.hasOwnProperty.call(orig, k)) wrapped[k] = orig[k];

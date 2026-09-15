@@ -1,7 +1,11 @@
 # STM32CubeMX2-translator
 
-把 STM32CubeMX2 的界面翻译成任意语言的工具链。抽取用 AST 加 sourcemap 定位，
-翻译人员用标准 Gettext PO 干活，译文通过运行时挂钩生效而不是逐条替换二进制里的字符串。
+把 STM32CubeMX2 的界面翻译成任意语言的工具链。用 AST 和 sourcemap 抽取前端文案，
+也可读取本机 CMSIS Pack 的参数表单；译文使用标准 Gettext PO，通过运行时挂钩生效。
+
+已在 Windows 的 STM32CubeMX2 **1.1.1** 验证中文，并用德语样例验证第二语言链路。
+中文词库含 **1896 条**：前端原文 1246 条，加上 STM32C5 TIM/LPTIM 参数表单新增的 650 条。
+这表示已收录词条全部处理完毕，**不代表整个应用所有页面均已汉化**。测试范围见 [VERIFICATION.md](VERIFICATION.md)。
 
 > **本项目与 STMicroelectronics 无关联，未获其背书或赞助。**
 > "STM32"、"STM32Cube"、"STM32CubeMX" 是 STMicroelectronics 的商标，此处仅用于指明本工具的作用对象。
@@ -35,12 +39,12 @@
 
 ## 覆盖分层
 
-两层，各管一半，互不重叠：
+两层分别覆盖框架文案和 ST 界面文案：
 
 | 层 | 覆盖什么 | 怎么做 | 改动 ST 文件 |
 | :-- | :-- | :-- | :-- |
 | **Tier 1 语言包** | Theia / VS Code 框架文案：菜单、编辑器、设置、命令面板（约 1.7 万条，14 种语言现成） | `langpack install` 把微软官方 VS Code 语言包（MIT）放进 Theia 用户插件目录 | **零** |
-| **Tier 2 运行时挂钩** | ST 自研界面的硬编码文案（约 1700 条） | `install` 在 `bundle.js` 包装六个渲染咽喉，渲染时查表替换 | 6 处，约 640 字节 |
+| **Tier 2 运行时挂钩** | ST 前端文案（1811 个可译位置、1246 条原文），以及显式抽取的 Pack 参数文案 | `install` 在 `bundle.js` 包装六个渲染入口，渲染时查表替换 | 6 处，638 字节（v1.1.1 实测） |
 
 ### Tier 1：语言包为什么必须装
 
@@ -68,7 +72,7 @@ View → 查看(V)   Help → 帮助(H)   Save → 保存(S)
 
 ### Tier 2：运行时挂钩
 
-ST 自研界面的文案没有走任何国际化框架，是硬编码在 JSX 里的。本工具在 `bundle.js` 里包装六个渲染咽喉：
+ST 自研文案来自 JSX、显示属性和 Pack 参数模型。本工具在 `bundle.js` 里包装六个渲染入口：
 
 | 挂钩点 | 覆盖 |
 | :-- | :-- |
@@ -88,31 +92,67 @@ ST 自定义的 nls 键），挂钩按原文替换。运行时挂钩因此是整
 
 ## 快速开始
 
-```bash
-npm install && npm run build
+需要 Node.js 20 或更新版本。直接使用仓库已有的中文译文：
+
+```powershell
+npm install
+npm run build
 
 # 1. 框架语言包（Tier 1）：菜单、编辑器、设置立刻有官方翻译，不碰 ST 文件
 node dist/cli.js langpack install --locale zh-cn
 
-# 2. 从本机安装抽取 ST 自研界面文本
-node dist/cli.js extract
-
-# 3. 生成开发者可查阅的文本清单（HTML，可搜索过滤）
-node dist/cli.js catalog
-
-# 4. 建立目标语言的 PO
-node dist/cli.js sync --locale zh-CN
-
-# 5. 用 Poedit / Weblate 翻译 locales/zh-CN.po
-
-# 6. 注入运行时并部署译文（Tier 2）
+# 2. 注入运行时并部署已有中文译文（Tier 2）
 node dist/cli.js install --locale zh-CN
 
-# 7. 启动 STM32CubeMX2，F1 → Configure Display Language → 选择语言
+# 3. 启动 STM32CubeMX2，F1 → Configure Display Language → 选择语言
 #    装了语言包后该语言会出现在列表里；两层翻译随这一个开关同时切换
 ```
 
 出问题随时 `node dist/cli.js rollback`。
+
+### 更新词库与 Pack 参数文案
+
+只抽取前端时运行 `node dist/cli.js extract`。外设设置的许多文案位于 HAL 驱动 Pack 的
+隐藏 `.config/*_parameters.json` 中，不在前端 sourcemap 里。用 `--pack-config` 显式补充：
+
+```powershell
+# 按本机的 Pack 系列、版本调整路径；以下是本次验证使用的两个文件
+$packConfigDir = Join-Path $env:LOCALAPPDATA 'stm32cube\packs\STMicroelectronics\stm32c5xx_hal_drivers\2.1.0\.config'
+$timerConfig = Join-Path $packConfigDir 'stm32c5xx_tim_parameters.json'
+$lowPowerTimerConfig = Join-Path $packConfigDir 'stm32c5xx_lptim_parameters.json'
+node dist/cli.js extract --pack-config $timerConfig $lowPowerTimerConfig
+node dist/cli.js catalog
+node dist/cli.js sync --locale zh-CN
+# 用 Poedit / Weblate 修改 PO，或使用下面的 JSON 批次流程
+node dist/cli.js lint --locale zh-CN
+node dist/cli.js install --locale zh-CN
+```
+
+参数也可传目录，递归读取其中的 `*_parameters.json`，包含隐藏目录。
+只收 schema 的 `title`、`description`、静态 action 提示及显示属性；不执行 Pack 脚本，
+不提取 `const`、`default`、`condition`、`computed` 等代码或数据值。
+`{{...}}` / `${...}` 动态文案记录为不可译；原始 Pack 文件不做修改。
+
+**同步时保持抽取范围一致。** 现有中文包含上述 TIM/LPTIM 文案；若重新抽取时省略
+`--pack-config`，后续 `sync` 会把该范围之外的词条当成已失效而移除。
+换系列或扩展到其他外设时，新增原文仍需翻译，不能沿用当前完成度作为覆盖保证。
+
+### 应用或 Pack 升级
+
+先保存旧清单，再用相同的源范围抽取新版本。沿用上面的 Pack 路径变量，并按实际版本更新：
+
+```powershell
+Copy-Item -LiteralPath catalog\catalog.json -Destination catalog\before-upgrade.json
+node dist/cli.js extract --pack-config $timerConfig $lowPowerTimerConfig
+node dist/cli.js diff --before catalog/before-upgrade.json
+node dist/cli.js sync --locale zh-CN
+node dist/cli.js export-work --locale zh-CN
+```
+
+`diff` 输出 `catalog/diff.json`，区分条目的新增、移除、字段变化和可译原文的变化。
+文件搬迁或 ID 变化不等于需要重翻：`sync` 按原文精确继承已有译文，保留译者注释、
+fuzzy 标记及仍有效的组件 `msgctxt`；改写后的原文留空等待翻译。
+可用 `--after <路径>` 指定新清单，`--json` 输出完整机器报告。
 
 ---
 
@@ -148,7 +188,7 @@ msgstr "风险评分："
 不想开 Poedit 也行。把待翻条目打包成 JSON 批次，连同 `TRANSLATION_HANDOFF.md` 一起交给翻译方
 （人或 AI），交回后灌回 PO 并自动校验：
 
-```bash
+```powershell
 node dist/cli.js export-work --locale zh-CN            # → work/zh-CN/batch-001.json …
 #   把 work/zh-CN/ 与 TRANSLATION_HANDOFF.md 交给翻译方，交回到 work/zh-CN/done/
 node dist/cli.js import-json --locale zh-CN --from work/zh-CN/done --source claude
@@ -185,7 +225,7 @@ node dist/cli.js lint --locale zh-CN --json > lint.json  # 有问题时把报告
 
 ### 方案的固有边界
 
-按值查表的运行时方案有三类情况**原理上处理不了**。它们不是 bug，遇到相关问题先对照这里。
+按值查表的运行时方案有以下限制，遇到残留文案时先对照这里。
 
 **一、渲染时才拼装的文本。**
 
@@ -206,6 +246,7 @@ Theia 主菜单、命令面板与标签页由 Lumino 而非 React 渲染，已�
 
 实例：`Line` 同时是 MCU 选择器的筛选列（**产品线**）和 EXTI 表格的列头（**中断线**），
 两个语义无法区分，只能挑一个两边都不误导的译法。`export-work` 因此会对跨模块的条目加提醒。
+同样，`Filter` 同时用于列表和定时器信号处理，目前统一用「过滤」。
 
 **三、共用的拼接片段互相牵制。**
 
@@ -215,6 +256,13 @@ Theia 主菜单、命令面板与标签页由 Lumino 而非 React 渲染，已�
 按钮就会变成「添加 (3) 中间件 添加到您的 中间件 面板」。
 改这类片段前先在文本清单里确认它只在一处使用。
 
+**四、抽取范围之外的文案。**
+
+其他 Pack、外设分类名称、运行时生成的通道名称，以及部分第三方控件、CSS `content`
+和 Electron 原生对话框仍可能显示英文。当前仅补译了 STM32C5 HAL 驱动 2.1.0 的
+TIM/LPTIM 参数 schema；其余 Pack 可用上述命令抽取后继续翻译。
+`highlightedText` 是组件的原文匹配条件，不作为普通 prop 翻译；最终高亮文本仍会翻译。
+
 ### 实测覆盖率
 
 静态分析只能告诉你抽到了什么，告诉不了你界面上还剩什么没翻。有两个办法：
@@ -222,15 +270,32 @@ Theia 主菜单、命令面板与标签页由 Lumino 而非 React 渲染，已�
 **伪翻译**——把每条原文包成 `⟦原文⟧` 装进去，启动即可肉眼分辨：
 `⟦括号⟧`＝挂钩命中，裸英文＝覆盖缺口。
 
-```bash
+```powershell
 node dist/cli.js install --locale zh-cn --pseudo
 ```
 
 **运行时审计**——记录所有查表未命中的英文：
 
-```bash
+```powershell
 node dist/cli.js audit   # 打印操作步骤
 ```
+
+仓库提供可重复运行的 CDP 检查脚本（**仅这些开发脚本需要 Node.js 22+**）。
+Windows 上应通过 Cube 启动器启动调试实例，以保留后端所需的 Pack 环境变量：
+
+```powershell
+$cubeLauncher = Join-Path $env:LOCALAPPDATA 'STMicroelectronics\STM32CubeMX2_1.1.1\.bin\cube.exe'
+& $cubeLauncher mx start --remote-debugging-port 9222 --no-detached
+# 在另一个 PowerShell 中，首页可见时执行
+node scripts/verify-live.mjs --locale zh-cn --expect-menu 工程 --expect-tab 主页 --out work/validation/live.json
+```
+
+可添加 `--screenshot work/validation/live.png` 保存截图；截图时窗口应处于恢复状态，不能最小化。
+`--reload` 忽略缓存重载，`--set-locale en` 可检查英文回落，`--audit` 开启并记录漏译审计。
+重载可能关闭外设标签页，需先重新打开待测页面。检查结果包括菜单、标签、实际查表命中、
+伪翻译残留和此次连接期间观察到的未捕获渲染异常；不代表已经检查后端全部日志。
+
+开发检查：`npm test` 编译 TypeScript 并执行测试；`node dist/cli.js lint --locale zh-CN` 校验词库。
 
 ### 安全保证
 
@@ -251,7 +316,9 @@ node dist/cli.js audit   # 打印操作步骤
 | `langpack install --locale <x>` | 下载微软 VS Code 语言包到 Theia 用户插件目录（Tier 1） |
 | `langpack list` / `langpack remove --locale <x>` | 查看 / 移除已装语言包 |
 | `extract` | 抽取文本，生成 `catalog.json` 与 `.pot` 模板 |
+| `extract --pack-config <路径...>` | 同时读取指定 Pack 参数文件或目录的显示文案 |
 | `catalog` | 生成开发者 HTML 文本清单 |
+| `diff --before <旧清单> [--after <新清单>]` | 比较升级差异与可继承原文 |
 | `sync --locale <x>` | 用最新模板更新语言 PO，保留已有译文 |
 | `export-work --locale <x>` | 把待翻条目打包成 JSON 批次，交给翻译人员或 AI |
 | `import-json --locale <x> --from <路径>` | 把交回的 JSON 灌回 PO 并立即校验 |

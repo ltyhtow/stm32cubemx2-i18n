@@ -8,7 +8,8 @@
 ## 0. 一句话
 
 给 STMicroelectronics 的 STM32CubeMX2（基于 Eclipse Theia 的 Electron 应用）做多语言本地化的工具链：
-从应用自带的 sourcemap 抽取界面文案，走 Gettext PO 让不懂代码的人翻译，再用运行时挂钩把译文注入界面。
+从应用自带的 sourcemap 和显式指定的 CMSIS Pack 参数 schema 抽取界面文案，
+经 Gettext PO 翻译，再用运行时挂钩把译文注入界面。
 
 仓库 `C:\Users\30496\stm32cubemx2-translator`，远端 `github.com/ltyhtow/stm32cubemx2-translator`（私有）。
 Node + TypeScript，MPL-2.0，每个源文件带 Exhibit A 头。本机装的应用是 v1.1.1。
@@ -40,8 +41,8 @@ Node + TypeScript，MPL-2.0，每个源文件带 Exhibit A 头。本机装的应
 1. 不复制它的任何代码，不沿用它的词典。
 2. 旧 CSV 工作表里 `from_dict=1` 的约 1303 行是它的翻译成果。`import-legacy` **默认跳过**这些行，
    需要显式 `--include-foreign` 才导入，且导入后产出的 PO 不可公开分发。这个开关不要改成默认开。
-3. 仓库不预置从 ST 二进制抽取的英文清单：`catalog/`、`out/`、`locales/*.pot`、`work/` 全部 gitignore，
-   使用者在自己机器上对自有副本跑 `extract`。
+3. `catalog/`、`out/`、`locales/*.pot`、`work/` 全部 gitignore，使用者对自有副本跑 `extract`。
+   已跟踪的 PO 含原文和简短来源语境；不要再声称仓库「不含任何 ST 界面文本」。
 4. `README.md` 与 `DISCLAIMER.md` 必须保留「与 STMicroelectronics 无关联」的声明，
    以及提示使用者自行确认 EULA 对修改程序文件的限制。
 
@@ -49,12 +50,12 @@ Node + TypeScript，MPL-2.0，每个源文件带 Exhibit A 头。本机装的应
 
 ## 2. 两层架构
 
-这是全项目最重要的一节。两层各管一半，互不重叠。
+两层分别覆盖框架文案和 ST 界面文案，已由框架翻译的文字通常不会再命中原文词库。
 
 | 层 | 覆盖什么 | 手段 | 改 ST 文件 |
 | :-- | :-- | :-- | :-- |
 | **Tier 1 语言包** | Theia / VS Code 框架文案（约 1.68 万条，14 种语言现成） | `langpack install` | **零** |
-| **Tier 2 运行时挂钩** | ST 自研界面的硬编码文案（约 1725 条） | `install`，在 `bundle.js` 包装 6 个渲染咽喉 | 6 处，约 638 字节 |
+| **Tier 2 运行时挂钩** | ST 前端 1811 个可译位置（1246 条原文），以及指定 Pack 的参数文案 | `install`，在 `bundle.js` 包装 6 个渲染入口 | 6 处，638 字节（v1.1.1） |
 
 ### 2.1 Tier 1：为什么必须装微软的语言包
 
@@ -119,7 +120,9 @@ src/
     source-tsx.ts        抽取的核心：TypeScript API 解析 sourcesContent，判定语法位置
     bundle-scan.ts       acorn tokenizer 单遍扫描压缩产物，统计字面量 + 识别代码位置
     catalog.ts           合并三路信号，生成稳定 ID
+    pack-config.ts       读取 Pack 的 *_parameters.json，按 schema 显示字段白名单抽取
   catalog/
+    diff.ts              升级清单差异，另统计按原文可继承的翻译范围
     po.ts                catalogToPot / mergePo（msgmerge 语义）/ poToRuntimeTable / pseudoTable / poStats
     lint.ts              译文校验，三档严重度
     work.ts              JSON 批次的导出与导回
@@ -132,10 +135,13 @@ src/
     index.ts             install / rollback / doctor
     langpack.ts          Tier 1 语言包
 runtime/loader.js        注入到页面的运行时（纯 JS，不经 TS 编译）
+scripts/cdp.mjs          Node 22+ 的开发用 CDP 连接与页面状态读取
+scripts/verify-live.mjs  可重复的活体验证、审计与截图
 locales/
   zh-CN.po               译文（进仓库）
   zh-CN.glossary.json    术语表，lint 与交接说明共用
 TRANSLATION_HANDOFF.md   给翻译人员/AI 的说明
+VERIFICATION.md          本轮验证范围、证据与剩余限制
 ```
 
 ### 命令
@@ -144,7 +150,9 @@ TRANSLATION_HANDOFF.md   给翻译人员/AI 的说明
 | :-- | :-- |
 | `langpack install/list/remove --locale <x>` | Tier 1 语言包 |
 | `extract` | 抽取文案 → `catalog/catalog.json` + `.pot` |
+| `extract --pack-config <路径...>` | 同时抽取指定 Pack 参数文件/目录，包含隐藏 `.config` |
 | `catalog` | 生成开发者 HTML 清单 |
+| `diff --before <旧清单> [--after <新清单>]` | 报告条目与可译原文的新增、移除、变化 |
 | `sync --locale <x>` | 用新模板更新 PO，保留已有译文 |
 | `export-work --locale <x>` | 待翻条目 → JSON 批次 |
 | `import-json --locale <x> --from <路径>` | 交回的 JSON → PO，自动跑 lint |
@@ -178,6 +186,13 @@ TRANSLATION_HANDOFF.md   给翻译人员/AI 的说明
 - **稳定 ID** `sha1(file:role:text:ordinal).slice(0,12)`。**不要用文本 slug** —— 那正是旧项目 119 处撞车的原因。
 - 分类是 allowlist：只有明确落在 UI 文本位置的才可译，其余一律不可译并记录 `ExclusionReason`。
   `TEXT_PROPS` 有 60 多项，其中 19 项是用数据驱动的 `propscan` 补出来的。
+- **外设参数不全在前端里**。STM32C5 HAL Pack 的 `.config/*_parameters.json` 含 TIM/LPTIM
+  的标题、说明和校验提示；`rg` 默认跳过点目录，查找时要加 `--hidden`。
+  `extract --pack-config` 只访问已知 schema 子树、静态 action 提示和 attributes 显示字段，
+  不执行脚本，不遍历 `computed`、`condition`、`default` 或 `const`。
+  Pack ID 使用虚拟来源名、componentid 和 JSON Pointer，不含安装绝对路径或 Pack 版本。
+- **保持抽取范围一致**：现有 PO 含 TIM/LPTIM 的 650 条新增原文。省略 `--pack-config`
+  再 `sync` 会删除这些被视为失效的词条。README 有本机验证范围的完整命令。
 
 ### 注入
 
@@ -199,8 +214,18 @@ TRANSLATION_HANDOFF.md   给翻译人员/AI 的说明
   （`String.fromCharCode(0)` 或 `'\u0000'`）—— 用 Write 工具写文件时曾把真的 NUL 字节落进源文件，
   症状是 grep 报「Binary file matches」。
 - `translateCommand` **原地改 `.label`**，因为 Theia 按引用比较命令对象。
-- 所有包装都 try/catch 回落原函数；`localeId` 为空或 `en`、或译文表加载失败时**不安装包装**，零开销。
+- 翻译出错时以原参数调用原函数；**原函数只调用一次**，它自身的异常继续向上传播。
+  `localeId` 为空或 `en`、或译文表加载失败时不安装包装。
+- `highlightedText` 是 Typography 在原文中查找高亮片段的条件，不能先翻译它。
+  最终生成的高亮文字仍会走 React 翻译；曾经直接翻译此 prop 导致首页高亮内容回落英文，已修复。
 - `file://` 下同步 XHR 可用（验证过），所以 loader 用同步 XHR 加载译文表，保证在 `bundle.js` 之前就绪。
+
+### PO 同步
+
+- `mergePo` 保留仍有效的人工 `msgctxt`、译者来源注释和 fuzzy/custom flags，更新模板生成的来源与标记。
+- 已存在但未翻译的条目不再每次算作「新增」；头字段按不区分大小写合并。
+- 安装的 `gettext-parser` 是 v8，`parse` 第二参数是 `{ defaultCharset: 'utf-8' }`；
+  `@types` v4 的旧字符串签名不准确。兼容桥接留在 `parsePo` 中，不要改回旧调用。
 
 ---
 
@@ -221,6 +246,7 @@ TRANSLATION_HANDOFF.md   给翻译人员/AI 的说明
 - `exti-configuration/exti-table-view.tsx:144` —— `{ field: 'line', header: 'Line' }`，EXTI 表格列头，意思是**中断线**
 
 两个语义无法区分，只能挑一个两边都不误导的译法。现在译成「线」并在此记录。
+新增 Pack 范围后，`Filter` 也同时用于列表与定时器信号处理，统一为「过滤」。
 `msgctxt` 对**直接**作为组件子节点或 prop 的字符串仍然有效。
 
 ### 5.2 拼接片段互相牵制
@@ -250,7 +276,7 @@ TRANSLATION_HANDOFF.md   给翻译人员/AI 的说明
 批次每条自带 `flags`、界面位置、原始 JSX 语境、注意事项，翻译方不需要接触仓库其它文件。
 导回按 `msgid` 对齐，所以批次可以拆给多方、乱序、部分交回。
 
-```bash
+```powershell
 node dist/cli.js export-work --locale zh-CN            # → work/zh-CN/batch-001.json …
 # 把 work/zh-CN/ 与 TRANSLATION_HANDOFF.md 交给翻译方，交回到 work/zh-CN/done/
 node dist/cli.js import-json --locale zh-CN --from work/zh-CN/done --source <译者名>
@@ -285,9 +311,20 @@ node dist/cli.js lint --locale zh-CN --json > lint.json   # 有问题把报告�
 
 ### CDP 实测
 
-应用是 Electron，可以带 `--remote-debugging-port=9222 --remote-allow-origins=*` 启动，
-然后用 WebSocket 发 `Runtime.evaluate` 读页面真实状态。`.claude/jobs/*/tmp/both-tiers.mjs` 是现成的探针，
-读菜单栏、标签页、`window.__CUBEMX2_I18N__` 的命中统计和界面中文字符数。
+使用安装根目录的 `.bin\cube.exe`，通过 Cube 启动器保留 `CMSIS_PACK_ROOT` 等后端环境：
+
+```powershell
+$cubeLauncher = Join-Path $env:LOCALAPPDATA 'STMicroelectronics\STM32CubeMX2_1.1.1\.bin\cube.exe'
+& $cubeLauncher mx start --remote-debugging-port 9222 --no-detached
+# 另一个 PowerShell 中，页面打开后：
+node scripts/verify-live.mjs --locale zh-cn --expect-menu 工程 --expect-tab 主页
+```
+
+根目录的 `stm32cubemx2-1.1.1.exe` 启动器未能传入 CDP 开关；直接启动内部 Electron 虽然可开端口，
+却会丢失后端环境。上述入口已成功实测，不需要继续调查旧的「端口拒绝连接」。
+脚本要求 Node 22+，支持断言可见文字、菜单、标签、译文命中、伪翻译残留与未捕获渲染异常。
+`--screenshot <路径>` 可截图；窗口最小化时截图可能超时，先恢复窗口。
+Page.reload 会关闭部分外设标签页，重载后先重新打开待测页。
 
 改了译文表要生效需要 `Page.reload` 带 `ignoreCache: true`。
 
@@ -300,17 +337,25 @@ node dist/cli.js lint --locale zh-CN --json > lint.json   # 有问题把报告�
 
 ### 测试
 
-`node --test dist/**/*.test.js`，当前 30 项：lint 规则、langpack 版本选择与 VSIX 校验、
-运行时 shim 行为。运行时测试在 vm 沙箱里用假的 window/localStorage/XHR 加载 `runtime/loader.js`。
+`npm test` 先编译再运行，当前 **56 项**：lint、语言包、PO 同步、升级 diff、
+Pack 参数安全抽取和运行时 shim 行为。运行时测试在 vm 沙箱中使用假的 window/localStorage/XHR。
 
 ---
 
 ## 8. 当前状态（2026-09-14）
 
-- **zh-CN 完成度 1246/1246**，lint error 0，warning 6（全是有意保留英文的产品名与内部标识）。
-- 抽取 1725 条可译。语言包 `vscode-language-pack-zh-hans` 1.108.0 已装在用户目录。
-- 两层已在真实应用里用**伪翻译**叠加验证过（菜单栏同时出现 `⟦Project⟧` 与 `查看(V)`）。
-- 36 项测试通过。
+- **zh-CN 1896/1896**，lint error 0、warning 6、style 0。警告是原来有意保留的产品名/内部标识。
+- 前端基线 20271 条 catalog 记录，1811 个可译位置、1246 条不同原文。
+  STM32C5 HAL 驱动 2.1.0 的 TIM/LPTIM 两个 schema 另加 1081 个显示字段，
+  其中 955 个可译位置；合并后 21352 条记录、2766 个可译位置、1896 条不同原文。
+- 中文官方语言包 `vscode-language-pack-zh-hans` 1.108.0 已安装；应用仍保留最终中文部署。
+- 中文首页、创建 MCU 工程向导、菜单、TIM1 参数及下拉选项已在真实窗口验证并截图。
+  TIM1 翻译前后 41 个参数控件值一致，用户工程文件 SHA256 一致。
+- 英文回落已验证：英文菜单、无运行时翻译 API。德语以 4 条自写词条配合官方 1.108.0
+  语言包验证了 `Projekt / Anzeigen / Hilfe / Startseite`，测试后移除了德语 VSIX 和部署词表。
+- 重抽前端清单与旧清单比较无内容差异；同步再构建仍保留全部原有翻译。
+  另实测 rollback 的 JS、gzip、HTML 与备份逐字节一致，再重新安装了中文。
+- 56 项测试通过。详细证据和调试窗口最终状态见 `VERIFICATION.md`。
 
 翻译由外部 AI 完成后我做了独立复核，改了 26 条：`Line` 的语义冲突、省略号统一为 `…`、
 裸 `part` 统一为「器件」（`part no` 仍用「型号」）、`Detail view` 两种译法统一、
@@ -318,38 +363,31 @@ node dist/cli.js lint --locale zh-CN --json > lint.json   # 有问题把报告�
 外部 AI 交回的批次文件在 `work/zh-CN/`（已全部导入，导入时没带 `--source`，
 所以 PO 注释里分不出哪些是它译的；要区分就 diff `a7b64e7` 之前的 PO）。
 
-### ⚠ 应用此刻不是干净状态
+650 条新增的 TIM/LPTIM 译文由本轮独立编写，未使用其他汉化项目的词典，
+来源注释为 `independent-timer-review-2026-09-14`。此前 1246 条翻译保留，
+仅把跨列表/滤波语境的 `Filter` 从「筛选」调整为「过滤」。
 
-复核结束后我执行了 `install --locale zh-CN` 把**真实译文**部署进了应用（6 处注入 + `index.html` 一行 +
-`st-i18n/zh-cn.json`），准备做活体验证。应用带 `--remote-debugging-port=9222` 启动了两次，
-CDP 端口都没起来（`127.0.0.1:9222` 拒绝连接），原因没查出来，验证**没做完**。
-可能原因：上一个实例没退干净、或 Electron 这次没接受该参数。
+### 部署与后续边界
 
-接手后先跑 `node dist/cli.js doctor` 确认状态，然后二选一：
-
-- **要验证**：确认没有残留进程后重新带调试端口启动，用 `.claude/jobs/*/tmp/both-tiers.mjs` 探针读菜单栏与 `window.__CUBEMX2_I18N__.stats`；
-  或者不走 CDP，直接开应用肉眼看首页与菜单是否中文。
-- **要还原**：`node dist/cli.js rollback`，再删 `lib/frontend/st-i18n/`，
-  用 SHA256 比对 `bundle.js == bundle.js.orig`、`bundle.js.gz == bundle.js.gz.orig`。语言包留在用户目录无害。
-
-伪翻译层面两层叠加已验证过，真实译文只是换了表的内容，运行时路径完全相同，风险很低——但没亲眼看过就不要对用户说「已验证」。
-
-### 还没做的
-
-- **真实译文的活体验证**（见上）。
-- **第二语言验证多语言链路**。目前只跑过 zh-CN，`langpack` 的 locale 映射表里另外 14 种没实测。
-- **CubeMX2 升级后的 catalog diff 流程**。稳定 ID 的设计支持译文继承，但没有工具化的 diff 报告。
-- CSS `content` 与 Electron 原生对话框的残留（如确有必要，用窄范围静态补丁兜底）。
-- 仓库目前**私有**。公开前过一遍 §1 的合规清单，并决定是否保留 `locales/zh-CN.po` 里内嵌的英文 msgid。
+- `doctor` 应看到 6 处挂钩对应的注入状态、HTML/runtime、同步的 gzip 和 `zh-cn.json`。
+  本工具备份与 `.orig` 未被覆盖；要恢复英文原始文件可运行 `rollback`。
+- **词库完成度不是全应用覆盖率。** 外设树分类（如 `Timers`）、运行时生成的
+  `Channel 1`、其他 Pack 参数、CSS 文本及部分第三方/原生控件仍有英文。
+  整个 HAL 2.1.0 `.config` 的 48 个 schema 可读取（8006 个显示字段），但本轮只补译 TIM/LPTIM。
+- UI 检查覆盖实际观察到的状态，不覆盖全部外设模式组合或代码生成结果。
+  后端原有的 `onChanged` 初始化异常等日志在英文状态也出现；CDP 检查通过不代表后端无错误。
+- `diff` 已有精确匹配与升级继承回归测试，但未安装另一版本的 CubeMX2 做跨版本补丁适配。
+- 远端保持私有，本轮未提交、推送或公开发布。公开前仍需处理 §1 的第三方内容分发问题。
 
 ---
 
 ## 9. 环境
 
-本机是原生 Windows 11，主 shell 是 PowerShell 7。用户的全局约定在 `~/.claude/CLAUDE.md`，
-其中与本项目相关的几条：内置 `WebSearch`/`WebFetch` 在这台机器上持续 429，联网走 Tavily MCP；
-已知路径的文件操作用 `-LiteralPath`；改文件用 Edit/Write 工具而不是 shell 重定向。
+本机是原生 Windows，主 shell 为 PowerShell 7，Node v22.22.2。
+遵循当前会话用户提供的 AGENTS 约定：Windows 路径、已知路径操作用 `-LiteralPath`，
+源文件修改用 `apply_patch`；不切 Bash/WSL/cmd，不覆盖无关工作区改动。
 
 应用装在
 `C:\Users\30496\AppData\Local\STMicroelectronics\STM32CubeMX2_1.1.1\resources\stm32cubemx-application\1.1.1\dist\resources\app\`，
-可执行文件是上层目录的 `stm32cubemx2-1.1.1.exe`。Theia 用户目录 `~/.theia-cubemx2/`。
+调试入口是安装根目录的 `.bin\cube.exe mx start`（见 §7），Theia 用户目录为
+`C:\Users\30496\.theia-cubemx2\`。CMSIS Packs 位于 `%LOCALAPPDATA%\stm32cube\packs\`。

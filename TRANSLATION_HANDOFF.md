@@ -39,7 +39,7 @@
 | `msgstr` | 你要填的译文；留空表示暂不翻译 |
 | `flags` | 该条的性质与注意事项，见下表 |
 | `where` | 界面位置：功能模块 → 组件名，帮助你判断语境 |
-| `context` | 原始界面代码片段，能看出它是标题、按钮、提示还是段落 |
+| `context` | 原始界面代码片段，或 Pack 的 componentid 与 schema 路径 |
 | `note` | 额外提醒（有则出现） |
 | `refs` | 源文件与行号，一般不用管 |
 
@@ -78,7 +78,7 @@
 
 **3. 禁译词原样保留（区分大小写、整词）。**
 硬件与协议：`GPIO` `DMA` `NVIC` `EXTI` `SPI` `I2C` `I3C` `UART` `USART` `LPUART` `CAN` `FDCAN` `USB` `RCC` `ADC` `DAC` `TIM` `LPTIM` `RTC` `CMSIS` `HAL` `MCU` `MPU`
-产品与生态：`STM32` `STM32Cube` `STM32CubeMX` `STM32CubeMX2` `Pack` `PDSC` `IOC2` `Keil` `IAR` `GCC` `CMake` `Cube` `Pinout` `Clock` `Boot`
+产品与生态：`STM32` `STM32Cube` `STM32CubeMX` `STM32CubeMX2` `Pack` `PDSC` `IOC2` `Keil` `IAR` `GCC` `CMake` `Cube`
 通用：`JSON` `YAML` `URL` `URI` `API` `SDK` `IDE` `Git` `Theia`
 - `Configure GPIO pins` → `配置 GPIO 引脚` ✓
 - `Pack management` → `Pack 管理` ✓，`包管理` ✗
@@ -133,8 +133,15 @@
 | autoclose | 自动关闭 | 自动闭合 |
 | wrapped lines | 折行 | 换行行 |
 | tab completion | Tab 补全 | 制表符补全 |
+| counter / prescaler | 计数器 / 预分频器 | |
+| time-base | 时基 | |
+| capture / compare | 捕获 / 比较 | |
+| break（定时器） | 刹车 | |
+| deadtime | 死区时间 | |
 
 完整版在仓库的 `locales/zh-CN.glossary.json`，校验程序用的就是它。
+`Filter` 在列表和定时器参数中共用同一原文，目前统一用「过滤」。
+Pack 的寄存器、信号名和分频公式保持原样；带 `{{...}}` 的动态标题不应手工展开成一批猜测值。
 
 ## 六、风格
 

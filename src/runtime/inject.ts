@@ -5,7 +5,7 @@
 /**
  * 把运行时包装注入 bundle.js。
  *
- * 只动两处单点赋值——React 的 createElement 导出与 JSX runtime 的 jsx/jsxs 导出。
+ * 只包装六个入口：React、JSX runtime、命令、子菜单、菜单项与 Lumino 标签页标题。
  * 替换表达式本身不含任何翻译逻辑，逻辑全在我们自己的 runtime/loader.js 里，
  * 因此升级译文、切换语言都不需要重新注入。
  *

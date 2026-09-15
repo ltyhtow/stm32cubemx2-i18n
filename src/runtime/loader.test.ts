@@ -19,6 +19,7 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import vm from 'node:vm';
 import { fileURLToPath } from 'node:url';
+import { extractFromSource } from '../extract/source-tsx.js';
 
 const RUNTIME = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
@@ -33,6 +34,9 @@ interface Api {
   size: number;
   wrapCreateElement: (f: Function) => Function;
   wrapJsx: (f: Function) => Function;
+  translateCommand: <T>(command: T) => T;
+  translateMenuLabel: (label: string) => string;
+  translateTitle: (label: string) => string;
   translate: (s: string, owner?: string) => string;
   report: () => { missing: { text: string; count: number }[] };
 }
@@ -148,6 +152,39 @@ test('白名单属性被翻译，其它属性原样', () => {
   assert.equal(seen['count'], 3);
 });
 
+test('抽取到的显示属性在运行时可译，高亮匹配词保持原文', () => {
+  const attributes = [
+    'subTitle', 'text', 'children', 'prettyName', 'clearText', 'loadingText',
+    'highlightedText', 'dataExportButtonText', 'defaultPlaceholder', 'inputPlaceholder',
+    'note', 'lockedLabel', 'collapsibleLabel', 'activeTooltip', 'deleteTooltipText',
+    'titleAccess', 'buttonTitle', 'showDetailsAction', 'content',
+  ];
+  const source = `const View = () => <Panel ${attributes.map(p => `${p}="Expand all"`).join(' ')} />;`;
+  const extracted = extractFromSource('view.tsx', source).filter(e => e.translatable);
+  assert.equal(extracted.length, attributes.length);
+  const api = loadRuntime({ locale: 'zh-CN', table: TABLE })!;
+  for (const wrap of [api.wrapCreateElement, api.wrapJsx]) {
+    const render = wrap((_type: unknown, props: Record<string, unknown>) => props);
+    const input = Object.fromEntries(attributes.map(p => [p, 'Expand all']));
+    const output = render('Panel', input);
+    for (const attribute of attributes) {
+      assert.equal(output[attribute], attribute === 'highlightedText' ? 'Expand all' : '全部展开', attribute);
+      assert.equal(input[attribute], 'Expand all');
+    }
+  }
+});
+
+test('高亮组件先用原文匹配，再翻译最终的高亮文本', () => {
+  const api = loadRuntime({ locale: 'zh-CN', table: TABLE })!;
+  const render = api.wrapCreateElement((_type: unknown, props: unknown, ...children: unknown[]) => ({ props, children }));
+  const input = { highlightedText: 'Expand all', children: 'Action: Expand all' };
+  const component = render('Typography', input).props;
+  const offset = component.children.indexOf(component.highlightedText);
+  assert.equal(offset, 8);
+  const fragment = component.children.slice(offset, offset + component.highlightedText.length);
+  assert.deepEqual(render('mark', null, fragment).children, ['全部展开']);
+});
+
 test('不修改传入的 props 对象', () => {
   const api = loadRuntime({ locale: 'zh-CN', table: TABLE })!;
   const wrapped = api.wrapCreateElement(() => null);
@@ -194,12 +231,43 @@ test('用组件名做消歧来源', () => {
   assert.equal(seen['children'], 'Pack 名称');
 });
 
-test('原函数抛错时不吞掉异常', () => {
+test('原函数抛错时保留同一异常，且渲染只能调用一次', () => {
   const api = loadRuntime({ locale: 'zh-CN', table: TABLE })!;
-  const wrapped = api.wrapCreateElement(() => {
-    throw new Error('boom');
-  });
-  assert.throws(() => wrapped('div', null, 'Expand all'), /boom/);
+  for (const wrap of [api.wrapCreateElement, api.wrapJsx]) {
+    let calls = 0;
+    const error = new Error('boom');
+    const wrapped = wrap(() => { calls++; throw error; });
+    assert.throws(() => wrapped('div', { children: 'Expand all' }), caught => caught === error);
+    assert.equal(calls, 1);
+  }
+});
+
+test('翻译读取属性出错时以原参数回落，保留 this 与参数个数', () => {
+  const api = loadRuntime({ locale: 'zh-CN', table: TABLE })!;
+  const props = { get label(): string { throw new Error('getter'); } };
+  const receiver = {};
+  for (const wrap of [api.wrapCreateElement, api.wrapJsx]) {
+    const wrapped = wrap(function (this: unknown, ...args: unknown[]) {
+      assert.equal(this, receiver);
+      return args;
+    });
+    assert.deepEqual(wrapped.call(receiver, 'Panel', props, 'key', 'extra'), ['Panel', props, 'key', 'extra']);
+    assert.deepEqual(wrapped.call(receiver), []);
+  }
+});
+
+test('命令保持对象身份与 ID，冻结对象安全回落，菜单与标题可译', () => {
+  const api = loadRuntime({ locale: 'zh-CN', table: TABLE })!;
+  const command = { id: 'Expand all', label: 'Expand all' };
+  assert.equal(api.translateCommand(command), command);
+  assert.equal(command.id, 'Expand all');
+  assert.equal(command.label, '全部展开');
+  const frozen = Object.freeze({ id: 'example', label: 'Name' });
+  assert.equal(api.translateCommand(frozen), frozen);
+  assert.equal(frozen.label, 'Name');
+  assert.equal(api.translateMenuLabel('Expand all'), '全部展开');
+  assert.equal(api.translateTitle('Name'), '名称');
+  assert.equal(api.translateTitle('firmware.c'), 'firmware.c');
 });
 
 test('审计模式记录未命中的英文', () => {
