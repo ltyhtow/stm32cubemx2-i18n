@@ -1,4 +1,4 @@
-# 项目交接：stm32cubemx2-translator
+# 项目交接：stm32cubemx2-i18n
 
 > 给接手这个项目的 Agent。读完这份文件应当能独立继续开发，不需要复现调查过程。
 > 面向翻译人员的说明见 [TRANSLATION_HANDOFF.md](TRANSLATION_HANDOFF.md)。常用操作见 [DEVELOPMENT.md](DEVELOPMENT.md)。
@@ -21,7 +21,7 @@
 从应用自带的 sourcemap 和显式指定的 CMSIS Pack 参数 schema 抽取界面文案，
 经 Gettext PO 翻译，再用运行时挂钩把译文注入界面。
 
-远端仓库：[ltyhtow/stm32cubemx2-translator](https://github.com/ltyhtow/stm32cubemx2-translator)。
+远端仓库：[ltyhtow/stm32cubemx2-i18n](https://github.com/ltyhtow/stm32cubemx2-i18n)。
 Node + TypeScript，MPL-2.0，每个源文件带 Exhibit A 头。本机装的应用是 v1.1.1。
 
 ---

@@ -37,8 +37,8 @@ GitHub Release: stm32cubemx2-translator-zh-CN-v*.zip
 从源码安装：
 
 ```powershell
-git clone https://github.com/ltyhtow/stm32cubemx2-translator.git
-Set-Location stm32cubemx2-translator
+git clone https://github.com/ltyhtow/stm32cubemx2-i18n.git
+Set-Location stm32cubemx2-i18n
 npm ci
 npm run build
 .\scripts\Install-ZhCN.ps1
