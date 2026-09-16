@@ -1,86 +1,130 @@
-# STM32CubeMX2 Translator
+# STM32CubeMX2 Translator (`i18n`)
 
-用于为 STM32CubeMX2 提取界面文案、管理 Gettext 翻译并通过运行时挂钩加载译文的社区工具链。当前仓库包含已验证的简体中文词库（5,341 条）。
+**English** | [简体中文](README_zh-CN.md)
 
-## 快速开始
+---
 
-GitHub Release: stm32cubemx2-translator-zh-CN-v*.zip
+A multi-language localization toolchain and runtime hook engine for STM32CubeMX2.
 
-需要 **Node.js 20+** 和 **PowerShell 7**。先**完全退出** STM32CubeMX2。
+Moving beyond brittle binary patching and crude string replacement, this project leverages AST + Sourcemap precision to extract UI text from the frontend bundles, deeply parses STMicroelectronics HAL drivers and DFP peripheral descriptors, manages translations via GNU Gettext PO standards, and dynamically applies translations via non-intrusive runtime hooks.
 
-解压本包后，在解压目录打开 PowerShell：
+> 💡 **Multi-Language Architecture Note**  
+> This project is a **language-agnostic i18n/l10n infrastructure**. The repository includes a verified **Simplified Chinese (`zh-CN`, 5,341 translated strings)** catalog as the initial out-of-the-box reference implementation. The toolchain natively supports extracting, maintaining, and applying any target language (such as Japanese `ja-JP`, German `de-DE`, French `fr-FR`, etc.) and seamlessly tracking upstream releases.
+
+---
+
+## Key Features
+
+- **Multi-Layer Deep String Extraction**: Combines AST + Sourcemap reverse analysis of the frontend Web UI with recursive scanning of ST HAL Drivers (`*_parameters.json`) and DFP peripheral descriptors (`*_peripherals.json`) to capture both UI text and deep hardware parameters.
+- **Production-Grade Gettext Pipeline**: Built on standard GNU Gettext POT/PO specifications with context comment preservation, format placeholder guards, and automated semantic linting to prevent app crashes.
+- **Upstream Version Diff & Sync**: When ST releases a new CubeMX2 version or MCU pack, catalog diffing detects changes, automatically inherits existing translations, and isolates only new or modified strings for translation.
+- **Non-Intrusive Runtime Hooking**: Injects runtime hooks into application render entry points without altering the application's core business logic, complete with automated backup, self-diagnostics (`Doctor`), and one-click rollback.
+- **Automated End-to-End Verification**: Includes Chrome DevTools Protocol (CDP) automation scripts for headless startup and automated visual regression screenshots.
+
+---
+
+## Quick Start Guide
+
+### Scenario A: Using the Simplified Chinese Language Pack (End Users)
+
+If you only want to use STM32CubeMX2 in Simplified Chinese, you can directly use the pre-packaged release:
+
+1. **Prerequisites**: Install **PowerShell 7** and **Node.js 20+**. Completely close STM32CubeMX2.
+2. **Download Release**: Download and extract `stm32cubemx2-translator-zh-CN-v*.zip` from GitHub Releases.
+3. **Run Installation**: In the extracted directory, open PowerShell 7 and run:
 
 ```powershell
-# 自动查找安装目录，备份由 CLI 在注入前完成；同时安装框架中文语言包
+# Automatically detects installation path, backs up original files, and injects runtime hooks & framework language pack
 .\Install-ZhCN.ps1
-
-# 只把当前 bundle.js / index.html 复制到备份目录（不改应用）
-.\Install-ZhCN.ps1 -Action Backup
-
-# 还原本工具的注入
-.\Install-ZhCN.ps1 -Action Rollback
-
-# 查看探测到的安装与注入状态
-.\Install-ZhCN.ps1 -Action Doctor
 ```
 
-自动探测失败时加上安装根目录：
+> **Common Maintenance Commands**:
+> - Revert application to original state: `.\Install-ZhCN.ps1 -Action Rollback`
+> - Backup current files only: `.\Install-ZhCN.ps1 -Action Backup`
+> - Inspect injection and backup status: `.\Install-ZhCN.ps1 -Action Doctor`
+> - Specify custom installation path: `.\Install-ZhCN.ps1 -App 'C:\Users\<YourUser>\AppData\Local\STMicroelectronics\STM32CubeMX2_1.1.1'`
+> - Skip downloading framework language pack: `.\Install-ZhCN.ps1 -SkipLangpack`
 
-```powershell
-.\Install-ZhCN.ps1 -App 'C:\Users\你的用户名\AppData\Local\STMicroelectronics\STM32CubeMX2_1.1.1'
-```
+---
 
-已装过语言包、或不想访问网络时：`.\Install-ZhCN.ps1 -SkipLangpack`。
+### Scenario B: Using the Toolkit for Localization & Development (Developers / Contributors)
 
-已验证 STM32CubeMX2 **1.1.1**。修改应用文件前请自行确认 ST 最终用户许可，见 `DISCLAIMER.md`。
+If you want to maintain catalogs, contribute new languages (such as Japanese, German, etc.), or track upstream ST updates:
 
-从源码安装：
+#### 1. Build from Source
 
 ```powershell
 git clone https://github.com/ltyhtow/stm32cubemx2-i18n.git
 Set-Location stm32cubemx2-i18n
 npm ci
 npm run build
-.\scripts\Install-ZhCN.ps1
 ```
 
-## 当前状态
+#### 2. CLI Toolchain Commands
 
-- `locales/zh-CN.po` 含 5,341 条已填充译文，来自 2026-09-15 的翻译批次导入。
-- 已在实际 STM32CubeMX2 界面目视确认中文菜单、分类、GPIO 配置标签、选项和提示生效。
-- 仍可能看到未收录的英文、产品名或动态内容；当前验证不代表所有页面完全汉化。
-- `npm test` 会构建 TypeScript 并运行完整测试；`doctor` 可检查安装、备份和运行时表。
-
-常用维护命令：
+The project provides a unified CLI tool `cubemx2-translator` (located at `dist/cli.js` after build):
 
 ```powershell
-node dist/cli.js backup
-node dist/cli.js doctor
-node dist/cli.js rollback
-node dist/cli.js lint --locale zh-CN
+# 1. Extract UI strings and MCU pack metadata into a POT template
+node dist/cli.js --catalog work/catalog.json extract --pack-config <PackDir> --pack-descriptor <Descriptors...> --pot template.pot
+
+# 2. Initialize or synchronize a target language PO catalog (e.g. ja-JP / de-DE / zh-CN)
+node dist/cli.js --locales locales sync --locale ja-JP --pot template.pot
+
+# 3. Diff upstream version changes
+node dist/cli.js diff --before catalog-v1.1.1.json --after catalog-v1.2.0.json
+
+# 4. Dispatch translation work batches & import reviewed translations (Human/AI Agent workflow)
+node dist/cli.js --locales locales export-work --locale zh-CN --out translation-work/
+node dist/cli.js --locales locales import-json --locale zh-CN --from translation-work/done/
+node dist/cli.js --locales locales lint --locale zh-CN
+
+# 5. Build catalog and install into local CubeMX2
+node dist/cli.js install --locale zh-CN
 ```
 
-## 开发与翻译
+#### 3. Automated Testing & Verification
 
-- [开发指南](docs/DEVELOPMENT.md)：重新提取、升级词库、导入翻译和测试。
-- [翻译 AI 说明](docs/TRANSLATION_HANDOFF.md)：只需填写 JSON 译文的交接规则。
-- [验证记录](docs/VERIFICATION.md)：测试范围、结果和已知限制。
-- [开发交接](docs/AGENT_HANDOFF.md)：实现细节与历史调查记录。
+```powershell
+# Run unit tests and catalog linting
+npm test
 
-## 目录
+# Connect to CubeMX2 via Chrome DevTools Protocol (CDP) for live visual verification & screenshot capture
+node scripts/verify-live.mjs --locale zh-cn --expect-menu 工程 --screenshot work/validation/tim1.png
+```
+
+---
+
+## Status & Scope
+
+- **Verified Version**: STM32CubeMX2 **1.1.1**.
+- **Reference Catalog**: `locales/zh-CN.po` containing **5,341 verified entries**, covering menus, peripheral categories, GPIO configurations, options, and static hints.
+- **Community Contributions**: Pull Requests for new locales (e.g., `locales/ja-JP.po`) are warmly welcome!
+- **Coverage Notice**: Some deep hardware part numbers or dynamically concatenated strings may remain in English; see [docs/VERIFICATION.md](docs/VERIFICATION.md) for testing details.
+
+---
+
+## Project Structure & Documentation
 
 ```text
-src/       TypeScript CLI、提取器、PO 处理和安装逻辑
-runtime/   注入应用的运行时加载器
-locales/   PO 词库和术语表
-scripts/   Install-ZhCN.ps1, pack-zhcn-release.py, CDP 辅助脚本
-docs/      翻译交接、开发交接和验证记录
+src/         TypeScript CLI, AST+Sourcemap extractors, PO processing, and runtime installers
+runtime/     Non-intrusive runtime loader injected into the application
+locales/     GNU Gettext PO catalogs and glossary files
+scripts/     Installation scripts (Install-ZhCN.ps1), release packaging, and CDP verification scripts
+docs/        Development guides, translation handoff guidelines, and architecture records
 ```
 
-`catalog/`、`out/`、`dist/`、`work/` 和 `node_modules/` 是本地生成目录，默认不纳入版本控制。
+- 📖 [Development Guide](docs/DEVELOPMENT.md): Detailed extractor options, differential updates, and test workflows.
+- 🤝 [Translation Handoff Specification](docs/TRANSLATION_HANDOFF.md): Work batch format, glossary constraints, and validation rules.
+- 🔍 [Verification Records](docs/VERIFICATION.md): Verified UI scope, known limitations, and screenshot artifacts.
+- 🏗️ [Architecture & Agent Handoff](docs/AGENT_HANDOFF.md): Implementation details, AST extraction mechanism, and reverse engineering notes.
 
-## 致谢与许可
+---
 
-本项目的最初灵感来自 [P1nkDog/STM32CubeMX2-Chinese](https://github.com/P1nkDog/STM32CubeMX2-Chinese)。感谢作者对 STM32CubeMX2 中文本地化的探索与启发。本项目为独立实现，不复制其代码或词典。
+## Acknowledgments & License
 
-代码以 MPL-2.0 发布，详见 [LICENSE](LICENSE)。本项目与 STMicroelectronics 无关联，也未获其背书或赞助；“STM32”和“STM32CubeMX”是 STMicroelectronics 的商标。修改 STM32CubeMX2 程序文件前，请自行确认其最终用户许可协议，详见 [DISCLAIMER.md](DISCLAIMER.md)。
+Originally inspired by [P1nkDog/STM32CubeMX2-Chinese](https://github.com/P1nkDog/STM32CubeMX2-Chinese). Thanks to the author for their early exploration and inspiration in STM32CubeMX2 Chinese localization. This project is an independent clean-room implementation.
+
+- Code is released under the [MPL-2.0](LICENSE) License.
+- This project is an independent community open-source project and is not affiliated with, endorsed by, or sponsored by STMicroelectronics. "STM32" and "STM32CubeMX" are registered trademarks of STMicroelectronics.
+- Before modifying application files, please review the STMicroelectronics end-user license agreement, as outlined in [DISCLAIMER.md](DISCLAIMER.md).
