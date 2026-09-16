@@ -3,7 +3,8 @@
   "_comment": "lint 与 docs/TRANSLATION_HANDOFF.md 共用的术语表。terms：原文出现该词时译文不得用 avoid 里的写法；keep：原文里出现就必须原样保留（整词、区分大小写），与 lint 内置的硬件缩写列表合并。",
   "keep": [
     "Pack",
-    "Cube"
+    "Cube",
+    "HardFault"
   ],
   "terms": [
     { "en": "project", "use": "工程", "avoid": ["项目"], "note": "嵌入式领域统一叫工程" },
@@ -41,6 +42,13 @@
     { "en": "compile", "use": "编译", "avoid": [] },
     { "en": "flash", "use": "烧录", "avoid": ["闪存写入", "刷写"], "note": "作为动词时；作为存储器名词时保留 Flash" },
     { "en": "remove", "use": "移除", "avoid": [], "note": "remove 用移除，delete 用删除，两者要区分" },
-    { "en": "delete", "use": "删除", "avoid": [] }
+    { "en": "delete", "use": "删除", "avoid": [] },
+    { "en": "regular group", "use": "常规组", "avoid": ["规则组"], "note": "RM0492 官方中文；不要用 F4 旧译规则组" },
+    { "en": "discontinuous", "use": "不连续", "avoid": ["间断"] },
+    { "en": "non-continuous", "use": "不连续", "avoid": ["非连续"] },
+    { "en": "sequencer", "use": "定序器", "avoid": ["序列器"] },
+    { "en": "time quanta", "use": "时间片", "avoid": ["时间份", "时间量子"] },
+    { "en": "hard fault", "use": "HardFault", "avoid": ["硬件错误"], "note": "Cortex 异常名；RM0492 旁注硬性故障" },
+    { "en": "memory management fault", "use": "存储器管理故障", "avoid": ["内存管理错误"] }
   ]
 }

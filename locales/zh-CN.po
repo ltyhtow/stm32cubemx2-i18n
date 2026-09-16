@@ -10279,7 +10279,7 @@ msgid ""
 "Available only for regular group conversions (not injected) and non-continuous mode."
 msgstr ""
 "采样在转换结束后立即开始，并在触发时停止。\n"
-"仅适用于非连续模式下的常规组转换（不适用于注入组）。"
+"仅适用于不连续模式下的常规组转换（不适用于注入组）。"
 
 #: pack-config/stm32c5xx_adc_parameters.json:178
 #. 界面位置：pack-config/stm32c5xx_adc_parameters
@@ -10297,7 +10297,7 @@ msgid ""
 "Available only for regular group conversions (not injected) and non-continuous mode."
 msgstr ""
 "采样由触发边沿控制。\n"
-"仅适用于非连续模式下的常规组转换（不适用于注入组）。"
+"仅适用于不连续模式下的常规组转换（不适用于注入组）。"
 
 # 译者: independent-timer-review-2026-09-14
 #: pack-config/stm32c5xx_adc_parameters.json:185
@@ -10654,7 +10654,7 @@ msgstr "连续模式仅在普通采样模式下可用。"
 #. 共 2 处使用
 #, config-value
 msgid "Sequencer discontinuous"
-msgstr "间断序列器"
+msgstr "不连续定序器"
 
 #: pack-config/stm32c5xx_adc_parameters.json:429
 #. 界面位置：pack-config/stm32c5xx_adc_parameters
@@ -10758,7 +10758,7 @@ msgstr "溢出"
 #. 语境：::Device:STM32CubeMX2 Config:ADC · /properties/parameters/properties/basic/properties/group_panel/properties/reg_config_t/properties/reg_sequencer/title
 #, config-value
 msgid "Sequencer"
-msgstr "序列器"
+msgstr "定序器"
 
 #: pack-config/stm32c5xx_adc_parameters.json:503
 #. 界面位置：pack-config/stm32c5xx_adc_parameters
@@ -10777,7 +10777,7 @@ msgstr "对常规组中的通道转换序列进行排序。"
 #. 共 5 处使用
 #, config-value
 msgid "Channel to set into sequencer in the selected rank."
-msgstr "在选定级中放入序列器的通道。"
+msgstr "在选定序列级中放入定序器的通道。"
 
 #: pack-config/stm32c5xx_adc_parameters.json:541
 #: pack-config/stm32c5xx_adc_parameters.json:938
@@ -10834,7 +10834,7 @@ msgstr "在选定级数后中断注入转换序列。"
 #. 语境：::Device:STM32CubeMX2 Config:ADC · /properties/parameters/properties/basic/properties/group_panel/properties/inj_config_t/properties/inj_sequencer/title
 #, config-value
 msgid "Injected sequencer"
-msgstr "注入序列器"
+msgstr "注入定序器"
 
 #: pack-config/stm32c5xx_adc_parameters.json:657
 #. 界面位置：pack-config/stm32c5xx_adc_parameters
@@ -11292,7 +11292,7 @@ msgstr "启用 AWD2 且通道模式设为多通道时可用。"
 msgid ""
 "Select the ADC group to be monitored by the analog watchdog. AWD2 and AWD3 monitor channels without "
 "distinction of group regular and injected: both sequencers trig the AWD."
-msgstr "选择由模拟看门狗监控的 ADC 组。AWD2 和 AWD3 监控通道时不区分常规组和注入组：两个序列器均可触发 AWD。"
+msgstr "选择由模拟看门狗监控的 ADC 组。AWD2 和 AWD3 监控通道时不区分常规组和注入组：两个定序器均可触发 AWD。"
 
 #: pack-config/stm32c5xx_adc_parameters.json:1168
 #. 界面位置：pack-config/stm32c5xx_adc_parameters
@@ -11390,10 +11390,8 @@ msgid ""
 msgstr ""
 "过采样范围：ADC 常规组和/或注入组。\n"
 "若在常规序列中插入 ADC 注入组转换：\n"
-"- 设置为 continued：当触发注入组时，常规组上的过采样会暂停并在之后继续。\n"
-"- 设置为 "
-"resumed：当触发注入组时，常规组上的过采样从头重新开始（过采样器缓冲区重置）。该器件支持并行注入过采样，允许独立对常规组和注入组执行过采样（使用各自具有倍率和移位设置的不同累加器），请参阅面板 "
-"'Oversampling group injected'。"
+"- 设置为继续：当触发注入组时，常规组上的过采样会暂停并在之后继续。\n"
+"- 设置为重置恢复：当触发注入组时，常规组上的过采样从头重新开始（过采样器缓冲区重置）。该器件支持并行注入过采样，允许独立对常规组和注入组执行过采样（各自使用不同累加器及其倍率和移位设置），请参阅面板“注入组过采样”。"
 
 #: pack-config/stm32c5xx_adc_parameters.json:1508
 #. 界面位置：pack-config/stm32c5xx_adc_parameters
@@ -11446,7 +11444,7 @@ msgstr "顺序模式下对 ADC 注入组转换的 ADC 过采样：按顺序执�
 msgid ""
 "ADC oversampling on conversions of ADC groups regular and injected. Combination of modes 'Regular "
 "(resumed)' and 'Injected': refer to description of these parameters."
-msgstr "对 ADC 常规组和注入组转换的 ADC 过采样。'Regular (resumed)' 和 'Injected' 模式的组合：请参阅这些参数的说明。"
+msgstr "对 ADC 常规组和注入组转换进行过采样。这是“常规（重置恢复）”与“注入”模式的组合：请参阅这些参数的说明。"
 
 #: pack-config/stm32c5xx_adc_parameters.json:1528
 #. 界面位置：pack-config/stm32c5xx_adc_parameters
@@ -11462,14 +11460,14 @@ msgstr "范围"
 msgid ""
 "Choose between continuous or discontinuous (triggered) oversampling mode (applied only on group "
 "regular oversampling)."
-msgstr "在连续或间断（触发）过采样模式之间选择（仅应用于常规组过采样）。"
+msgstr "在连续或不连续（触发）过采样模式之间选择（仅应用于常规组过采样）。"
 
 #: pack-config/stm32c5xx_adc_parameters.json:1540
 #. 界面位置：pack-config/stm32c5xx_adc_parameters
 #. 语境：::Device:STM32CubeMX2 Config:ADC · /properties/parameters/properties/additional/properties/ovs_panel/properties/discont/oneOf/1/title
 #, config-value
 msgid "Discontinuous"
-msgstr "间断"
+msgstr "不连续"
 
 #: pack-config/stm32c5xx_adc_parameters.json:1546
 #. 界面位置：pack-config/stm32c5xx_adc_parameters
@@ -11483,7 +11481,7 @@ msgstr "顺序（传统）范围内的注入过采样不支持触发过采样"
 #. 语境：::Device:STM32CubeMX2 Config:ADC · /properties/parameters/properties/additional/properties/ovs_panel/properties/discont/title
 #, config-value
 msgid "Discontinuous mode"
-msgstr "间断模式"
+msgstr "不连续模式"
 
 #: pack-config/stm32c5xx_adc_parameters.json:1556
 #: pack-config/stm32c5xx_adc_parameters.json:1584
@@ -11499,7 +11497,7 @@ msgstr "取决于过采样范围。"
 #. 语境：::Device:STM32CubeMX2 Config:ADC · /properties/parameters/properties/additional/properties/ovs_panel/properties/ratio/description
 #, config-value
 msgid "Sum of conversions data computed to oversampling conversions data (before potential shift)."
-msgstr "计算为过采样转换数据的转换数据之和（在潜在移位之前）。"
+msgstr "由多次转换数据累加得到的过采样转换数据（在可能的移位之前）。"
 
 #: pack-config/stm32c5xx_adc_parameters.json:1566
 #. 界面位置：pack-config/stm32c5xx_adc_parameters
@@ -13089,7 +13087,7 @@ msgstr "输出消隐源"
 #. 语境：::Device:STM32 MX Config:COMP · /properties/parameters/properties/additional/properties/output_blanking_src/description
 #, config-value
 msgid "Signal from another peripheral that triggers output blanking."
-msgstr "来自另一个外设触发输出消隐的信号。"
+msgstr "来自另一个外设、用于触发输出消隐的信号。"
 
 #: pack-config/stm32c5xx_comp_parameters.json:653
 #: pack-config/stm32c5xx_comp_parameters.json:686
@@ -13873,7 +13871,8 @@ msgid ""
 "Enable the default MPU memory configuration. If an address is not covered by any MPU region is "
 "accessed with this option enabled the base memory mapping applies. If the option is disabled, any "
 "memory access not covered by an MPU region triggers a memory management fault."
-msgstr "启用默认 MPU 内存配置。若在此选项启用的情况下访问未被任何 MPU 区域覆盖的地址，则应用基本内存映射。若禁用该选项，则访问未被 MPU 区域覆盖的任何内存都将触发内存管理错误。"
+msgstr ""
+"启用默认 MPU 存储器配置。若在此选项启用的情况下访问未被任何 MPU 区域覆盖的地址，则应用基本存储器映射。若禁用该选项，则访问未被 MPU 区域覆盖的任何存储器都将触发存储器管理故障。"
 
 #: pack-config/stm32c5xx_cortex_mpu_parameters.json:134
 #. 界面位置：pack-config/stm32c5xx_cortex_mpu_parameters
@@ -13887,7 +13886,7 @@ msgstr "错误期间启用 MPU"
 #. 语境：::Device:STM32CubeMX2 Config:CORTEX MPU · /properties/parameters/properties/basic/properties/during_hardfault/description
 #, config-value
 msgid "Enable the MPU during non-maskable interrupt (NMI) and hard fault events."
-msgstr "在不可屏蔽中断（NMI）和硬件错误事件期间启用 MPU。"
+msgstr "在不可屏蔽中断（NMI）和 HardFault 事件期间启用 MPU。"
 
 #: pack-config/stm32c5xx_cortex_mpu_parameters.json:146
 #: pack-config/stm32c5xx_cortex_scb_parameters.json:98
@@ -13896,7 +13895,7 @@ msgstr "在不可屏蔽中断（NMI）和硬件错误事件期间启用 MPU。"
 #. 共 2 处使用
 #, config-value
 msgid "Memory management fault"
-msgstr "内存管理错误"
+msgstr "存储器管理故障"
 
 #: pack-config/stm32c5xx_cortex_mpu_parameters.json:148
 #: pack-config/stm32c5xx_cortex_scb_parameters.json:100
@@ -13907,7 +13906,7 @@ msgstr "内存管理错误"
 #. 共 4 处使用
 #, config-value
 msgid "The system escalates to hard fault if you do not enable it."
-msgstr "若不启用，系统将升级为硬件错误。"
+msgstr "若不启用，系统将升级为 HardFault。"
 
 #: pack-config/stm32c5xx_cortex_mpu_parameters.json:162
 #. 界面位置：pack-config/stm32c5xx_cortex_mpu_parameters
@@ -13916,7 +13915,7 @@ msgstr "若不启用，系统将升级为硬件错误。"
 msgid ""
 "Memory management fault is automatically enabled by the drivers. To enable hard fault escalation, "
 "please bind the CORTEX SCB panel."
-msgstr "驱动程序会自动启用内存管理错误。若要启用硬件错误升级，请绑定 CORTEX SCB 面板。"
+msgstr "驱动程序会自动启用存储器管理故障。若要启用 HardFault 升级，请绑定 CORTEX SCB 面板。"
 
 #: pack-config/stm32c5xx_cortex_mpu_parameters.json:181
 #. 界面位置：pack-config/stm32c5xx_cortex_mpu_parameters
@@ -14353,14 +14352,14 @@ msgstr "用法错误"
 #. 语境：::Device:STM32CubeMX2 Config:CORTEX SCB · /properties/parameters/properties/system/properties/nvic/properties/enable_management_mem/title
 #, config-value
 msgid "Memory management priority management"
-msgstr "内存管理优先级管理"
+msgstr "存储器管理优先级管理"
 
 #: pack-config/stm32c5xx_cortex_scb_parameters.json:155
 #. 界面位置：pack-config/stm32c5xx_cortex_scb_parameters
 #. 语境：::Device:STM32CubeMX2 Config:CORTEX SCB · /properties/parameters/properties/system/properties/nvic/properties/irq_config1/title
 #, config-value
 msgid "Memory management priority"
-msgstr "内存管理优先级"
+msgstr "存储器管理优先级"
 
 #: pack-config/stm32c5xx_cortex_scb_parameters.json:172
 #. 界面位置：pack-config/stm32c5xx_cortex_scb_parameters
@@ -19693,7 +19692,7 @@ msgstr "预分频器"
 #. 语境：::Device:STM32CubeMX2 Config:FDCAN · /properties/parameters/properties/basic/properties/timings/properties/bit_timing/properties/nominal_bit_timing/properties/n
 #, config-value
 msgid "The value by which the kernel clock is divided for generating the nominal bit time quanta."
-msgstr "用于生成标称位时间份的内核时钟分频值。"
+msgstr "用于生成标称位时间片的内核时钟分频值。"
 
 #: pack-config/stm32c5xx_fdcan_parameters.json:1646
 #: pack-config/stm32c5xx_fdcan_parameters.json:1702
@@ -19722,14 +19721,14 @@ msgstr "当时钟通过 CCU 路由时，预分频器必须处于非活动状态�
 #. 共 2 处使用
 #, config-value
 msgid "Time quanta"
-msgstr "时间份"
+msgstr "时间片"
 
 #: pack-config/stm32c5xx_fdcan_parameters.json:1672
 #. 界面位置：pack-config/stm32c5xx_fdcan_parameters
 #. 语境：::Device:STM32CubeMX2 Config:FDCAN · /properties/parameters/properties/basic/properties/timings/properties/bit_timing/properties/nominal_bit_timing/properties/n
 #, config-value
 msgid "Nominal time quanta."
-msgstr "标称时间份。"
+msgstr "标称时间片。"
 
 #: pack-config/stm32c5xx_fdcan_parameters.json:1692
 #: pack-config/stm32c5xx_fdcan_parameters.json:1945
@@ -19745,7 +19744,7 @@ msgstr "时间段 1"
 #. 语境：::Device:STM32CubeMX2 Config:FDCAN · /properties/parameters/properties/basic/properties/timings/properties/bit_timing/properties/nominal_bit_timing/properties/n
 #, config-value
 msgid "The number of nominal time quanta in Bit Segment 1."
-msgstr "位段 1 中的标称时间份数量。"
+msgstr "位段 1 中的标称时间片数量。"
 
 #: pack-config/stm32c5xx_fdcan_parameters.json:1723
 #: pack-config/stm32c5xx_fdcan_parameters.json:1969
@@ -19761,7 +19760,7 @@ msgstr "时间段 2"
 #. 语境：::Device:STM32CubeMX2 Config:FDCAN · /properties/parameters/properties/basic/properties/timings/properties/bit_timing/properties/nominal_bit_timing/properties/n
 #, config-value
 msgid "The number of nominal time quanta in Bit Segment 2."
-msgstr "位段 2 中的标称时间份数量。"
+msgstr "位段 2 中的标称时间片数量。"
 
 #: pack-config/stm32c5xx_fdcan_parameters.json:1752
 #: pack-config/stm32c5xx_fdcan_parameters.json:1993
@@ -19779,7 +19778,7 @@ msgstr "同步跳转宽度"
 msgid ""
 "Maximum number of nominal time quanta the FDCAN hardware is allowed to lengthen or shorten a data "
 "bit to perform resynchronization."
-msgstr "FDCAN 硬件为执行重新同步而允许加长或缩短数据位的最大标称时间份数量。"
+msgstr "FDCAN 硬件为执行重新同步而允许加长或缩短数据位的最大标称时间片数量。"
 
 #: pack-config/stm32c5xx_fdcan_parameters.json:1764
 #. 界面位置：pack-config/stm32c5xx_fdcan_parameters
@@ -19873,21 +19872,21 @@ msgstr "将数据阶段比特率设置为与标称比特率相同或更高的值
 #. 语境：::Device:STM32CubeMX2 Config:FDCAN · /properties/parameters/properties/basic/properties/timings/properties/bit_timing/properties/data_bit_timing/properties/data
 #, config-value
 msgid "Value by which the oscillator frequency is divided for generating the data bit time quanta."
-msgstr "用于生成数据位时间份的振荡器频率分频值。"
+msgstr "用于生成数据位时间片的振荡器频率分频值。"
 
 #: pack-config/stm32c5xx_fdcan_parameters.json:1946
 #. 界面位置：pack-config/stm32c5xx_fdcan_parameters
 #. 语境：::Device:STM32CubeMX2 Config:FDCAN · /properties/parameters/properties/basic/properties/timings/properties/bit_timing/properties/data_bit_timing/properties/data
 #, config-value
 msgid "Number of data time quanta in Bit Segment 1."
-msgstr "位段 1 中的数据时间份数量。"
+msgstr "位段 1 中的数据时间片数量。"
 
 #: pack-config/stm32c5xx_fdcan_parameters.json:1970
 #. 界面位置：pack-config/stm32c5xx_fdcan_parameters
 #. 语境：::Device:STM32CubeMX2 Config:FDCAN · /properties/parameters/properties/basic/properties/timings/properties/bit_timing/properties/data_bit_timing/properties/data
 #, config-value
 msgid "Number of data time quanta in Bit Segment 2."
-msgstr "位段 2 中的数据时间份数量。"
+msgstr "位段 2 中的数据时间片数量。"
 
 #: pack-config/stm32c5xx_fdcan_parameters.json:1994
 #. 界面位置：pack-config/stm32c5xx_fdcan_parameters
@@ -19896,7 +19895,7 @@ msgstr "位段 2 中的数据时间份数量。"
 msgid ""
 "Maximum number of data time quanta the FDCAN hardware is allowed to lengthen or shorten a data bit "
 "to perform resynchronization."
-msgstr "FDCAN 硬件为执行重新同步而允许加长或缩短数据位的最大数据时间份数量。"
+msgstr "FDCAN 硬件为执行重新同步而允许加长或缩短数据位的最大数据时间片数量。"
 
 #: pack-config/stm32c5xx_fdcan_parameters.json:2003
 #. 界面位置：pack-config/stm32c5xx_fdcan_parameters
@@ -19948,8 +19947,7 @@ msgid ""
 "In BYPASS mode the CCU can still be used to monitor calibration state and timing counters, but it "
 "does not influence the FDCAN clock and bit timings."
 msgstr ""
-"配置 FDCAN 时钟校准单元（CCU）。当时钟通过 CCU 路由时，FDCAN1 测量参考 CAN 帧的时序，且 CCU 为所有 FDCAN 实例校准时间份时钟。\n"
-"在旁路（BYPASS）模式下，CCU 仍可用于监控校准状态和时序计数器，但它不会影响 FDCAN 时钟和位定时。"
+"配置 FDCAN 时钟校准单元（CCU）。当时钟通过 CCU 路由时，FDCAN1 测量参考 CAN 帧的时序，且 CCU 为所有 FDCAN 实例校准时间片时钟。\n在旁路（BYPASS）模式下，CCU 仍可用于监控校准状态和时序计数器，但它不会影响 FDCAN 时钟和位定时。"
 
 #: pack-config/stm32c5xx_fdcan_parameters.json:2091
 #. 界面位置：pack-config/stm32c5xx_fdcan_parameters
@@ -19989,7 +19987,7 @@ msgstr ""
 #. 语境：::Device:STM32CubeMX2 Config:FDCAN · /properties/parameters/properties/basic/properties/timings/properties/clock_calibration/properties/time_quanta_per_bit_time
 #, config-value
 msgid "Time quanta per bit time"
-msgstr "每位时间的时间份"
+msgstr "每位时间的时间片"
 
 #: pack-config/stm32c5xx_fdcan_parameters.json:2123
 #. 界面位置：pack-config/stm32c5xx_fdcan_parameters
@@ -20138,7 +20136,7 @@ msgstr "窗口长度"
 msgid ""
 "Maximum number of time quanta the FDCAN hardware is allowed to lengthen or shorten a bit to perform "
 "resynchronization."
-msgstr "FDCAN 硬件为执行重新同步而允许加长或缩短位的最大时间份数量。"
+msgstr "FDCAN 硬件为执行重新同步而允许加长或缩短位的最大时间片数量。"
 
 #: pack-config/stm32c5xx_fdcan_parameters.json:2263
 #. 界面位置：pack-config/stm32c5xx_fdcan_parameters
@@ -21676,7 +21674,7 @@ msgstr "编程模式"
 msgid ""
 "When disabled, the programming mode selection is forced to 'Quad-word' and cannot be modified. This "
 "option is only available when using the HAL layer (not available for LL)."
-msgstr "禁用时，编程模式选择被强制为 'Quad-word' 且无法修改。此选项仅在采用 HAL 层时可用（不适用于 LL）。"
+msgstr "禁用时，编程模式选择被强制为“四字”且无法修改。此选项仅在采用 HAL 层时可用（不适用于 LL）。"
 
 #: pack-config/stm32c5xx_flash_parameters.json:184
 #. 界面位置：pack-config/stm32c5xx_flash_parameters
@@ -21686,7 +21684,8 @@ msgid ""
 "Select the FLASH programming granularity used by the HAL APIs for this instance. This setting is "
 "editable only when 'Use flash programming' is enabled. If programming is disabled, the granularity "
 "is automatically set and locked to 'Quad-word'."
-msgstr "选择此实例的 HAL API 所使用的 FLASH 编程粒度。仅在启用 'Use flash programming' 时可编辑此设置。如果禁用编程，粒度将自动设置并锁定为 'Quad-word'。"
+msgstr ""
+"选择此实例的 HAL API 所使用的 FLASH 编程粒度。仅在启用“使用 FLASH 编程”时可编辑此设置。如果禁用编程，粒度将自动设置并锁定为“四字”。"
 
 #: pack-config/stm32c5xx_flash_parameters.json:236
 #. 界面位置：pack-config/stm32c5xx_flash_parameters
@@ -21712,7 +21711,7 @@ msgid ""
 "Enable generation of an interrupt on single ECC error and generate the corresponding ECC IRQ "
 "handler. This option is only available when 'Use error Code Correction (ECC)' is enabled; otherwise "
 "it is automatically cleared and disabled."
-msgstr "启用在发生单 ECC 错误时生成中断并生成相应的 ECC IRQ 处理程序。仅当启用 'Use error Code Correction (ECC)' 时此选项可用；否则它将自动清除并禁用。"
+msgstr "启用在发生单 ECC 错误时生成中断，并生成相应的 ECC IRQ 处理程序。仅当启用“纠错码（ECC）”时此选项可用；否则它将自动清除并禁用。"
 
 #: pack-config/stm32c5xx_flash_parameters.json:290
 #. 界面位置：pack-config/stm32c5xx_flash_parameters
@@ -22140,14 +22139,14 @@ msgstr "HAL 无操作系统"
 #. 语境：::Device:STM32CubeMX2 Config:CORE · /properties/parameters/properties/common/properties/hal_osal_selection/oneOf/1/title
 #, config-value
 msgid "HAL OS FreeRTOS"
-msgstr "HAL FreeRTOS 操作系统"
+msgstr "HAL OS FreeRTOS"
 
 #: pack-config/stm32c5xx_hal_core_parameters.json:111
 #. 界面位置：pack-config/stm32c5xx_hal_core_parameters
 #. 语境：::Device:STM32CubeMX2 Config:CORE · /properties/parameters/properties/common/properties/hal_osal_selection/oneOf/1/actions/0/message
 #, config-value
 msgid "FreeRTOS must be enabled before selecting 'HAL OS FreeRTOS'."
-msgstr "在选择 'HAL OS FreeRTOS' 之前必须先启用 FreeRTOS。"
+msgstr "在选择“HAL OS FreeRTOS”之前必须先启用 FreeRTOS。"
 
 #: pack-config/stm32c5xx_hal_core_parameters.json:128
 #. 界面位置：pack-config/stm32c5xx_hal_core_parameters
@@ -36786,7 +36785,7 @@ msgstr "DTS2 时钟频率"
 #. 语境：::Device:STM32CubeMX2 Config:TIM · /properties/parameters/properties/basic/properties/autoreload_preload/title
 #, config-value
 msgid "Autoreload preload"
-msgstr "自动重装载预装载"
+msgstr "自动重载预装载"
 
 # 译者: independent-timer-review-2026-09-14
 #: pack-config/stm32c5xx_tim_parameters.json:1266
@@ -40938,7 +40937,7 @@ msgstr "您正在使用的存储器的最大大小。"
 #. 共 2 处使用
 #, config-value
 msgid "16 bits (2 bytes)"
-msgstr "16 bit（2 B）"
+msgstr "16 位（2 字节）"
 
 #: pack-config/stm32c5xx_xspi_parameters.json:253
 #: pack-config/stm32c5xx_xspi_parameters.json:399
@@ -40947,7 +40946,7 @@ msgstr "16 bit（2 B）"
 #. 共 2 处使用
 #, config-value
 msgid "32 bits (4 bytes)"
-msgstr "32 bit（4 B）"
+msgstr "32 位（4 字节）"
 
 #: pack-config/stm32c5xx_xspi_parameters.json:257
 #: pack-config/stm32c5xx_xspi_parameters.json:403
@@ -40956,7 +40955,7 @@ msgstr "32 bit（4 B）"
 #. 共 2 处使用
 #, config-value
 msgid "64 bits (8 bytes)"
-msgstr "64 bit（8 B）"
+msgstr "64 位（8 字节）"
 
 #: pack-config/stm32c5xx_xspi_parameters.json:261
 #: pack-config/stm32c5xx_xspi_parameters.json:407
@@ -40965,7 +40964,7 @@ msgstr "64 bit（8 B）"
 #. 共 2 处使用
 #, config-value
 msgid "128 bits (16 bytes)"
-msgstr "128 bit（16 B）"
+msgstr "128 位（16 字节）"
 
 #: pack-config/stm32c5xx_xspi_parameters.json:265
 #: pack-config/stm32c5xx_xspi_parameters.json:411
@@ -40974,7 +40973,7 @@ msgstr "128 bit（16 B）"
 #. 共 2 处使用
 #, config-value
 msgid "256 bits (32 bytes)"
-msgstr "256 bit（32 B）"
+msgstr "256 位（32 字节）"
 
 #: pack-config/stm32c5xx_xspi_parameters.json:269
 #: pack-config/stm32c5xx_xspi_parameters.json:415
@@ -40983,7 +40982,7 @@ msgstr "256 bit（32 B）"
 #. 共 2 处使用
 #, config-value
 msgid "512 bits (64 bytes)"
-msgstr "512 bit（64 B）"
+msgstr "512 位（64 字节）"
 
 #: pack-config/stm32c5xx_xspi_parameters.json:273
 #: pack-config/stm32c5xx_xspi_parameters.json:419
@@ -40992,7 +40991,7 @@ msgstr "512 bit（64 B）"
 #. 共 2 处使用
 #, config-value
 msgid "1 kbit (128 bytes)"
-msgstr "1 kbit（128 B）"
+msgstr "1 kbit（128 字节）"
 
 #: pack-config/stm32c5xx_xspi_parameters.json:277
 #: pack-config/stm32c5xx_xspi_parameters.json:423
@@ -41001,7 +41000,7 @@ msgstr "1 kbit（128 B）"
 #. 共 2 处使用
 #, config-value
 msgid "2 kbits (256 bytes)"
-msgstr "2 kbit（256 B）"
+msgstr "2 kbit（256 字节）"
 
 #: pack-config/stm32c5xx_xspi_parameters.json:281
 #: pack-config/stm32c5xx_xspi_parameters.json:427
@@ -41010,7 +41009,7 @@ msgstr "2 kbit（256 B）"
 #. 共 2 处使用
 #, config-value
 msgid "4 kbits (512 bytes)"
-msgstr "4 kbit（512 B）"
+msgstr "4 kbit（512 字节）"
 
 #: pack-config/stm32c5xx_xspi_parameters.json:285
 #: pack-config/stm32c5xx_xspi_parameters.json:431
@@ -41168,7 +41167,7 @@ msgstr "512 Mbit（64 MB）"
 #. 语境：::Device:STM32CubeMX2 Config:XSPI · /properties/parameters/properties/basic/properties/memory_config/properties/size_bit/oneOf/26/title
 #, config-value
 msgid "1 Gbit (128 Mbytes))"
-msgstr "1 Gbit（128 MB））"
+msgstr "1 Gbit（128 MB）"
 
 #: pack-config/stm32c5xx_xspi_parameters.json:357
 #: pack-config/stm32c5xx_xspi_parameters.json:503
