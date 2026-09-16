@@ -28,7 +28,7 @@ import {
   poToRuntimeTable,
   pseudoTable,
 } from './catalog/po.js';
-import { install as doInstall, rollback as doRollbackCmd, doctor as doDoctor } from './apply/index.js';
+import { install as doInstall, rollback as doRollbackCmd, doctor as doDoctor, backup as doBackup } from './apply/index.js';
 import {
   installPack,
   listInstalled,
@@ -46,7 +46,7 @@ const program = new Command();
 program
   .name('cubemx2-translator')
   .description('STM32CubeMX2 多语言本地化工具（社区项目，与 STMicroelectronics 无关联）')
-  .version('0.1.0')
+  .version('0.2.0')
   .option('-a, --app <path>', 'STM32CubeMX2 安装目录（默认自动探测）')
   .option('-C, --catalog <path>', 'catalog.json 路径', 'catalog/catalog.json')
   .option('-L, --locales <dir>', '译文目录', 'locales');
@@ -382,6 +382,26 @@ langpack
     const removed = removePack(install, cmd.locale);
     if (!removed.length) console.log(`没有装 ${cmd.locale} 的语言包`);
     for (const f of removed) console.log(`已移除 ${f}`);
+  });
+
+
+// ---------------------------------------------------------------- backup
+
+program
+  .command('backup')
+  .description('把当前 bundle.js 与 index.html 复制到备份目录，不修改应用')
+  .option('--out <dir>', '备份输出目录（默认 ~/stm32cubemx2-translator-backups/<版本>-<时间>）')
+  .action((cmd: { out?: string }) => {
+    const o = opts();
+    const install = locate(o.app);
+    const r = doBackup(install, cmd.out);
+    console.log(`安装: ${install.root}  (v${install.version})`);
+    console.log(`备份目录  ${r.outDir}`);
+    if (!r.files.length) {
+      console.log('（没有复制到文件）');
+      return;
+    }
+    for (const f of r.files) console.log(`  ${f}`);
   });
 
 // ---------------------------------------------------------------- rollback

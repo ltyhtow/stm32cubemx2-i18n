@@ -15,6 +15,7 @@ import {
   readdirSync,
 } from 'node:fs';
 import path from 'node:path';
+import os from 'node:os';
 import { fileURLToPath } from 'node:url';
 import type { Catalog, Installation, RuntimeTable } from '../types.js';
 import {
@@ -127,6 +128,49 @@ export interface DoctorReport {
   i18nFiles: string[];
   runtimePresent: boolean;
   notes: string[];
+}
+
+
+export function backup(install_: Installation, outDir?: string): { outDir: string; files: string[] } {
+  const stamp = new Date().toISOString().replace(/[-:]/g, '').replace('T', '-').slice(0, 15);
+  const dest =
+    outDir ??
+    path.join(os.homedir(), 'stm32cubemx2-translator-backups', `${install_.version}-${stamp}`);
+  mkdirSync(dest, { recursive: true });
+
+  const candidates = [
+    install_.bundleJs,
+    install_.bundleJs + '.gz',
+    install_.bundleJs + '.gz.orig',
+    install_.bundleOrig,
+    install_.bundleJs + '.cubemx2-translator.bak',
+    install_.indexHtml,
+    install_.indexHtml + '.gz',
+    install_.indexHtml + '.cubemx2-translator.bak',
+  ];
+  const files: string[] = [];
+  for (const src of candidates) {
+    if (!existsSync(src)) continue;
+    const name = path.basename(src);
+    copyFileSync(src, path.join(dest, name));
+    files.push(name);
+  }
+  writeFileSync(
+    path.join(dest, 'backup-info.json'),
+    JSON.stringify(
+      {
+        root: install_.root,
+        version: install_.version,
+        appDir: install_.appDir,
+        createdAt: new Date().toISOString(),
+        files,
+      },
+      null,
+      2,
+    ) + '\n',
+    'utf8',
+  );
+  return { outDir: dest, files };
 }
 
 export function doctor(install_: Installation): DoctorReport {

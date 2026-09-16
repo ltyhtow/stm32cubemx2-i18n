@@ -1,6 +1,6 @@
 {
   "name": "stm32cubemx2-translator",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Multi-language localization toolkit for STM32CubeMX2. Extracts UI strings with AST + sourcemap precision, produces Gettext catalogs for translators, and applies translations through runtime hooks instead of binary string replacement.",
   "type": "module",
   "license": "MPL-2.0",
@@ -22,7 +22,8 @@
     "build": "tsc -p tsconfig.json",
     "dev": "tsc -p tsconfig.json --watch",
     "test": "npm run build && node --test dist/**/*.test.js",
-    "clean": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\""
+    "clean": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\"",
+    "pack:zh-cn": "python scripts/pack-zhcn-release.py"
   },
   "keywords": [
     "stm32cubemx2",
