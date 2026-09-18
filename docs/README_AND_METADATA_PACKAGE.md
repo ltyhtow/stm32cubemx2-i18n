@@ -4,11 +4,10 @@
 > **设计说明**：
 > 本方案完全保留了原提案清晰、结构化、高可读性的视觉与排版风格（Highlights、Status 表格、双角色导航、ASCII 架构图、Emoji 视觉导引），同时修复了原稿中的事实疏漏、命令路径错误与技术细节：
 > 1. **明确界定适用范围**：首屏明确指出仅针对全新 Theia/Electron 架构的 **STM32CubeMX2**，不适用于旧版 Java 架构的 STM32CubeMX。
-> 2. **补齐关键交互步骤**：普通用户运行安装脚本后，明确提示按 `F1` 执行 `Configure Display Language` 切换至中文并重载。
-> 3. **修正 CLI 命令与路径**：修正 `import-json` 导入路径为实际规范的 `translation-work/zh-CN/done/`；明确 `extract` 中 Pack 参数为可选增强项；命令默认采用易复制的格式。
-> 4. **完整展现双层架构优势**：清晰阐述 Tier 1（官方 VS Code/Theia 语言包，1.6万+ 框架词条）与 Tier 2（非侵入式运行时 Hook，ST 业务与芯片描述文案）的分工。
-> 5. **实事求是的验证状态**：准确描述 5,341 条中文已填且通过自动化 Lint，在 CubeMX2 1.1.1 经真实界面目视验证生效；说明 CDP 具备端到端测试能力。
-> 6. **修复文档链接**：将原本退化为目录的链接全部指回具体的 `docs/DEVELOPMENT.md`、`docs/TRANSLATION_HANDOFF.md`、`docs/VERIFICATION.md` 与 `docs/AGENT_HANDOFF.md`。
+> 2. **修正 CLI 命令与路径**：修正 `import-json` 导入路径为实际规范的 `translation-work/zh-CN/done/`；明确 `extract` 中 Pack 参数为可选增强项；命令默认采用易复制的格式。
+> 3. **完整展现双层架构优势**：清晰阐述 Tier 1（官方 VS Code/Theia 语言包，1.6万+ 框架词条）与 Tier 2（非侵入式运行时 Hook，ST 业务与芯片描述文案）的分工。
+> 4. **实事求是的验证状态**：准确描述 5,341 条中文已填且通过自动化 Lint，在 CubeMX2 1.1.1 经真实界面目视验证生效；说明 CDP 具备端到端测试能力。
+> 5. **修复文档链接**：将原本退化为目录的链接全部指回具体的 `docs/DEVELOPMENT.md`、`docs/TRANSLATION_HANDOFF.md`、`docs/VERIFICATION.md` 与 `docs/AGENT_HANDOFF.md`。
 
 ---
 
@@ -127,14 +126,6 @@ The installer automatically:
 3. Installs the official framework Chinese language pack (Tier 1).
 4. Injects runtime localization hooks and deploys the `zh-CN` catalog (Tier 2).
 5. Runs automatic health checks (`Doctor`).
-
-### Switch Display Language in Application
-
-Once the script finishes:
-1. Launch **STM32CubeMX2**.
-2. Press <kbd>F1</kbd> (or <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd>) to open the command palette.
-3. Type and select: **`Configure Display Language`**.
-4. Choose **`简体中文 (zh-cn)`** and confirm reload.
 
 ---
 
@@ -445,14 +436,6 @@ Distributed under the [Mozilla Public License 2.0 (MPL-2.0)](LICENSE).
 3. 下载并安装官方 Theia 中文语言包（Tier 1）。
 4. 注入运行时本地化挂钩并部署 `zh-CN` 译文表（Tier 2）。
 5. 自动运行体检（`Doctor`）确认注入成功。
-
-### 在应用内切换语言（关键步骤）
-
-脚本执行完毕后：
-1. 打开 **STM32CubeMX2**。
-2. 按键盘 <kbd>F1</kbd>（或快捷键 <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd>）调出命令面板。
-3. 输入并选择：**`Configure Display Language`**。
-4. 选择 **`简体中文 (zh-cn)`**，点击提示中的重载按钮（Reload）。
 
 ---
 

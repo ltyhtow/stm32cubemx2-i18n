@@ -65,7 +65,7 @@ If you just want to use **STM32CubeMX2 in Simplified Chinese**, you do not need 
 1. Download `stm32cubemx2-translator-zh-CN-v*-windows-x64-setup.exe` from [GitHub Releases](../../releases). If that release does not yet include an EXE, use the script archive below.
 2. Double-click the EXE and choose **安装 / 更新简体中文** (install/update Chinese).
 3. Leave the application path blank for automatic detection, or browse to your CubeMX2 installation.
-4. After installation, switch the display language as described below. Run the same EXE again to back up, roll back, or inspect the installation and view its operation log.
+4. Run the same EXE again to back up, roll back, or inspect the installation and view its operation log.
 
 The framework language pack is downloaded from Open VSX. You can skip this download when offline or when the pack is already installed. Download failures are reported while ST translations are still deployed. The EXE uses a temporary private runtime; it does not install Node.js system-wide.
 
@@ -83,14 +83,6 @@ The installer automatically:
 3. Installs the official framework Chinese language pack (Tier 1).
 4. Injects runtime localization hooks and deploys the `zh-CN` catalog (Tier 2).
 5. Runs automatic health checks (`Doctor`).
-
-### Switch Display Language in Application
-
-Once installation finishes:
-1. Launch **STM32CubeMX2**.
-2. Press <kbd>F1</kbd> (or <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd>) to open the command palette.
-3. Type and select: **`Configure Display Language`**.
-4. Choose **`简体中文 (zh-cn)`** and confirm reload.
 
 ---
 
