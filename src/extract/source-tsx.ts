@@ -15,6 +15,7 @@
 import ts from 'typescript';
 import type { StringRole, ExclusionReason } from '../types.js';
 import { composedExpressions, textShapes } from './text-expressions.js';
+export { hasSignificantWhitespace } from './whitespace.js';
 
 /** 从原始源码里抽出的一条候选。尚未与 bundle 侧信息合并。 */
 export interface RawString {
@@ -252,11 +253,6 @@ export function looksLikeSentence(text: string): boolean {
 
 /** 名字表明这不是界面文案的常量。 */
 const NON_UI_CONST = /URL|URI|PATH|REGEX|PATTERN|SCHEME|CHANNEL|COMMAND_ID|_KEY$|_ID$|^ID_|SELECTOR|CLASS_?NAME|TEST_?ID/i;
-
-/** 首尾空格承载语义的片段：它会被拼接到相邻内容上。 */
-export function hasSignificantWhitespace(text: string): boolean {
-  return text !== text.trim() && text.trim().length > 0;
-}
 
 /**
  * 按 React/Babel 的规则折叠 JSX 文本。

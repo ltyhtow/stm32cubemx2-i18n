@@ -17,7 +17,7 @@
  */
 import { po as gtPo } from 'gettext-parser';
 import type { Catalog, CatalogEntry, RuntimeTable } from '../types.js';
-import { hasSignificantWhitespace } from '../extract/source-tsx.js';
+import { hasSignificantWhitespace } from '../extract/whitespace.js';
 
 /**
  * 消歧表的键分隔符：`组件名 + NUL + 原文`。

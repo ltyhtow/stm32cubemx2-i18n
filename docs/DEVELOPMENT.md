@@ -60,6 +60,8 @@ node dist/cli.js install --locale zh-CN --dry-run
 
 ## 界面调试
 
+Windows EXE 的构建与验证见 [Windows 安装包](WINDOWS-INSTALLER.md)。
+
 退出已有 CubeMX2 实例，再从安装根目录的 `.bin\cube.exe` 启动：
 
 ```powershell

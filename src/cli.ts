@@ -12,11 +12,6 @@ import { Command } from 'commander';
 import { readFileSync, writeFileSync, existsSync, mkdirSync, readdirSync, statSync } from 'node:fs';
 import path from 'node:path';
 import { locate, locateAll, InstallationNotFoundError } from './locate.js';
-import { SourceMapIndex } from './extract/sourcemap.js';
-import { BundleScanner } from './extract/bundle-scan.js';
-import { buildCatalog, computeStats } from './extract/catalog.js';
-import { readPackConfigs } from './extract/pack-config.js';
-import { readPackDescriptors } from './extract/pack-descriptor.js';
 import { renderReport } from './catalog/report.js';
 import { diffCatalogs, formatDiff } from './catalog/diff.js';
 import {
@@ -105,7 +100,20 @@ program
   .option('--pack-config <paths...>', '附加 CMSIS Pack 参数文件或目录（目录递归读取 *_parameters.json）')
   .option('--pack-descriptor <files...>', '附加 DFP 外设映射或 *_peripherals.json 描述文件')
   .option('--pot <path>', 'POT 输出路径', 'locales/stm32cubemx2.pot')
-  .action((cmd: { allSources?: boolean; packConfig?: string[]; packDescriptor?: string[]; pot: string }) => {
+  .action(async (cmd: { allSources?: boolean; packConfig?: string[]; packDescriptor?: string[]; pot: string }) => {
+    const [
+      { SourceMapIndex },
+      { BundleScanner },
+      { buildCatalog, computeStats },
+      { readPackConfigs },
+      { readPackDescriptors },
+    ] = await Promise.all([
+      import('./extract/sourcemap.js'),
+      import('./extract/bundle-scan.js'),
+      import('./extract/catalog.js'),
+      import('./extract/pack-config.js'),
+      import('./extract/pack-descriptor.js'),
+    ]);
     const o = opts();
     const install = locate(o.app);
     console.log(`安装: ${install.root}  (v${install.version})`);

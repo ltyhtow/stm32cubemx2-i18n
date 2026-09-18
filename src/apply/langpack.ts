@@ -148,13 +148,14 @@ export function pickVersion(available: string[], apiVersion: string | undefined)
 /** Node 的 fetch 不走系统代理；失败时退到 curl（它会）。 */
 async function httpGet(url: string): Promise<Buffer> {
   try {
-    const res = await fetch(url, { redirect: 'follow' });
+    const res = await fetch(url, { redirect: 'follow', signal: AbortSignal.timeout(60_000) });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     return Buffer.from(await res.arrayBuffer());
   } catch (e) {
     try {
       return execFileSync('curl', ['-sL', '--fail', '--max-time', '180', url], {
         maxBuffer: 64 * 1024 * 1024,
+        windowsHide: true,
       });
     } catch {
       throw new LangpackError(`下载失败：${url}\n  ${(e as Error).message}`);

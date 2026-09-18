@@ -1,5 +1,13 @@
 # Windows 一键汉化
 
+推荐使用 `stm32cubemx2-translator-zh-CN-v*-windows-x64-setup.exe`：双击后选择安装、备份、还原或检查，安装目录留空即可自动查找。支持 Windows 10 / 11 x64，**无需预装 PowerShell 7、Node.js 或 .NET**。
+
+EXE 会自动备份被修改的应用文件。框架语言包默认联网下载；可勾选跳过下载。下载失败会在完成页提示重试，不会被当作完整安装成功。安装后启动 CubeMX2，按 F1 → Configure Display Language → 简体中文 (zh-cn)，重载即可。
+
+再次运行同一 EXE 可还原或检查。“还原”撤销本工具的注入，保留框架语言包、备份与译文文件。日志保存在 `%LOCALAPPDATA%\stm32cubemx2-i18n\logs`，可在向导内点击“查看操作日志”。
+
+以下说明针对 **ZIP 脚本包**：
+
 需要 **Node.js 20+** 和 **PowerShell 7**。先**完全退出** STM32CubeMX2。
 
 解压本包后，在解压目录打开 PowerShell：

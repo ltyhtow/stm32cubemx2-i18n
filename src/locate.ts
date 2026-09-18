@@ -118,6 +118,7 @@ function registryRoots(): string[] {
         encoding: 'utf8',
         stdio: ['ignore', 'pipe', 'ignore'],
         timeout: 15_000,
+        windowsHide: true,
       });
       for (const m of stdout.matchAll(/InstallLocation\s+REG_SZ\s+(.+)/g)) {
         const loc = m[1]?.trim();

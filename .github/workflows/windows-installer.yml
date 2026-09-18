@@ -1,0 +1,58 @@
+name: Build Windows installer
+
+on:
+  workflow_dispatch:
+  push:
+    tags: ['v*']
+  pull_request:
+    paths:
+      - 'src/**'
+      - 'runtime/**'
+      - 'locales/**'
+      - 'scripts/**'
+      - 'package*.json'
+      - '.github/workflows/windows-installer.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.21.0'
+          cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: npm ci
+      - run: npm test
+      - name: Prepare Inno Setup compiler
+        shell: pwsh
+        run: |
+          $download = Join-Path $env:RUNNER_TEMP 'innosetup-6.7.1.exe'
+          Invoke-WebRequest 'https://github.com/jrsoftware/issrc/releases/download/is-6_7_1/innosetup-6.7.1.exe' -OutFile $download
+          $expected = '4D11E8050B6185E0D49BD9E8CC661A7A59F44959A621D31D11033124C4E8A7B0'
+          if ((Get-FileHash -LiteralPath $download -Algorithm SHA256).Hash -ne $expected) { throw 'Compiler checksum mismatch' }
+          $compilerDir = Join-Path $env:RUNNER_TEMP 'inno'
+          $arguments = @('/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART', '/SP-', '/CURRENTUSER', ('/DIR="' + $compilerDir + '"'))
+          $p = Start-Process -FilePath $download -ArgumentList $arguments -WindowStyle Hidden -Wait -PassThru
+          if ($p.ExitCode -ne 0) { throw "Inno Setup failed: $($p.ExitCode)" }
+          "ISCC=$compilerDir\ISCC.exe" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+      - run: npm run pack:exe
+      - name: Test packaged EXE without developer tools on PATH
+        shell: pwsh
+        run: |
+          $version = (Get-Content -LiteralPath package.json -Raw | ConvertFrom-Json).version
+          python scripts/test-windows-installer.py "work/stm32cubemx2-translator-zh-CN-v$version-windows-x64-setup.exe"
+          if ($LASTEXITCODE -ne 0) { throw 'Packaged installer checks failed' }
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows-x64-installer
+          path: |
+            work/*-windows-x64-setup.exe
+            work/*-windows-x64-setup.exe.sha256
+          if-no-files-found: error
